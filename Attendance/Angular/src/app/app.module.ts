@@ -8,17 +8,25 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
-
+import { LayoutComponent } from './shared/layout/layout.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { RequestComponent } from './components/request/request.component';
 @NgModule({
-  declarations: [AppComponent, LoginComponent],
+  declarations: [AppComponent, LoginComponent, LayoutComponent, DashboardComponent, RequestComponent,],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     MatButtonModule,
     // MatInputModule,
     MatCardModule,
+    MatIconModule,
+    MatSidenavModule,
     MatGridListModule,
     AppRoutingModule,
+    MatToolbarModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
