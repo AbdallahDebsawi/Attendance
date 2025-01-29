@@ -11,17 +11,26 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
+import { LayoutComponent } from './shared/layout/layout.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { RequestComponent } from './components/request/request.component';
 @NgModule({
-  declarations: [AppComponent, LoginComponent],
+  declarations: [AppComponent, LoginComponent, LayoutComponent, DashboardComponent, RequestComponent,],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     MatButtonModule,
     MatInputModule,
     MatCardModule,
+    MatIconModule,
+    MatSidenavModule,
     MatGridListModule,
     MatFormFieldModule,
     AppRoutingModule,
+    MatToolbarModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

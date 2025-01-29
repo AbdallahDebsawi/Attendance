@@ -1,0 +1,199 @@
+/* Sidebar Styles */
+.mat-drawer-inner-container {
+    width: 100%;
+    height: 100%;
+}
+
+.example-container {
+    height: 100vh; /* Full viewport height */
+}
+
+.example-sidenav {
+    width: 250px;
+    background-color: #121C3E;
+}
+
+.sidebar-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 40px);
+    box-sizing: border-box;
+}
+
+.sidebar-image img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.profile-section {
+    justify-content: space-around;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.profile-pic img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    margin-bottom: 10px;
+}
+
+.username-section span {
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Features Section */
+.Features {
+    margin-top: 20px;
+}
+
+.Features-label span {
+    padding-left: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.option-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    background-color: transparent;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.option-item:hover {
+    background-color: #2F3C77;
+}
+
+.option-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Attendance Section */
+.Attendance {
+    margin-top: 20px;
+}
+
+.Attendance-label span {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.attendance-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.attendance-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    background-color: #FFC20E;
+    color: #000;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.attendance-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.attendance-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Logout Section */
+.logout-section {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: auto; /* Push to bottom */
+}
+
+.logout-button {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #FF0000;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+    background-color: #d40000;
+}
+
+.logout-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.bottom-pic {
+    display: flex;
+    align-items: center; /* Center the image vertically */
+}
+
+.bottom-pic img {
+    width: 100%;
+    height: auto;
+}
+
+.side-bottom {
+    margin-top: auto;
+}
+
+.main-content {
+    padding: 3%;
+}
+
+.main-content button {
+    border: 0;
+    background-color: #E3EDF9;
+    cursor: pointer;
+}
+
+.page-title {
+    padding-left: 3%;
+    font-size: 20px;
+}
