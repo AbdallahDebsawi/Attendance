@@ -17,6 +17,7 @@ namespace Attendance.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<Department> Departments{ get; set; }
         public DbSet<Request> Requests { get; set; }
-        
+        public DbSet<AttendanceUser> AttendanceUsers { get; set; }
+
     }
 }
