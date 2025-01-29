@@ -8,25 +8,35 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
-import { LayoutComponent } from './shared/layout/layout.component';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { RequestComponent } from './components/request/request.component';
+import { RegisterComponent } from './components/register/register.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { HttpClientModule } from '@angular/common/http';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 @NgModule({
-  declarations: [AppComponent, LoginComponent, LayoutComponent, DashboardComponent, RequestComponent,],
+  declarations: 
+  [AppComponent,
+   LoginComponent,
+   RegisterComponent
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     MatButtonModule,
-    // MatInputModule,
-    MatCardModule,
-    MatIconModule,
-    MatSidenavModule,
     MatGridListModule,
     AppRoutingModule,
-    MatToolbarModule,
+    MatInputModule,
+    MatCardModule,
+    MatDialogModule,
+    MatTableModule,
+    MatPaginatorModule,
+    HttpClientModule,
+    MatFormFieldModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent],
