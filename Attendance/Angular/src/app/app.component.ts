@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { RegisterComponent } from './components/register/register.component';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +9,12 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Angular';
+
+  constructor(private dialog: MatDialog) {}
+
+  openDialog() {
+    const dialogRef = this.dialog.open(RegisterComponent, {
+      width: '1000px',
+    });
+  }
 }
