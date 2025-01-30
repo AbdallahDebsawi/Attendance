@@ -14,12 +14,16 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { RequestComponent } from './components/request/request.component';
+import { ControlComponent } from './shared/control/control.component';
+import { MatTableModule } from '@angular/material/table';
+
 @NgModule({
-  declarations: [AppComponent, LoginComponent, LayoutComponent, DashboardComponent, RequestComponent,],
+  declarations: [AppComponent, LoginComponent, LayoutComponent, DashboardComponent, RequestComponent, ControlComponent,],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     MatButtonModule,
+    MatTableModule,
     // MatInputModule,
     MatCardModule,
     MatIconModule,
