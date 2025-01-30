@@ -1,7 +1,6 @@
-import { Component,Inject , OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormGroup , FormBuilder , Validators } from '@angular/forms';
-
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
@@ -9,51 +8,47 @@ import { FormGroup , FormBuilder , Validators } from '@angular/forms';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  userForm : FormGroup;
+  userForm: FormGroup;
 
   constructor(
-    private fb : FormBuilder,
-    private diologRef : MatDialogRef<RegisterComponent>,
-    @Inject(MAT_DIALOG_DATA) public data : any
-
-
+    private fb: FormBuilder,
+    private dialogRef: MatDialogRef<RegisterComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.userForm = this.fb.group({
-      firstName : ['',Validators.required],
-      lastName :['',Validators.required],
-      email : ['',Validators.required],
-      password:['',Validators.required],
-      confirmPassword:['',Validators.required],
-      phoneNumber:['',Validators.required],
-      joinDate:['',Validators.required]
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
+      confirmPassword: ['', Validators.required],
+      phoneNumber: ['', Validators.required],
+      joinDate: ['', Validators.required],
     });
-   }
+  }
 
   ngOnInit(): void {
-    if(this.data && this.data.Id){
-      this.userForm.patchValue(this.data)
+    if (this.data && this.data.Id) {
+      this.userForm.patchValue(this.data);
       const formatDate = this.formatDate(this.data.joinDate);
-      this.userForm.patchValue({joinDate : formatDate})
+      this.userForm.patchValue({ joinDate: formatDate });
     }
-
-
   }
+
   formatDate(date: string): string {
-    // Convert date to yyyy-MM-dd format
     const parsedDate = new Date(date);
     const year = parsedDate.getFullYear();
-    const month = String(parsedDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
     const day = String(parsedDate.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
 
-  close(): void{
-    this.diologRef.close();
-   }
+  close(): void {
+    this.dialogRef.close();
+  }
 
-   save() {
+  save() {
     if (this.userForm.valid) {
-      this.diologRef.close(this.userForm.value);
+      this.dialogRef.close(this.userForm.value);
     }
-}
+  }
 }

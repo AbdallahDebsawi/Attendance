@@ -16,5 +16,11 @@ export class AppComponent {
     const dialogRef = this.dialog.open(RegisterComponent, {
       width: '1000px',
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Form Data:', result);
+      }
+    });
   }
 }

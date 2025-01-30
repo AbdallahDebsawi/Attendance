@@ -9,11 +9,11 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTableModule } from '@angular/material/table';
-import { MatDialogModule } from '@angular/material/dialog'; // Add the missing MatDialogModule
-import { MatPaginatorModule } from '@angular/material/paginator'; // Add the missing MatPaginatorModule
-import { MatFormFieldModule } from '@angular/material/form-field'; // Add MatFormFieldModule
-import { HttpClientModule } from '@angular/common/http'; // Add HttpClientModule
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Add FormsModule and ReactiveFormsModule
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field'; // Import MatFormFieldModule
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Ensure FormsModule and ReactiveFormsModule are imported
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
@@ -21,6 +21,7 @@ import { LayoutComponent } from './shared/layout/layout.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { RequestComponent } from './components/request/request.component';
 import { ControlComponent } from './shared/control/control.component';
+import { RegisterComponent } from './components/register/register.component'; // Add RegisterComponent here
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { ControlComponent } from './shared/control/control.component';
     DashboardComponent,
     RequestComponent,
     ControlComponent,
+    RegisterComponent, // Declare RegisterComponent here
   ],
   imports: [
     BrowserModule,
@@ -45,9 +47,9 @@ import { ControlComponent } from './shared/control/control.component';
     MatDialogModule,
     MatPaginatorModule,
     HttpClientModule,
-    MatFormFieldModule,
-    FormsModule,
-    ReactiveFormsModule
+    MatFormFieldModule, // Add MatFormFieldModule here
+    FormsModule, // Add FormsModule
+    ReactiveFormsModule // Add ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent],
