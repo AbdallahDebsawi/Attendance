@@ -82,7 +82,7 @@
 
       <div class="side-bottom">
         <div class="logout-section">
-          <button class="logout-button">
+          <button class="logout-button" (click)="signOut()">
             <img
               src="../../../assets/images/logout.png"
               alt="Logout Icon"
@@ -112,6 +112,5 @@
     </div>
 
     <router-outlet></router-outlet>
-
   </mat-sidenav-content>
 </mat-sidenav-container>

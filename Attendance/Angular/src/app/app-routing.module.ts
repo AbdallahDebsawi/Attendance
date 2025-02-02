@@ -3,12 +3,17 @@ import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from './shared/layout/layout.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { RequestComponent } from './components/request/request.component';
+import { RegisterComponent } from './components/register/register.component';
+import { LoginComponent } from './components/login/login.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' }, 
+  { path: 'register', component: RegisterComponent },
+  { path: 'login', component: LoginComponent },
+
   {
     path: '',
-    component: LayoutComponent, // LayoutComponent wraps all pages
+    component: LayoutComponent,
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'request', component: RequestComponent },
@@ -18,6 +23,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

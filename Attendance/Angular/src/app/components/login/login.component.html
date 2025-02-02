@@ -1,54 +1,32 @@
-<!-- <mat-grid-list cols="2" rowHeight="100vh" gutterSize="-100px">
-  <mat-grid-tile> -->
-    <div class="container">
-        <div class="left-section">
-      <mat-card class="login-card">
-        <mat-card-title class="login-card-title">Login</mat-card-title>
-        <mat-card-content>
-          <p class="login-description">Login to your account</p>
-          <form>
-            <div>
-              <mat-label>E-mail Address</mat-label>
-              <mat-form-field class="form-field" appearance="outline">
-                <input
-                  class="form-field"
-                  matInput
-                  type="email"
-                  placeholder=""
-                />
-              </mat-form-field>
-            </div>
-            <div>
-              <mat-label>Password</mat-label>
-              <mat-form-field class="form-field" appearance="outline">
-                <input
-                  class="form-field"
-                  matInput
-                  type="password"
-                  placeholder=""
-                />
-              </mat-form-field>
-            </div>
 
-            <button  class="login-button">Sign In</button>
-          </form>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="right-section">
-      <img src="assets/images/login.png" alt="Login" class="login-image" />
-      <div class="image-overlay">
-        <p class="overlay-text">
-          Manage all <span class="text-span">HR Operations</span> from the
-          comfort of your home.
-        </p>
-      </div>
-    </div>
+<div class="container">
+  <div class="left-section">
+    <div>
+      <div class="login-card-title">Login</div>
+      <p class="login-description">Login to your account</p>
+      <form>
+        <div>
+          <label>E-mail Address</label>
+          <input class="form-field" type="email" placeholder="" />
+        </div>
+        <div>
+          <label>Password</label>
+          <input class="form-field" type="password" placeholder="" />
+        </div>
+
+        <button class="login-button" (click)="signIn()">Sign In</button>
+      </form>
     </div>
 
-  <!-- </mat-grid-tile>
+  </div>
+  <div class="right-section">
+    <img src="assets/images/login.png" alt="Login" class="login-image" />
+    <div class="image-overlay">
+      <p class="overlay-text">
+        Manage all <span class="text-span">HR Operations</span> from the comfort
+        of your home.
+      </p>
+    </div>
+  </div>
+</div>
 
-  <mat-grid-tile>
-
-  </mat-grid-tile>
-</mat-grid-list> -->
