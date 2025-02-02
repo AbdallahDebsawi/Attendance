@@ -1,1 +1,81 @@
-<p>dashboard works!</p>
+<p>Dashboard</p>
+<div class="dashboard-container">
+  <!-- First row: Attendance Card -->
+  <div class="attendance-row">
+    <div class="attendance-card">
+      <div class="date">
+        <span>January 29, 2025</span>
+      </div>
+      <div class="status-time">
+        <span class="entry-label">Entry Time</span>
+        <div class="status-time-row">
+          <span class="status">Present on time</span>
+          <span class="time">08:30 AM</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Second row: Charts -->
+  <div class="charts-row">
+    <div class="chart-container">
+      <canvasjs-chart
+        [options]="chartOptions"
+        [styles]="{ width: '400px', height: '340px' }"
+      ></canvasjs-chart>
+
+      <div class="chart-center-text">
+        <div class="center-today">Today</div>
+        <div class="center-date">30 Jan</div>
+      </div>
+
+      <div class="chart-legend">
+        <div class="legend-item">
+          <span class="legend-square present"></span> Present On Time
+        </div>
+        <div class="legend-item">
+          <span class="legend-square late"></span> Present Late
+        </div>
+        <div class="legend-item">
+          <span class="legend-square absent"></span> Absent
+        </div>
+        <div class="legend-item">
+          <span class="legend-square leave"></span> Leave
+        </div>
+      </div>
+    </div>
+    <!-- Leave Progress Card with Title -->
+    <div class="chart-containner">
+      <div class="leave-progress-card">
+        <h3>Leave Progress</h3>
+        <div class="leave-progress-container" *ngFor="let leave of leaveTypes">
+          <div class="leave-info">
+            <span class="leave-type">{{ leave.type }}</span>
+            <div class="progress-bar">
+              <div
+                class="filled"
+                [ngStyle]="{
+                  'background-color': getProgressBarColor(leave.type),
+                  width: leave.filledPercentage + '%'
+                }"
+              ></div>
+              <div class="divisions">
+                <div
+                  *ngFor="
+                    let _ of [].constructor(leave.totalDays + 1);
+                    let i = index
+                  "
+                  class="division"
+                  [ngClass]="{ 'filled-division': i < leave.takenDays }"
+                ></div>
+              </div>
+            </div>
+            <span class="days-info">
+              {{ leave.takenDays }} / {{ leave.totalDays }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -17,8 +17,16 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { RequestComponent } from './components/request/request.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 @NgModule({
-  declarations: [AppComponent, LoginComponent, LayoutComponent, DashboardComponent, RequestComponent,],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    LayoutComponent,
+    DashboardComponent,
+    RequestComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -31,8 +39,11 @@ import { RequestComponent } from './components/request/request.component';
     MatFormFieldModule,
     AppRoutingModule,
     MatToolbarModule,
+    MatProgressBarModule,
+    CanvasJSAngularChartsModule,
   ],
   providers: [],
+
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

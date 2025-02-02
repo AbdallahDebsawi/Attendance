@@ -4,14 +4,14 @@
     <div class="sidebar-content">
       <!-- Sidebar Image -->
       <div class="sidebar-image">
-        <img src="../../../assets/images/sidebar.png" alt="Sidebar Image">
+        <img src="../../../assets/images/sidebar.png" alt="Sidebar Image" />
       </div>
 
       <!-- Profile Section -->
       <div class="profile-section">
         <!-- Profile Picture -->
         <div class="profile-pic">
-          <img src="../../../assets/images/profile.png" alt="Profile Picture">
+          <img src="../../../assets/images/profile.png" alt="Profile Picture" />
         </div>
         <!-- Username -->
         <div class="username-section">
@@ -33,13 +33,23 @@
         <div class="options">
           <!-- Dashboard Option -->
           <div class="option-item">
-            <img src="../../../assets/images/dashboard.png" alt="Dashboard Icon" class="option-icon">
-            <span>Dashboard</span>
+            <img
+              src="../../../assets/images/dashboard.png"
+              alt="Dashboard Icon"
+              class="option-icon"
+            />
+            <a routerLink="/dashboard">Dashboard</a>
+            <!-- <span>Dashboard</span> -->
           </div>
           <!-- Request Option -->
           <div class="option-item">
-            <img src="../../../assets/images/request.png" alt="Request Icon" class="option-icon">
-            <span>Request</span>
+            <img
+              src="../../../assets/images/request.png"
+              alt="Request Icon"
+              class="option-icon"
+            />
+            <a routerLink="/request">Request</a>
+            <!-- <span>Request</span> -->
           </div>
         </div>
       </div>
@@ -51,12 +61,20 @@
         <div class="attendance-options">
           <!-- Check In Button -->
           <button class="attendance-button">
-            <img src="../../../assets/images/check.png" alt="Check In Icon" class="attendance-icon">
+            <img
+              src="../../../assets/images/check.png"
+              alt="Check In Icon"
+              class="attendance-icon"
+            />
             Check In
           </button>
           <!-- Check Out Button -->
           <button class="attendance-button">
-            <img src="../../../assets/images/check.png" alt="Check Out Icon" class="attendance-icon">
+            <img
+              src="../../../assets/images/check.png"
+              alt="Check Out Icon"
+              class="attendance-icon"
+            />
             Check Out
           </button>
         </div>
@@ -65,14 +83,22 @@
       <div class="side-bottom">
         <div class="logout-section">
           <button class="logout-button">
-            <img src="../../../assets/images/logout.png" alt="Logout Icon" class="logout-icon">
+            <img
+              src="../../../assets/images/logout.png"
+              alt="Logout Icon"
+              class="logout-icon"
+            />
             Logout
           </button>
         </div>
       </div>
     </div>
     <div class="bottom-pic">
-      <img src="../../../assets/images/bottomSidebar.png" alt="Logout Icon" class="logout-icon">
+      <img
+        src="../../../assets/images/bottomSidebar.png"
+        alt="Logout Icon"
+        class="logout-icon"
+      />
     </div>
   </mat-sidenav>
 
@@ -81,12 +107,10 @@
     <div class="main-content">
       <!-- Toggle Button -->
       <button (click)="toggleSidebar(sidenav)">
-        <img src="../../../assets/images/toggle.png" alt="Toggle Sidebar">
+        <img src="../../../assets/images/toggle.png" alt="Toggle Sidebar" />
       </button>
     </div>
-    <div class="page-title">
-      <span>Dashboard</span>
-    </div>
+
+    <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>
-  
