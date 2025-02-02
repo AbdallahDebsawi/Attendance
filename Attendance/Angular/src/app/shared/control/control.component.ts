@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ControlComponent implements OnInit {
 
+  role: string = 'hr'; // Set this to 'employee' or 'hr' based on user role
   displayedColumns: string[] = ['name', 'duration', 'startDate', 'endDate', 'type', 'reason', 'managerStatus', 'hrStatus'];
 
   dataSource = [
@@ -20,6 +21,21 @@ export class ControlComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    // Update columns based on role
+    if (this.role === 'hr') {
+      this.displayedColumns = ['name', 'duration', 'startDate', 'endDate', 'type', 'reason', 'action']; // Added 'action' for HR
+    } else if (this.role === 'employee') {
+      this.displayedColumns = ['name', 'duration', 'startDate', 'endDate', 'type', 'reason', 'managerStatus', 'hrStatus']; // Employee view
+    }
   }
 
+  takeAction(element: any): void {
+    // Example: Toggle the hrStatus between 'Approved' and 'Rejected'
+    if (element.hrStatus === 'Pending') {
+      element.hrStatus = 'Approved';  // Update to 'Approved' when action is taken
+    } else {
+      element.hrStatus = 'Pending';  // Toggle back to 'Pending'
+    }
+    console.log('Updated HR Status for', element.name, ':', element.hrStatus);
+  }
 }
