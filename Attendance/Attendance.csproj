@@ -184,6 +184,10 @@
     <Compile Include="Migrations\202501280708006_Adding the models and adding creating the user controller .designer.cs">
       <DependentUpon>202501280708006_Adding the models and adding creating the user controller .cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202502020819095_fix server error.cs" />
+    <Compile Include="Migrations\202502020819095_fix server error.designer.cs">
+      <DependentUpon>202502020819095_fix server error.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AttendanceUser.cs" />
     <Compile Include="Models\Department.cs" />
@@ -284,6 +288,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202501280708006_Adding the models and adding creating the user controller .resx">
       <DependentUpon>202501280708006_Adding the models and adding creating the user controller .cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202502020819095_fix server error.resx">
+      <DependentUpon>202502020819095_fix server error.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
