@@ -1,167 +1,172 @@
 ﻿using Attendance.Data;
 using Attendance.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Collections.Generic;
 
 namespace Attendance.Controllers
 {
     public class UserController : ApiController
     {
-
         private AttendanceDb db = new AttendanceDb();
 
-
         [HttpGet]
-        [Route("api/User/GetAllUsers")]
+        [Route("api/user")]
         public IHttpActionResult GetAllUsers()
         {
             try
             {
-                var users = db.Users
-                              .Include("Role")
-                              .Include("Department")
-                              .Include("Requests")
-                              .ToList();
+                var users = db.Users.Where(u => !u.IsDeleted).ToList();
 
-                if (users == null || !users.Any())
+                if (!users.Any())
                 {
-                    return BadRequest("There is no Users in the Database"); 
+                    return Content(HttpStatusCode.NotFound, new { Message = "No users found." });
                 }
 
-                return Ok(users);
+                return Ok(new { Message = "Users retrieved successfully.", Data = users });
             }
-
             catch (Exception ex)
             {
-                return InternalServerError(ex);
+                return Content(HttpStatusCode.InternalServerError, new { Message = "An error occurred while fetching users.", Error = ex.Message });
             }
         }
 
-
-
         [HttpGet]
-        [Route("api/User/GetUserById/{id}")]
+        [Route("api/user/{id}")]
         public IHttpActionResult GetUserById(int id)
         {
             try
             {
-                
-                var user = db.Users
-                             .Include("Role")
-                             .Include("Department")
-                             .Include("Requests")
-                             .FirstOrDefault(u => u.Id == id);
+                var user = db.Users.SingleOrDefault(u => u.Id == id && !u.IsDeleted);
 
                 if (user == null)
                 {
-                    return NotFound(); 
+                    return Content(HttpStatusCode.NotFound, new { Message = $"User with ID {id} not found." });
                 }
 
-              
-                return Ok(user);
+                return Ok(new { Message = "User retrieved successfully.", Data = user });
             }
             catch (Exception ex)
             {
-
-                return InternalServerError(ex);
+                return Content(HttpStatusCode.InternalServerError, new { Message = "An error occurred while fetching the user.", Error = ex.Message });
             }
         }
 
-
         [HttpPost]
-        [Route("api/User/AddUser")]
-        public IHttpActionResult AddUser(User user)
+        [Route("api/user/register")]
+        public IHttpActionResult RegisterUser(User user)
         {
             try
             {
                 if (user == null)
                 {
-                    return BadRequest("Invalid user data.");
+                    return Content(HttpStatusCode.BadRequest, new { Message = "Invalid user data." });
                 }
 
+                var existingUser = db.Users.SingleOrDefault(u => u.Email == user.Email);
+                if (existingUser != null)
+                {
+                    return Content(HttpStatusCode.BadRequest, new { Message = "User with this email already exists." });
+                }
+
+                user.CreatedBy = "System";
                 db.Users.Add(user);
                 db.SaveChanges();
 
-                return Created($"api/User/GetUserById/{user.Id}", user);
+                return Created($"api/user/{user.Id}", new { Message = "User registered successfully.", Data = user });
             }
             catch (Exception ex)
             {
-                return InternalServerError(ex);
+                return Content(HttpStatusCode.InternalServerError, new
+                {
+                    Message = "An error occurred while registering the user.",
+                    Error = ex.InnerException?.Message ?? ex.Message
+                });
             }
         }
 
-
-        // PUT: api/User/UpdateUser/{id}
-        [HttpPut]
-        [Route("api/User/UpdateUser/{id}")]
-        public IHttpActionResult UpdateUser(int id, User updatedUser)
+        [HttpPost]
+        [Route("api/user/login")]
+        public IHttpActionResult Login(string email, string password)
         {
             try
             {
-                // Validate input
-                if (updatedUser == null || id != updatedUser.Id)
+                var user = db.Users.SingleOrDefault(u => u.Email == email && u.Password == password && !u.IsDeleted);
+
+                if (user == null)
                 {
-                    return BadRequest("Invalid user data or ID mismatch.");
+                    return Content(HttpStatusCode.Unauthorized, new { Message = "Invalid email or password." });
                 }
 
-                // Retrieve the existing user from the database
-                var existingUser = db.Users.FirstOrDefault(u => u.Id == id);
-                if (existingUser == null)
-                {
-                    return NotFound(); // User with the given ID doesn't exist
-                }
-
-                // Update the properties of the existing user
-                existingUser.ManagerId = updatedUser.ManagerId;
-                existingUser.Name = updatedUser.Name;
-                existingUser.Email = updatedUser.Email;
-                existingUser.Password = updatedUser.Password;
-                existingUser.Gender = updatedUser.Gender;
-                existingUser.Salary = updatedUser.Salary;
-                existingUser.JoinDate = updatedUser.JoinDate;
-                existingUser.LeftDate = updatedUser.LeftDate;
-                existingUser.RoleId = updatedUser.RoleId;
-                existingUser.DepartmentId = updatedUser.DepartmentId;
-
-                // Save the changes to the database
-                db.SaveChanges();
-
-                // Return the updated user as the response
-                return Ok(existingUser);
+                return Ok(new { Message = "Login successful.", Data = user });
             }
             catch (Exception ex)
             {
-                // Handle any exceptions that may occur
-                return InternalServerError(ex);
+                return Content(HttpStatusCode.InternalServerError, new { Message = "An error occurred while logging in.", Error = ex.Message });
             }
         }
 
+        [HttpPut]
+        [Route("api/user/{id}")]
+        public IHttpActionResult UpdateUser(int id, User user)
+        {
+            try
+            {
+                if (user == null || id != user.Id)
+                {
+                    return Content(HttpStatusCode.BadRequest, new { Message = "Invalid user data or ID mismatch." });
+                }
 
+                var existingUser = db.Users.SingleOrDefault(u => u.Id == id && !u.IsDeleted);
+                if (existingUser == null)
+                {
+                    return Content(HttpStatusCode.NotFound, new { Message = $"User with ID {id} not found." });
+                }
+
+                existingUser.Name = user.Name;
+                existingUser.Email = user.Email;
+                existingUser.Password = user.Password;
+                existingUser.Gender = user.Gender;
+                existingUser.Salary = user.Salary;
+                existingUser.RoleId = user.RoleId;
+                existingUser.DepartmentId = user.DepartmentId;
+                existingUser.ModificationDate = DateTime.UtcNow;
+
+                db.SaveChanges();
+
+                return Ok(new { Message = "User updated successfully.", Data = existingUser });
+            }
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.InternalServerError, new { Message = "An error occurred while updating the user.", Error = ex.Message });
+            }
+        }
 
         [HttpDelete]
-        [Route("api/User/DeleteUser/{id}")]
+        [Route("api/user/{id}")]
         public IHttpActionResult DeleteUser(int id)
         {
             try
             {
-                var user = db.Users.FirstOrDefault(u => u.Id == id);
+                var user = db.Users.SingleOrDefault(u => u.Id == id);
+
                 if (user == null)
                 {
-                    return NotFound();
+                    return Content(HttpStatusCode.NotFound, new { Message = $"User with ID {id} not found." });
                 }
 
-                db.Users.Remove(user);
+                user.IsDeleted = true;
+                user.ModificationDate = DateTime.UtcNow;
                 db.SaveChanges();
 
-                return Ok($"User with ID {id} has been deleted.");
+                return Ok(new { Message = "User deleted successfully." });
             }
             catch (Exception ex)
             {
-                return InternalServerError(ex);
+                return Content(HttpStatusCode.InternalServerError, new { Message = "An error occurred while deleting the user.", Error = ex.Message });
             }
         }
     }

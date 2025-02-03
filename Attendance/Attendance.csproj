@@ -169,7 +169,6 @@
     <Compile Include="Controllers\DepartmentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RequestController.cs" />
-    <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Data\AttendanceDb.cs" />
@@ -188,12 +187,23 @@
     <Compile Include="Migrations\202502020819095_fix server error.designer.cs">
       <DependentUpon>202502020819095_fix server error.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202502030835042_removed role controller.cs" />
+    <Compile Include="Migrations\202502030835042_removed role controller.designer.cs">
+      <DependentUpon>202502030835042_removed role controller.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202502030904052_UpdateDatabase.cs" />
+    <Compile Include="Migrations\202502030904052_UpdateDatabase.designer.cs">
+      <DependentUpon>202502030904052_UpdateDatabase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202502030926021_Edit USER MODEL.cs" />
+    <Compile Include="Migrations\202502030926021_Edit USER MODEL.designer.cs">
+      <DependentUpon>202502030926021_Edit USER MODEL.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AttendanceUser.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\Interfaces\IAttendance.cs" />
     <Compile Include="Models\Request.cs" />
-    <Compile Include="Models\Role.cs" />
     <Compile Include="Models\SharedProp\Audit.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\ViewModel\AttendanceUserViewModel.cs" />
@@ -291,6 +301,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202502020819095_fix server error.resx">
       <DependentUpon>202502020819095_fix server error.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202502030835042_removed role controller.resx">
+      <DependentUpon>202502030835042_removed role controller.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202502030904052_UpdateDatabase.resx">
+      <DependentUpon>202502030904052_UpdateDatabase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202502030926021_Edit USER MODEL.resx">
+      <DependentUpon>202502030926021_Edit USER MODEL.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
