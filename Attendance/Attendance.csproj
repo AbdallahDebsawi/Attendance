@@ -212,6 +212,7 @@
     <Compile Include="Models\SharedProp\Audit.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\ViewModel\AttendanceUserViewModel.cs" />
+    <Compile Include="Models\ViewModel\RequestViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
