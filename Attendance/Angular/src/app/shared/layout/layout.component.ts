@@ -7,12 +7,12 @@ import { Router } from '@angular/router';
 })
 export class LayoutComponent implements OnInit {
   constructor(private router: Router) {}
-
+  role = 'hr';
   ngOnInit(): void {}
   toggleSidebar(sidenav: any) {
     sidenav.toggle();
   }
   signOut() {
-    this.router.navigate(['/login']);
+    this.router.navigate(['/login'], { replaceUrl: true });
   }
 }

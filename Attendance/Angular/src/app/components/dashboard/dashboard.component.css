@@ -1,6 +1,29 @@
+.filter-container {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 50px;
+  width: 97%;
+}
 p {
   padding-left: 3%;
   font-size: 20px;
+}
+
+.filter-button {
+  background: none;
+  margin-bottom: 20px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.filter-button img {
+  width: 30px;
+  height: 30px;
+}
+
+.filter-button:hover {
+  transform: scale(1.1);
 }
 
 .dashboard-container {

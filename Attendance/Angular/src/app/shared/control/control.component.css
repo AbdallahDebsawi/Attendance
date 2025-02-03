@@ -72,7 +72,20 @@ button.mat-button:hover {
 td.mat-cell button {
   margin: auto;
 }
-
+.add-req-btn {
+  font-size: 12px;
+  background-color: #253D90;
+  height: 70%;
+  width: 100%;
+  margin-left: 20px;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.add-req-btn:hover {
+  transform: scale(1.05);
+}
 @media screen and (max-width: 1024px) {
   .table-inner-container {
     max-height: 300px;
@@ -153,6 +166,7 @@ td.mat-cell button {
 
 .filter-button {
   background: none;
+ margin-bottom: 20px;
   border: none;
   cursor: pointer;
   transition: transform 0.2s ease-in-out;

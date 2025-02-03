@@ -41,6 +41,15 @@
             <a routerLink="/dashboard">Dashboard</a>
             <!-- <span>Dashboard</span> -->
           </div>
+          <div class="option-item" *ngIf="role == 'hr'">
+            <img
+              src="../../../assets/images/employee.png"
+              alt="Employee Icon"
+              class="option-icon"
+            />
+            <a routerLink="/employee">Employees</a>
+            <!-- <span>Request</span> -->
+          </div>
           <!-- Request Option -->
           <div class="option-item">
             <img
@@ -48,7 +57,7 @@
               alt="Request Icon"
               class="option-icon"
             />
-            <a routerLink="/request">Request</a>
+            <a routerLink="/request">Requests</a>
             <!-- <span>Request</span> -->
           </div>
         </div>
@@ -69,14 +78,14 @@
             Check In
           </button>
           <!-- Check Out Button -->
-          <button class="attendance-button">
+          <!-- <button class="attendance-button">
             <img
               src="../../../assets/images/check.png"
               alt="Check Out Icon"
               class="attendance-icon"
             />
             Check Out
-          </button>
+          </button> -->
         </div>
       </div>
 
@@ -111,7 +120,6 @@
       </button>
     </div>
 
-   
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>
