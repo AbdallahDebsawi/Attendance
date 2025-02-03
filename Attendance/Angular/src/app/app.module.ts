@@ -24,6 +24,8 @@ import { ControlComponent } from './shared/control/control.component';
 import { RegisterComponent } from './components/register/register.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
+import { RequestEntryComponent } from './components/request/request-entry/request-entry.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 // import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
@@ -35,6 +37,7 @@ import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
     RequestComponent,
     ControlComponent,
     RegisterComponent,
+    RequestEntryComponent,
   ],
   imports: [
     BrowserModule,
@@ -55,6 +58,7 @@ import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
     FormsModule,
     ReactiveFormsModule,
     CanvasJSAngularChartsModule,
+    MatDatepickerModule
     // MatProgressBarModule,
   ],
   providers: [],
