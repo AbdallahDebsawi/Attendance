@@ -1,4 +1,9 @@
-<p>Dashboard</p>
+<div class="filter-container">
+  <p>Dashboard</p>
+  <button class="filter-button" *ngIf="role == 'hr'">
+    <img src="../../../assets/images/filter.png" alt="Filter" />
+  </button>
+</div>
 <div class="dashboard-container">
   <!-- First row: Attendance Card -->
   <div class="attendance-row">

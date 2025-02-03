@@ -7,7 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
   constructor() {}
-
+  role: string = 'hr';
   totalDays: number = 14;
   takenDays: number = 10;
   leaveType: string = '';
@@ -63,7 +63,7 @@ export class DashboardComponent implements OnInit {
         return '#4CAF50';
     }
   }
- 
+
   chartOptions = {
     animationEnabled: true,
     title: {

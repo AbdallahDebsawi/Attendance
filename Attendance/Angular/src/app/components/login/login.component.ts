@@ -17,6 +17,6 @@ export class LoginComponent implements OnInit {
     this.dialog.open(RegisterComponent);
   }
   signIn() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/dashboard'], { replaceUrl: true });
   }
 }
