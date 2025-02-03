@@ -14,7 +14,6 @@ namespace Attendance.Models
         public DateTime To { get; set; }
         public string ReasonOfAbsence { get; set; }
         public bool IsApproved { get; set; }
-
         public int UserId { get; set; }
         public User User { get; set; }
     }

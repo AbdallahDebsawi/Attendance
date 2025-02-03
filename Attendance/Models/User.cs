@@ -16,15 +16,10 @@ namespace Attendance.Models
         public string Gender { get; set; }
         public decimal Salary { get; set; }
         public DateTime JoinDate { get; set; }
-        public DateTime LeftDate { get; set; }
-
-        public int RoleId { get; set; }
-        public Role Role { get; set; }
-
+        public DateTime? LeftDate { get; set; }
+        public int? RoleId { get; set; }
         public int DepartmentId { get; set; }
         public Department Department { get; set; }
-
-        public int RequestId { get; set; }
         public IList<Request> Requests { get; set; }
 
 
