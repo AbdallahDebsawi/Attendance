@@ -199,9 +199,14 @@
     <Compile Include="Migrations\202502030926021_Edit USER MODEL.designer.cs">
       <DependentUpon>202502030926021_Edit USER MODEL.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202502031001186_added login dto.cs" />
+    <Compile Include="Migrations\202502031001186_added login dto.designer.cs">
+      <DependentUpon>202502031001186_added login dto.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AttendanceUser.cs" />
     <Compile Include="Models\Department.cs" />
+    <Compile Include="Models\dto%27s\LoginDto.cs" />
     <Compile Include="Models\Interfaces\IAttendance.cs" />
     <Compile Include="Models\Request.cs" />
     <Compile Include="Models\SharedProp\Audit.cs" />
@@ -310,6 +315,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202502030926021_Edit USER MODEL.resx">
       <DependentUpon>202502030926021_Edit USER MODEL.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202502031001186_added login dto.resx">
+      <DependentUpon>202502031001186_added login dto.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Collections.Generic;
+using Attendance.Models.dto_s;
 
 namespace Attendance.Controllers
 {
@@ -90,11 +91,16 @@ namespace Attendance.Controllers
 
         [HttpPost]
         [Route("api/user/login")]
-        public IHttpActionResult Login(string email, string password)
+        public IHttpActionResult Login(LoginDto loginRequest)
         {
             try
             {
-                var user = db.Users.SingleOrDefault(u => u.Email == email && u.Password == password && !u.IsDeleted);
+                if (loginRequest == null || string.IsNullOrEmpty(loginRequest.Email) || string.IsNullOrEmpty(loginRequest.Password))
+                {
+                    return Content(HttpStatusCode.BadRequest, new { Message = "Invalid email or password." });
+                }
+
+                var user = db.Users.SingleOrDefault(u => u.Email == loginRequest.Email && u.Password == loginRequest.Password && !u.IsDeleted);
 
                 if (user == null)
                 {
@@ -109,23 +115,27 @@ namespace Attendance.Controllers
             }
         }
 
+
         [HttpPut]
         [Route("api/user/{id}")]
         public IHttpActionResult UpdateUser(int id, User user)
         {
             try
             {
+                // Check if the user object is null or if there's an ID mismatch
                 if (user == null || id != user.Id)
                 {
                     return Content(HttpStatusCode.BadRequest, new { Message = "Invalid user data or ID mismatch." });
                 }
 
+                // Fetch the user from the database by id
                 var existingUser = db.Users.SingleOrDefault(u => u.Id == id && !u.IsDeleted);
                 if (existingUser == null)
                 {
                     return Content(HttpStatusCode.NotFound, new { Message = $"User with ID {id} not found." });
                 }
 
+                // Update the properties that should change
                 existingUser.Name = user.Name;
                 existingUser.Email = user.Email;
                 existingUser.Password = user.Password;
@@ -133,17 +143,23 @@ namespace Attendance.Controllers
                 existingUser.Salary = user.Salary;
                 existingUser.RoleId = user.RoleId;
                 existingUser.DepartmentId = user.DepartmentId;
+
+                // Update the ModificationDate only
                 existingUser.ModificationDate = DateTime.UtcNow;
 
+                // Save the changes to the database
                 db.SaveChanges();
 
+                // Return a success message with the updated user data
                 return Ok(new { Message = "User updated successfully.", Data = existingUser });
             }
             catch (Exception ex)
             {
+                // Return an error message in case of an exception
                 return Content(HttpStatusCode.InternalServerError, new { Message = "An error occurred while updating the user.", Error = ex.Message });
             }
         }
+
 
         [HttpDelete]
         [Route("api/user/{id}")]
