@@ -222,13 +222,9 @@
     <Compile Include="Migrations\202502031001186_added login dto.designer.cs">
       <DependentUpon>202502031001186_added login dto.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202502030930041_fixAttendanceModel.cs" />
-    <Compile Include="Migrations\202502030930041_fixAttendanceModel.designer.cs">
-      <DependentUpon>202502030930041_fixAttendanceModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202502030955231_editAttendanceModel.cs" />
-    <Compile Include="Migrations\202502030955231_editAttendanceModel.designer.cs">
-      <DependentUpon>202502030955231_editAttendanceModel.cs</DependentUpon>
+    <Compile Include="Migrations\202502040749506_amer.cs" />
+    <Compile Include="Migrations\202502040749506_amer.designer.cs">
+      <DependentUpon>202502040749506_amer.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\202502040744128_mergeMigrations.cs" />
     <Compile Include="Migrations\202502040744128_mergeMigrations.designer.cs">
@@ -351,11 +347,8 @@
     <EmbeddedResource Include="Migrations\202502031001186_added login dto.resx">
       <DependentUpon>202502031001186_added login dto.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202502030930041_fixAttendanceModel.resx">
-      <DependentUpon>202502030930041_fixAttendanceModel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202502030955231_editAttendanceModel.resx">
-      <DependentUpon>202502030955231_editAttendanceModel.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202502040749506_amer.resx">
+      <DependentUpon>202502040749506_amer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202502040744128_mergeMigrations.resx">
       <DependentUpon>202502040744128_mergeMigrations.cs</DependentUpon>
