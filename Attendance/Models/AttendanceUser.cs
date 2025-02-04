@@ -13,7 +13,7 @@ namespace Attendance.Models
         public DateTime CheckIn { get; set; }
         public DateTime? CheckOut { get; set; }
         public string Status { get; set; }
-        public TimeSpan WorkingHours  {  get; set; }
+        public double? WorkingHours  {  get; set; }
 
         public int UserId { get; set; }
         public User User { get; set; }

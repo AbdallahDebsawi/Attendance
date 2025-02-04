@@ -1,0 +1,8 @@
+<p>Dashboard / Attendance</p>
+<div style="padding: 2%">
+<app-control
+  [displayedColumns]="['Id', 'CheckIn', 'CheckOut', 'Status', 'WorkingHours']"
+  [dataSource]="attendanceRecords"
+  [tableTitle]="'Attendance History'">
+</app-control>
+</div>

@@ -222,10 +222,6 @@
     <Compile Include="Migrations\202502031001186_added login dto.designer.cs">
       <DependentUpon>202502031001186_added login dto.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202502031152216_update.cs" />
-    <Compile Include="Migrations\202502031152216_update.designer.cs">
-      <DependentUpon>202502031152216_update.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AttendanceUser.cs" />
     <Compile Include="Models\Department.cs" />
@@ -342,9 +338,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202502031001186_added login dto.resx">
       <DependentUpon>202502031001186_added login dto.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202502031152216_update.resx">
-      <DependentUpon>202502031152216_update.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

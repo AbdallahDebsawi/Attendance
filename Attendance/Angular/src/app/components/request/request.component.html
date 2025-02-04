@@ -1,4 +1,18 @@
-<p>{{ pageTitle }}</p>
+<p>Dashboard / Requests</p>
 <div style="padding: 2%">
-  <app-control [from]="from"></app-control>
+  <app-control
+    [displayedColumns]="[
+      'name',
+      'duration',
+      'startDate',
+      'endDate',
+      'type',
+      'reason',
+      'managerStatus',
+      'hrStatus'
+    ]"
+    [dataSource]="leaveRequests"
+    [tableTitle]="'Request History'"
+  >
+  </app-control>
 </div>
