@@ -50,6 +50,15 @@
             <a routerLink="/employee">Employees</a>
             <!-- <span>Request</span> -->
           </div>
+          <div class="option-item" *ngIf="role !== 'hr'">
+            <img
+              src="../../../assets/images/employee.png"
+              alt="Employee Icon"
+              class="option-icon"
+            />
+            <a routerLink="/attendance">Your Attendance</a>
+            <!-- <span>Request</span> -->
+          </div>
           <!-- Request Option -->
           <div class="option-item">
             <img
@@ -69,21 +78,22 @@
         </div>
         <div class="attendance-options">
           <!-- Check In Button -->
-          <button class="attendance-button">
+          <!-- Merged Check In / Check Out Button -->
+          <button class="attendance-button" (click)="toggleCheckInOut()">
             <img
               src="../../../assets/images/check.png"
-              alt="Check In Icon"
+              alt="Check Icon"
               class="attendance-icon"
             />
-            Check In
+            {{ attendanceStatus === "CheckedIn" ? "Check Out" : "Check In" }}
           </button>
+
           <!-- Check Out Button -->
-          <!-- <button class="attendance-button">
-            <img
-              src="../../../assets/images/check.png"
-              alt="Check Out Icon"
-              class="attendance-icon"
-            />
+          <!-- <button
+            class="attendance-button"
+            *ngIf="attendanceStatus === 'CheckedIn'"
+            (click)="checkOut()">
+            <img src="../../../assets/images/check.png" alt="Check Out Icon" class="attendance-icon" />
             Check Out
           </button> -->
         </div>

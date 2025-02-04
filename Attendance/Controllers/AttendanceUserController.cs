@@ -11,18 +11,14 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 
 namespace Attendance.Controllers
 {
     public class AttendanceUserController : ApiController
     {
-        //private readonly AttendanceDb _context;
         private AttendanceDb db = new AttendanceDb();
 
-        //public AttendanceUserController(AttendanceDb context)
-        //{
-        //    _context = context;
-        //}
         // POST: api/AttendanceUser
         [HttpPost]
         public async Task<IHttpActionResult> PostAttendanceUser([FromBody] AttendanceUser attendanceUser)
@@ -35,6 +31,7 @@ namespace Attendance.Controllers
             // Ensure CheckOut and WorkingHours are nullable during creation
             attendanceUser.CheckOut = null;
             attendanceUser.WorkingHours = null;
+            attendanceUser.IsDeleted = false; // Ensure new records are not marked as deleted
 
             // Check if the User exists before adding attendance
             var userExists = await db.Users.AnyAsync(u => u.Id == attendanceUser.UserId);
@@ -58,7 +55,8 @@ namespace Attendance.Controllers
                 return BadRequest("Invalid attendance data.");
             }
 
-            var existingAttendanceUser = await db.AttendanceUsers.FindAsync(id);
+            var existingAttendanceUser = await db.AttendanceUsers.Where(a => !a.IsDeleted) // Ensure we are updating only non-deleted records
+                                                 .FirstOrDefaultAsync(a => a.Id == id);
 
             if (existingAttendanceUser == null)
             {
@@ -89,14 +87,18 @@ namespace Attendance.Controllers
             db.Entry(existingAttendanceUser).State = EntityState.Modified;
             await db.SaveChangesAsync();
 
-            return StatusCode(System.Net.HttpStatusCode.NoContent);
+            return Ok(existingAttendanceUser);
         }
 
         // GET: api/AttendanceUser
         [HttpGet]
         public async Task<IHttpActionResult> GetAttendanceUsers()
         {
-            var attendanceUsers = await db.AttendanceUsers.ToListAsync();
+            // Fetch only non-deleted records
+            var attendanceUsers = await db.AttendanceUsers
+                                          .Where(a => !a.IsDeleted) // Exclude soft-deleted records
+                                          .ToListAsync();
+
             return Ok(attendanceUsers);
         }
 
@@ -104,7 +106,10 @@ namespace Attendance.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetAttendanceUserById(int id)
         {
-            var attendanceUser = await db.AttendanceUsers.FindAsync(id);
+            // Fetch only non-deleted record by id
+            var attendanceUser = await db.AttendanceUsers
+                                         .Where(a => !a.IsDeleted) // Exclude soft-deleted records
+                                         .FirstOrDefaultAsync(a => a.Id == id);
 
             if (attendanceUser == null)
             {
@@ -118,19 +123,67 @@ namespace Attendance.Controllers
         [HttpDelete]
         public async Task<IHttpActionResult> DeleteAttendanceUser(int id)
         {
-            var attendanceUser = await db.AttendanceUsers.FindAsync(id);
+            var attendanceUser = await db.AttendanceUsers
+                                         .Where(a => !a.IsDeleted) // Ensure we're not deleting already soft-deleted records
+                                         .FirstOrDefaultAsync(a => a.Id == id);
 
             if (attendanceUser == null)
             {
                 return NotFound();
             }
 
-            db.AttendanceUsers.Remove(attendanceUser);
+            // Perform soft delete by setting IsDeleted to true
+            attendanceUser.IsDeleted = true;
+
+            // Mark the entity as modified
+            db.Entry(attendanceUser).State = EntityState.Modified;
+
+            // Save changes to the database
             await db.SaveChangesAsync();
 
             return StatusCode(System.Net.HttpStatusCode.NoContent);
         }
+        //  Get today's attendance record for a user
+        [HttpGet]
+        [Route("api/AttendanceUser/user/{userId}/date/{date}")]
+        [ResponseType(typeof(AttendanceUser))]
+        public async Task<IHttpActionResult> GetUserAttendanceByDate(int userId, string date)
+        {
+            if (!DateTime.TryParse(date, out DateTime parsedDate))
+            {
+                return BadRequest("Invalid date format.");
+            }
 
+            var attendance = await db.AttendanceUsers
+                .Where(a => a.UserId == userId && DbFunctions.TruncateTime(a.CheckIn) == parsedDate.Date && !a.IsDeleted)
+                .FirstOrDefaultAsync();
+
+            if (attendance == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(attendance);
+        }
+
+        //  Get the latest attendance record for a user
+        [HttpGet]
+        [Route("api/AttendanceUser/user/{userId}/last")]
+        [ResponseType(typeof(AttendanceUser))]
+        public async Task<IHttpActionResult> GetLastAttendanceForUser(int userId)
+        {
+            var latestAttendance = await db.AttendanceUsers
+                .Where(a => a.UserId == userId && !a.IsDeleted)
+                .OrderByDescending(a => a.CheckIn)
+                .FirstOrDefaultAsync();
+
+            if (latestAttendance == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(latestAttendance);
+        }
         //   private AttendanceDb db = new AttendanceDb();
 
 

@@ -26,6 +26,9 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { RequestEntryComponent } from './components/request/request-entry/request-entry.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { AttendanceService } from './services/attendance.service';
+import { EmployeesComponent } from './components/employees/employees.component';
+import { AttendanceComponent } from './components/attendance/attendance.component';
 // import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
@@ -38,6 +41,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     ControlComponent,
     RegisterComponent,
     RequestEntryComponent,
+    EmployeesComponent,
+    AttendanceComponent,
   ],
   imports: [
     BrowserModule,
@@ -58,10 +63,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     FormsModule,
     ReactiveFormsModule,
     CanvasJSAngularChartsModule,
-    MatDatepickerModule
+    MatDatepickerModule,
     // MatProgressBarModule,
   ],
-  providers: [],
+  providers: [AttendanceService],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
