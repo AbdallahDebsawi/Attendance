@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ServiceApiService } from 'src/app/Service/service-api.service';
+import { RequestEntryComponent } from './request-entry/request-entry.component';
 
 @Component({
   selector: 'app-request',
   templateUrl: './request.component.html',
-  styleUrls: ['./request.component.css'],
+  styleUrls: ['./request.component.css']
 })
 export class RequestComponent implements OnInit {
   pageTitle: string = '';
@@ -61,26 +63,23 @@ export class RequestComponent implements OnInit {
       hrStatus: 'Pending',
     },
   ];
-  constructor(private router: Router) {}
+  constructor() {}
 
   ngOnInit() {
-    // this.updateTitleBasedOnRoute();
+  //this.updateTitleBasedOnRoute();
   }
 
-  updateTitleBasedOnRoute() {
-    const currentPath = this.router.url.split('/').pop(); // Get the last part of the URL
-    if (currentPath === 'request') {
-      this.pageTitle = 'Dashboard / Requests';
-      this.from = 'request';
-    } else if (currentPath === 'employee') {
-      this.pageTitle = 'Dashboard / Employees';
-      this.from = 'employee';
-    } else if (currentPath === 'attendance') {
-      this.pageTitle = 'Dashboard / Attendance';
-      this.from = 'attendance';
-    } else {
-      this.pageTitle = 'Dashboard';
-      this.from = '';
-    }
-  }
+  // updateTitleBasedOnRoute() {
+  //   const currentPath = this.router.url.split('/').pop(); // Get the last part of the URL
+  //   if (currentPath === 'request') {
+  //     this.pageTitle = 'Dashboard / Requests';
+  //     this.from = 'request';
+  //   } else if (currentPath === 'employee') {
+  //     this.pageTitle = 'Dashboard / Employees';
+  //     this.from = 'employee';
+  //   } else {
+  //     this.pageTitle = 'Dashboard';
+  //     this.from = '';
+  //   }
+  // }
 }

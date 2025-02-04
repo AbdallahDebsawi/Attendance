@@ -1,44 +1,119 @@
 <h1 mat-dialog-title>Create New Employee</h1>
 <div mat-dialog-content>
-  <form>
-    <mat-form-field appearance="fill">
-      <mat-label>First Name</mat-label>
-      <input matInput formControlName="firstName" />
-    </mat-form-field>
+  <form [formGroup]="userForm">
+    
+    <!-- First Name & Last Name -->
+    <div style="display: flex; gap: 10px;">
+      <div style="flex: 1;">
+        <label>First Name</label>
+        <mat-form-field appearance="fill" style="width: 100%;">
+          <input matInput formControlName="firstName" />
+        </mat-form-field>
+      </div>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Last Name</mat-label>
-      <input matInput formControlName="lastName" />
-    </mat-form-field>
+      <div style="flex: 1;">
+        <label>Last Name</label>
+        <mat-form-field appearance="fill" style="width: 100%;">
+          <input matInput formControlName="lastName" />
+        </mat-form-field>
+      </div>
+    </div>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Email</mat-label>
-      <input matInput type="email" formControlName="email" />
-    </mat-form-field>
+    <!-- Email & Password -->
+    <div style="display: flex; gap: 10px;">
+      <div style="flex: 1;">
+        <label>Email</label>
+        <mat-form-field appearance="fill" style="width: 100%;">
+          <input matInput type="email" formControlName="email" />
+        </mat-form-field>
+      </div>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Phone Number</mat-label>
-      <input matInput  type="number" formControlName="phoneNumber" />
-    </mat-form-field>
+      <div style="flex: 1;">
+        <label>Password</label>
+        <mat-form-field appearance="fill" style="width: 100%;">
+          <input matInput type="password" formControlName="password" />
+        </mat-form-field>
+      </div>
+    </div>
 
-    <mat-form-field appearance="fill">
-        <mat-label>Password</mat-label>
-        <input matInput  type="password" formControlName="password" />
+    <!-- Gender & Department -->
+    <div style="display: flex; gap: 10px;">
+      <div style="flex: 1;">
+        <label>Gender</label>
+        <mat-form-field appearance="fill" style="width: 100%;">
+          <mat-select formControlName="gender">
+            <mat-option value="male">Male</mat-option>
+            <mat-option value="female">Female</mat-option>
+            <mat-option value="other">Other</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div style="flex: 1;">
+        <label>Department</label>
+        <mat-form-field appearance="fill" style="width: 100%;">
+          <mat-select formControlName="department">
+            <mat-option value="hr">HR</mat-option>
+            <mat-option value="engineering">Engineering</mat-option>
+            <mat-option value="sales">Sales</mat-option>
+            <mat-option value="marketing">Marketing</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Manager ID & Salary -->
+    <div style="display: flex; gap: 10px;">
+      <div style="flex: 1;">
+        <label>Manager ID</label>
+        <mat-form-field appearance="fill" style="width: 100%;">
+          <input matInput type="number" formControlName="managerId" />
+        </mat-form-field>
+      </div>
+
+      <div style="flex: 1;">
+        <label>Salary</label>
+        <mat-form-field appearance="fill" style="width: 100%;">
+          <input matInput type="number" formControlName="salary" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Role & Phone Number -->
+    <div style="display: flex; gap: 10px;">
+      <div style="flex: 1;">
+        <label>Role</label>
+        <mat-form-field appearance="fill" style="width: 100%;">
+          <mat-select formControlName="role">
+            <mat-option *ngFor="let role of roles" [value]="role">{{ role }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div style="flex: 1;">
+        <label>Phone Number</label>
+        <mat-form-field appearance="fill" style="width: 100%;">
+          <input matInput type="number" formControlName="phoneNumber" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Join Date -->
+    <div>
+      <label>Join Date</label>
+      <mat-form-field appearance="fill" style="width: 100%;">
+        <input matInput [matDatepicker]="picker" formControlName="joinDate">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Confirm Password</mat-label>
-        <input matInput  type="password" formControlName="confirmPassword" />
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Join Date</mat-label>
-        <input matInput  type="date" formControlName="joinDate" />
-      </mat-form-field>
+    </div>
+    
   </form>
 </div>
-<div mat-dialog-actions>
-  <button mat-button (click)="close()">Cancel</button>
-  <button mat-button color="primary">Save</button>
-</div>
 
+<!-- Action Buttons -->
+<div mat-dialog-actions style="display: flex; justify-content: space-between;">
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button color="primary" (click)="save()" >Save</button>
+</div>
+<!-- [disabled]="!userForm.valid" -->
