@@ -1,14 +1,13 @@
-﻿using Attendance.Models.SharedProp;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Attendance.Models
+namespace Attendance.Models.ViewModel
 {
-    public class Request : Audit
+    public class RequestViewModel
     {
-        public int Id { get; set; }
         public string TypeOfAbsence { get; set; }
         public DateTime From { get; set; }
         public DateTime To { get; set; }
