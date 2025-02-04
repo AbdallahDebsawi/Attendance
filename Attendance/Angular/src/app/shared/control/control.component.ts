@@ -6,7 +6,7 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./control.component.css'],
 })
 export class ControlComponent implements OnInit {
-  role: string = 'employee';
+  role: string = 'hr';
   @Input() displayedColumns: string[] = [];
   @Input() dataSource: any[] = [];
   @Input() tableTitle: string = '';

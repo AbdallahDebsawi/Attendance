@@ -1,8 +1,8 @@
 <p>Dashboard / Employees</p>
 <div style="padding: 2%">
  <app-control
-  [displayedColumns]="['name', 'department', 'jobTitle', 'startDate', 'gender']"
-  [dataSource]="employeeList"
+ [displayedColumns]="['Id','Name', 'ManagerId', 'Email', 'Gender', 'Salary', 'JoinDate', 'RoleId', 'DepartmentId']"
+ [dataSource]="employeeList"
   [tableTitle]="'Employee List'">
 </app-control>
 </div>

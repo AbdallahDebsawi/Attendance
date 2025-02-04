@@ -11,7 +11,7 @@ import { Attendance } from '../models/attendance';
   styleUrls: ['./layout.component.css'],
 })
 export class LayoutComponent implements OnInit {
-  role = 'employee';
+  role = 'hr';
   userId: number = 8;
   attendanceId?: number | null = null;
   attendanceStatus: string = '';
@@ -48,7 +48,7 @@ export class LayoutComponent implements OnInit {
     });
   }
 
-  
+
   toggleCheckInOut() {
     const currentTime = new Date();
     const todayDate = currentTime.toISOString().split('T')[0];
