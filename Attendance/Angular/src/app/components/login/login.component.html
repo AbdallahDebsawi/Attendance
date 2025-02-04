@@ -1,23 +1,35 @@
-
 <div class="container">
   <div class="left-section">
     <div>
       <div class="login-card-title">Login</div>
       <p class="login-description">Login to your account</p>
-      <form>
+      <form (ngSubmit)="signIn()"> <!-- Add ngSubmit to call signIn method on form submission -->
         <div>
           <label>E-mail Address</label>
-          <input class="form-field" type="email" placeholder="" />
+          <input 
+            class="form-field" 
+            type="email" 
+            [(ngModel)]="email" 
+            name="email" 
+            placeholder="Enter your email" 
+            required 
+          />
         </div>
         <div>
           <label>Password</label>
-          <input class="form-field" type="password" placeholder="" />
+          <input 
+            class="form-field" 
+            type="password" 
+            [(ngModel)]="password" 
+            name="password" 
+            placeholder="Enter your password" 
+            required 
+          />
         </div>
 
-        <button class="login-button" (click)="signIn()">Sign In</button>
+        <button type="submit" class="login-button">Sign In</button>
       </form>
     </div>
-
   </div>
   <div class="right-section">
     <img src="assets/images/login.png" alt="Login" class="login-image" />
@@ -29,4 +41,3 @@
     </div>
   </div>
 </div>
-

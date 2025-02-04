@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { RegisterComponent } from '../register/register.component';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,13 +9,28 @@ import { Router } from '@angular/router';
   encapsulation: ViewEncapsulation.None,
 })
 export class LoginComponent implements OnInit {
-  constructor(public dialog: MatDialog, private router: Router) {}
+  email: string = '';
+  password: string = '';
+
+  constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {}
-  createUser(): void {
-    this.dialog.open(RegisterComponent);
-  }
+
   signIn() {
-    this.router.navigate(['/dashboard'], { replaceUrl: true });
+    const loginData = {
+      email: this.email,
+      password: this.password
+    };
+  
+    this.http.post('https://localhost:44323/api/user/login', loginData).subscribe(
+      (response: any) => {
+        if (response) {
+          this.router.navigate(['/dashboard']);
+        }
+      },
+      (error) => {
+        alert(error.error?.Message || 'Invalid email or password');
+      }
+    );
   }
 }
