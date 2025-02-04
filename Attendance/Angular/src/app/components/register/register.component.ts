@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Role } from 'src/app/enums/role';
+
 
 @Component({
   selector: 'app-register',
@@ -9,6 +11,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 })
 export class RegisterComponent implements OnInit {
   userForm: FormGroup;
+  roles = Object.values(Role)
 
   constructor(
     private fb: FormBuilder,
@@ -20,9 +23,14 @@ export class RegisterComponent implements OnInit {
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
+      salary: ['',Validators.required],
+      gender :['' ,Validators.required],
+      department : ['' , Validators.required],
+      role: ['',Validators.required],
       confirmPassword: ['', Validators.required],
       phoneNumber: ['', Validators.required],
       joinDate: ['', Validators.required],
+      managerId :['',Validators.required]
     });
   }
 

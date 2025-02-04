@@ -10,11 +10,8 @@ namespace Attendance
     {
         public static void Register(HttpConfiguration config)
         {
-            // Web API configuration and services
-            // Enable CORS for all origins, methods, and headers
-            var cors = new EnableCorsAttribute("*", "*", "*");
+            var cors = new EnableCorsAttribute("http://localhost:4200", "*", "*");
             config.EnableCors(cors);
-            // Web API routes
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(

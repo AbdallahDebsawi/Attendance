@@ -1,0 +1,43 @@
+.dialog-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+  }
+  
+  .dialog-subtitle {
+    text-align: center;
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+  
+  .date-container {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+  }
+  
+  .date-picker {
+    flex: 1;
+  }
+  
+  .file-upload-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .file-upload {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .dialog-actions {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  

@@ -29,6 +29,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { AttendanceService } from './services/attendance.service';
 import { EmployeesComponent } from './components/employees/employees.component';
 import { AttendanceComponent } from './components/attendance/attendance.component';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
 // import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
@@ -65,6 +67,9 @@ import { AttendanceComponent } from './components/attendance/attendance.componen
     CanvasJSAngularChartsModule,
     MatDatepickerModule,
     // MatProgressBarModule,
+    MatNativeDateModule,
+    MatSelectModule
+    
   ],
   providers: [AttendanceService],
   bootstrap: [AppComponent],
