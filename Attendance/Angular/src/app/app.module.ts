@@ -31,6 +31,7 @@ import { EmployeesComponent } from './components/employees/employees.component';
 import { AttendanceComponent } from './components/attendance/attendance.component';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
+import { MatMenuModule } from '@angular/material/menu';
 // import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
@@ -68,7 +69,9 @@ import { MatSelectModule } from '@angular/material/select';
     MatDatepickerModule,
     // MatProgressBarModule,
     MatNativeDateModule,
-    MatSelectModule
+    MatSelectModule,
+    MatMenuModule,
+    MatIconModule
     
   ],
   providers: [AttendanceService],

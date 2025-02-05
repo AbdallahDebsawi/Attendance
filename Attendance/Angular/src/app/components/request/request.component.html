@@ -1,4 +1,10 @@
 <p>Dashboard / Requests</p>
 <div style="padding: 2%">
-  <app-control></app-control>
+  <app-control
+    [role]="'employee'"
+    [from]="'request'"
+    [displayedColumns] ="displayedColumns"
+    [dataSource]="requestList"
+    [tableTitle]="'Requests List'">
+  </app-control>
 </div>
