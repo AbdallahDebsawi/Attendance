@@ -1,119 +1,148 @@
-<h1 mat-dialog-title>Create New Employee</h1>
-<div mat-dialog-content>
-  <form [formGroup]="userForm">
+<h2 mat-dialog-title>{{ data?.Id ? 'Edit User' : 'Register User' }}</h2>
+
+<form [formGroup]="userForm" (ngSubmit)="save()">
+  <mat-dialog-content class="mat-typography">
+
+    <!-- First Name -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>First Name</mat-label>
+      <input matInput formControlName="firstName" required>
+      <mat-error *ngIf="userForm.get('firstName')?.hasError('required')">
+        First Name is required
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Last Name -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Last Name</mat-label>
+      <input matInput formControlName="lastName" required>
+      <mat-error *ngIf="userForm.get('lastName')?.hasError('required')">
+        Last Name is required
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Email -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email" required>
+      <mat-error *ngIf="userForm.get('email')?.hasError('required')">
+        Email is required
+      </mat-error>
+      <mat-error *ngIf="userForm.get('email')?.hasError('email')">
+        Enter a valid email
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Password -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Password</mat-label>
+      <input matInput type="password" formControlName="password" required>
+      <mat-error *ngIf="userForm.get('password')?.hasError('required')">
+        Password is required
+      </mat-error>
+    </mat-form-field>
     
-    <!-- First Name & Last Name -->
-    <div style="display: flex; gap: 10px;">
-      <div style="flex: 1;">
-        <label>First Name</label>
-        <mat-form-field appearance="fill" style="width: 100%;">
-          <input matInput formControlName="firstName" />
-        </mat-form-field>
-      </div>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Confirm Password</mat-label>
+      <input matInput type="password" formControlName="confirmPassword" required>
+      <mat-error *ngIf="userForm.get('confirmPassword')?.hasError('required')">
+        Confirm Password is required
+      </mat-error>
+      <mat-error *ngIf="userForm.get('confirmPassword')?.hasError('passwordMismatch')">
+        Passwords do not match
+      </mat-error>
+    </mat-form-field>
 
-      <div style="flex: 1;">
-        <label>Last Name</label>
-        <mat-form-field appearance="fill" style="width: 100%;">
-          <input matInput formControlName="lastName" />
-        </mat-form-field>
-      </div>
-    </div>
+    <!-- Phone Number -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Phone Number</mat-label>
+      <input matInput type="tel" formControlName="phoneNumber" required>
+      <mat-error *ngIf="userForm.get('phoneNumber')?.hasError('required')">
+        Phone Number is required
+      </mat-error>
+    </mat-form-field>
 
-    <!-- Email & Password -->
-    <div style="display: flex; gap: 10px;">
-      <div style="flex: 1;">
-        <label>Email</label>
-        <mat-form-field appearance="fill" style="width: 100%;">
-          <input matInput type="email" formControlName="email" />
-        </mat-form-field>
-      </div>
+    <!-- Salary -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Salary</mat-label>
+      <input matInput type="number" formControlName="salary" required>
+      <mat-error *ngIf="userForm.get('salary')?.hasError('required')">
+        Salary is required
+      </mat-error>
+    </mat-form-field>
 
-      <div style="flex: 1;">
-        <label>Password</label>
-        <mat-form-field appearance="fill" style="width: 100%;">
-          <input matInput type="password" formControlName="password" />
-        </mat-form-field>
-      </div>
-    </div>
+    <!-- Gender -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Gender</mat-label>
+      <mat-select formControlName="gender" required>
+        <mat-option value="Male">Male</mat-option>
+        <mat-option value="Female">Female</mat-option>
+      </mat-select>
+      <mat-error *ngIf="userForm.get('gender')?.hasError('required')">
+        Gender is required
+      </mat-error>
+    </mat-form-field>
 
-    <!-- Gender & Department -->
-    <div style="display: flex; gap: 10px;">
-      <div style="flex: 1;">
-        <label>Gender</label>
-        <mat-form-field appearance="fill" style="width: 100%;">
-          <mat-select formControlName="gender">
-            <mat-option value="male">Male</mat-option>
-            <mat-option value="female">Female</mat-option>
-            <mat-option value="other">Other</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
+    <!-- Role -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Role</mat-label>
+      <mat-select formControlName="role" required>
+        <mat-option *ngFor="let role of roles" [value]="role">
+          {{ role }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="userForm.get('role')?.hasError('required')">
+        Role is required
+      </mat-error>
+    </mat-form-field>
 
-      <div style="flex: 1;">
-        <label>Department</label>
-        <mat-form-field appearance="fill" style="width: 100%;">
-          <mat-select formControlName="department">
-            <mat-option value="hr">HR</mat-option>
-            <mat-option value="engineering">Engineering</mat-option>
-            <mat-option value="sales">Sales</mat-option>
-            <mat-option value="marketing">Marketing</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-
-    <!-- Manager ID & Salary -->
-    <div style="display: flex; gap: 10px;">
-      <div style="flex: 1;">
-        <label>Manager ID</label>
-        <mat-form-field appearance="fill" style="width: 100%;">
-          <input matInput type="number" formControlName="managerId" />
-        </mat-form-field>
-      </div>
-
-      <div style="flex: 1;">
-        <label>Salary</label>
-        <mat-form-field appearance="fill" style="width: 100%;">
-          <input matInput type="number" formControlName="salary" />
-        </mat-form-field>
-      </div>
-    </div>
-
-    <!-- Role & Phone Number -->
-    <div style="display: flex; gap: 10px;">
-      <div style="flex: 1;">
-        <label>Role</label>
-        <mat-form-field appearance="fill" style="width: 100%;">
-          <mat-select formControlName="role">
-            <mat-option *ngFor="let role of roles" [value]="role">{{ role }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <div style="flex: 1;">
-        <label>Phone Number</label>
-        <mat-form-field appearance="fill" style="width: 100%;">
-          <input matInput type="number" formControlName="phoneNumber" />
-        </mat-form-field>
-      </div>
-    </div>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Department</mat-label>
+      <mat-select formControlName="department" required>
+        <mat-option value="" disabled>Select Department</mat-option> <!-- Added default empty value -->
+        <mat-option *ngFor="let dept of departments" [value]="dept.Id">
+          {{ dept.DepartmentName }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="userForm.get('department')?.hasError('required')">
+        Department is required
+      </mat-error>
+    </mat-form-field>
+    
+    <!-- Manager -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Manager</mat-label>
+      <mat-select formControlName="managerId">
+        <!-- Add an empty option for null/empty value -->
+        <mat-option value="">None</mat-option>
+    
+        <!-- Display options with manager IDs -->
+        <mat-option *ngFor="let manager of managers" [value]="manager.Id">
+          {{ manager.Id }}  <!-- Display manager's ID -->
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="userForm.get('managerId')?.hasError('required')">
+        Manager is required
+      </mat-error>
+    </mat-form-field>
+    
+    
 
     <!-- Join Date -->
-    <div>
-      <label>Join Date</label>
-      <mat-form-field appearance="fill" style="width: 100%;">
-        <input matInput [matDatepicker]="picker" formControlName="joinDate">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-    </div>
-    
-  </form>
-</div>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Join Date</mat-label>
+      <input matInput type="date" formControlName="joinDate" required>
+      <mat-error *ngIf="userForm.get('joinDate')?.hasError('required')">
+        Join Date is required
+      </mat-error>
+    </mat-form-field>
 
-<!-- Action Buttons -->
-<div mat-dialog-actions style="display: flex; justify-content: space-between;">
-  <button mat-button (click)="close()">Cancel</button>
-  <button mat-button color="primary" (click)="save()" >Save</button>
-</div>
-<!-- [disabled]="!userForm.valid" -->
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="close()">Cancel</button>
+    <button mat-button color="primary" type="submit" [disabled]="userForm.invalid">
+      {{ data?.Id ? 'Update' : 'Register' }}
+    </button>
+  </mat-dialog-actions>
+</form>

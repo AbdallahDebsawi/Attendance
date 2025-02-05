@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Collections.Generic;
 using Attendance.Models.dto_s;
+using Attendance.Models.Enums;
 
 namespace Attendance.Controllers
 {
@@ -185,5 +186,22 @@ namespace Attendance.Controllers
                 return Content(HttpStatusCode.InternalServerError, new { Message = "An error occurred while deleting the user.", Error = ex.Message });
             }
         }
+
+        [HttpGet]
+        [Route("api/user/GetManagers")]
+        public IHttpActionResult GetManagers()
+        {
+            // Filter by roleId for Manager (1)
+            var managers = db.Users
+                .Where(u => u.RoleId == (int)Role.Manager) 
+                .Select(u => new { u.Id, u.Name })
+                .ToList();
+
+            return Ok(new { Success = true, Data = managers });
+        }
+
     }
+
+
+
 }

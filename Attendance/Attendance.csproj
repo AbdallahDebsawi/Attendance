@@ -289,10 +289,19 @@
     <Compile Include="Migrations\202502031136242_UpdateUser.Designer.cs">
       <DependentUpon>202502031136242_UpdateUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202502041246315_enum.cs" />
+    <Compile Include="Migrations\202502041246315_enum.designer.cs">
+      <DependentUpon>202502041246315_enum.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202502041252003_selfjoin.cs" />
+    <Compile Include="Migrations\202502041252003_selfjoin.designer.cs">
+      <DependentUpon>202502041252003_selfjoin.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AttendanceUser.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\dto%27s\LoginDto.cs" />
+    <Compile Include="Models\Enums\Role.cs" />
     <Compile Include="Models\Interfaces\IAttendance.cs" />
     <Compile Include="Models\Request.cs" />
     <Compile Include="Models\SharedProp\Audit.cs" />
@@ -415,6 +424,12 @@
     <EmbeddedResource Include="Migrations\202502031136242_UpdateUser.resx">
       <DependentUpon>202502031136242_UpdateUser.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202502041246315_enum.resx">
+      <DependentUpon>202502041246315_enum.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202502041252003_selfjoin.resx">
+      <DependentUpon>202502041252003_selfjoin.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -452,13 +467,13 @@
     <Error Condition="!Exists('packages\EntityFramework.6.5.1\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.5.1\build\EntityFramework.props'))" />
     <Error Condition="!Exists('packages\EntityFramework.6.5.1\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.5.1\build\EntityFramework.targets'))" />
   </Target>
-	<Target Name="CopyRoslynFiles" AfterTargets="AfterBuild" Condition="!$(Disable_CopyWebApplication) And '$(OutDir)' != '$(OutputPath)'">
-		<ItemGroup>
-			<RoslynFiles Include="$(CscToolPath)\*" />
-		</ItemGroup>
-		<MakeDir Directories="$(WebProjectOutputDir)\bin\roslyn" />
-		<Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(WebProjectOutputDir)\bin\roslyn" SkipUnchangedFiles="true" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
-	</Target>
+  <Target Name="CopyRoslynFiles" AfterTargets="AfterBuild" Condition="!$(Disable_CopyWebApplication) And '$(OutDir)' != '$(OutputPath)'">
+    <ItemGroup>
+      <RoslynFiles Include="$(CscToolPath)\*" />
+    </ItemGroup>
+    <MakeDir Directories="$(WebProjectOutputDir)\bin\roslyn" />
+    <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(WebProjectOutputDir)\bin\roslyn" SkipUnchangedFiles="true" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
+  </Target>
   <Import Project="packages\EntityFramework.6.5.1\build\EntityFramework.targets" Condition="Exists('packages\EntityFramework.6.5.1\build\EntityFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
