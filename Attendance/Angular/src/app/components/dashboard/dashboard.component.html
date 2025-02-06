@@ -6,16 +6,42 @@
 </div>
 <div class="dashboard-container">
   <!-- First row: Attendance Card -->
-  <div class="attendance-row">
-    <div class="attendance-card">
+  <!-- <div class="attendance-row">
+    <div class="attendance-card" *ngIf="attendance; else noAttendance">
       <div class="date">
-        <span>January 29, 2025</span>
+        <span>{{ attendance.CheckIn | date : "MMMM d, yyyy" }}</span>
       </div>
       <div class="status-time">
         <span class="entry-label">Entry Time</span>
         <div class="status-time-row">
-          <span class="status">Present on time</span>
-          <span class="time">08:30 AM</span>
+          <span class="status">{{ attendance.Status }}</span>
+          <span class="time">{{ attendance.CheckIn | date : "hh:mm a" }}</span>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noAttendance>
+      <div class="attendance-card no-attendance">
+        <p>No attendance record found.</p>
+      </div>
+    </ng-template>
+  </div> -->
+  <div class="attendance-row">
+    <div class="attendance-card">
+      <div class="date">
+        <span>{{ attendance?.CheckIn || today | date : "MMMM d, yyyy" }}</span>
+      </div>
+      <div class="status-time">
+        <span class="entry-label">Entry Time</span>
+        <div class="status-time-row">
+          <span class="status">{{
+            attendance?.Status || "Not Checked In"
+          }}</span>
+          <span class="time">{{
+            attendance?.CheckIn
+              ? (attendance!.CheckIn | date : "hh:mm a")
+              : "--:--"
+          }}</span>
         </div>
       </div>
     </div>
@@ -31,7 +57,7 @@
 
       <div class="chart-center-text">
         <div class="center-today">Today</div>
-        <div class="center-date">30 Jan</div>
+        <div class="center-date">{{ todayDate }}</div>
       </div>
 
       <div class="chart-legend">

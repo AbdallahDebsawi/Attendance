@@ -1,4 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { AttendanceService } from 'src/app/services/attendance.service';
+import { Attendance } from 'src/app/shared/models/attendance';
 
 @Component({
   selector: 'app-dashboard',
@@ -6,7 +8,14 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
-  constructor() {}
+  attendance: Attendance | null = null;
+  attendanceData: Attendance[] = [];
+  userId: number = 8;
+  today: Date = new Date();
+  todayDate: string = '';
+
+  constructor(private attendanceService: AttendanceService) {}
+
   role: string = 'hr';
   totalDays: number = 14;
   takenDays: number = 10;
@@ -47,7 +56,24 @@ export class DashboardComponent implements OnInit {
     },
   ];
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.attendanceService.currentAttendanceData.subscribe((data) => {
+      this.attendance = data;
+    });
+    this.todayDate = new Date().toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+    });
+    const year = this.today.getFullYear();
+    const month = this.today.getMonth() + 1; // Months are 0-based in JS
+
+    this.attendanceService
+      .getUserAttendanceByMonth(this.userId, year, month)
+      .subscribe((data) => {
+        this.attendanceData = data;
+        this.updateChartOptions();
+      });
+  }
 
   getProgressBarColor(type: string): string {
     switch (type) {
@@ -64,31 +90,57 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  chartOptions = {
-    animationEnabled: true,
-    title: {
-      text: 'Attendance Statistics',
-      fontSize: 22,
-    },
-    subtitles: [
-      {
-        text: 'Monthly',
-        fontSize: 16,
+  chartOptions = {};
+
+  updateChartOptions(): void {
+    const attendanceCounts = {
+      'Present On Time': 0,
+      Late: 0,
+      Absent: 0,
+      Leave: 0,
+    };
+
+    // Count occurrences of each status
+    this.attendanceData.forEach((record) => {
+      const status = record.Status?.trim() || 'Unknown';
+      if (status in attendanceCounts) {
+        attendanceCounts[status as keyof typeof attendanceCounts]++;
+      } else {
+        console.warn(`Unexpected status found: ${status}`);
+      }
+    });
+
+    this.chartOptions = {
+      animationEnabled: true,
+      title: {
+        text: 'Attendance Statistics',
+        fontSize: 22,
       },
-    ],
-    data: [
-      {
-        type: 'doughnut',
-        // yValueFormatString: "#,###.##'%'",
-        // innerRadius: '65%', // Adjust the inner radius for space inside
-        // indexLabel: '{name}: {y}%', // Labels on chart
-        dataPoints: [
-          { y: 22, name: 'Present On Time', color: '#008080' },
-          { y: 5, name: 'Present Late', color: '#EF2B1F' },
-          { y: 2, name: 'Absent', color: '#FF9600' },
-          { y: 1, name: 'Leave', color: '#1976D2' },
-        ],
-      },
-    ],
-  };
+      subtitles: [
+        {
+          text: 'Monthly',
+          fontSize: 16,
+        },
+      ],
+      data: [
+        {
+          type: 'doughnut',
+          dataPoints: [
+            {
+              y: attendanceCounts['Present On Time'],
+              name: 'Present On Time',
+              color: '#008080',
+            },
+            {
+              y: attendanceCounts['Late'],
+              name: 'Present Late',
+              color: '#EF2B1F',
+            },
+            { y: attendanceCounts['Absent'], name: 'Absent', color: '#FF9600' },
+            { y: attendanceCounts['Leave'], name: 'Leave', color: '#1976D2' },
+          ],
+        },
+      ],
+    };
+  }
 }

@@ -185,3 +185,12 @@ td.mat-cell button {
   height: 15px;
   width: 15px;
 }
+::ng-deep .custom-datepicker .mat-calendar {
+  position: absolute;
+  top: 50px;
+  /* Adjust top position as needed */
+  left: 50%;
+  /* Adjust left position as needed */
+  transform: translateX(-50%);
+  /* Center horizontally */
+}

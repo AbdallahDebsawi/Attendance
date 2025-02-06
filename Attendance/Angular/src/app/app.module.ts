@@ -30,6 +30,7 @@ import { AttendanceService } from './services/attendance.service';
 import { EmployeesComponent } from './components/employees/employees.component';
 import { AttendanceComponent } from './components/attendance/attendance.component';
 // import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { AttendanceComponent } from './components/attendance/attendance.componen
     ReactiveFormsModule,
     CanvasJSAngularChartsModule,
     MatDatepickerModule,
+    MatNativeDateModule,
     // MatProgressBarModule,
   ],
   providers: [AttendanceService],

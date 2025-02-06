@@ -2,3 +2,25 @@ p {
   padding-left: 3%;
   font-size: 20px;
 }
+::ng-deep .mat-datepicker-content {
+  position: fixed !important;
+  top: 50% !important;
+  right: 10px !important;
+  transform: translateY(-50%) !important;
+  z-index: 6000 !important;
+  max-width: 350px;
+}
+
+@media (max-width: 768px) {
+  ::ng-deep .mat-datepicker-content {
+    width: 80% !important;
+    right: 10px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  ::ng-deep .mat-datepicker-content {
+    width: 100% !important;
+    right: 5px !important;
+  }
+}

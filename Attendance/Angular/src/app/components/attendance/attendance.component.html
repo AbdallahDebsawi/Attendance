@@ -1,8 +1,34 @@
 <p>Dashboard / Attendance</p>
 <div style="padding: 2%">
-<app-control
-  [displayedColumns]="['Id', 'CheckIn', 'CheckOut', 'Status', 'WorkingHours']"
-  [dataSource]="attendanceRecords"
-  [tableTitle]="'Attendance History'">
-</app-control>
+  <app-control
+    [displayedColumns]="[
+      'Id',
+      'formattedCheckIn',
+      'formattedCheckOut',
+      'Status',
+      'WorkingHours'
+    ]"
+    [dataSource]="attendanceRecords"
+    [tableTitle]="'Attendance History'"
+    (filterClicked)="openDatePicker()"
+  >
+  </app-control>
 </div>
+>
+
+<!-- Hidden input element for MatDatepickerTrigger -->
+<input
+  matInput
+  [matDatepicker]="picker"
+  #datepickerInput
+  style="display: none"
+/>
+
+<mat-datepicker
+  #picker
+  startView="multi-year"
+  (yearSelected)="chosenYearHandler($event, picker)"
+  (monthSelected)="chosenMonthHandler($event, picker)"
+  panelClass="custom-datepicker"
+>
+</mat-datepicker>

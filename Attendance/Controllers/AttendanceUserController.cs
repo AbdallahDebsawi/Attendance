@@ -106,17 +106,102 @@ namespace Attendance.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetAttendanceUserById(int id)
         {
-            // Fetch only non-deleted record by id
-            var attendanceUser = await db.AttendanceUsers
-                                         .Where(a => !a.IsDeleted) // Exclude soft-deleted records
-                                         .FirstOrDefaultAsync(a => a.Id == id);
+                var attendanceRecords = await db.AttendanceUsers
+                    .Where(a => a.UserId == id && !a.IsDeleted)
+                    .OrderBy(a => a.CheckIn)
+                    .ToListAsync();
 
-            if (attendanceUser == null)
-            {
-                return NotFound();
-            }
+                // Dictionary to group records by date
+                var groupedRecords = attendanceRecords
+                    .GroupBy(a => a.CheckIn.Date)
+                    .ToDictionary(g => g.Key, g => g.ToList());
 
-            return Ok(attendanceUser);
+                var startDate = attendanceRecords.Min(a => a.CheckIn).Date;
+                var endDate = DateTime.Today;
+
+                var result = new List<object>();
+
+                for (var date = startDate; date <= endDate; date = date.AddDays(1))
+                {
+                    var dayRecords = groupedRecords.ContainsKey(date) ? groupedRecords[date] : new List<AttendanceUser>();
+                    List<object> recordsList = new List<object>();
+
+                    if (dayRecords.Any())
+                    {
+                        double totalHours = 0;
+                        bool breakAdded = false;
+
+                        for (int i = 0; i < dayRecords.Count; i++)
+                        {
+                            var record = dayRecords[i];
+
+                            // Determine status
+                            if (record.CheckIn.TimeOfDay < TimeSpan.FromHours(8))
+                                record.Status = "Present On Time";
+                            else
+                                record.Status = "Present Late";
+
+                            if (record.CheckOut.HasValue)
+                            {
+                                var checkOutTime = record.CheckOut.Value.TimeOfDay;
+                                if (checkOutTime < TimeSpan.FromHours(17))
+                                    record.Status = "Leave";
+                                else if (checkOutTime <= TimeSpan.FromHours(17.5))
+                                    record.Status = "Leave On Time";
+                                else
+                                    record.Status = "Over Time";
+                            }
+
+                            // Calculate working hours for this record
+                            double hoursWorked = record.CheckOut.HasValue ?
+                                (record.CheckOut.Value - record.CheckIn).TotalHours : 0;
+                            totalHours += hoursWorked;
+
+                            recordsList.Add(new
+                            {
+                                CheckIn = record.CheckIn.ToString("hh:mm tt"),
+                                CheckOut = record.CheckOut?.ToString("hh:mm tt"),
+                                Status = record.Status,
+                                WorkingHours = Math.Round(hoursWorked, 2)
+                            });
+
+                            // Add break after the first work session
+                            if (!breakAdded && record.CheckOut.HasValue && totalHours >= 4)
+                            {
+                                var breakStart = record.CheckOut.Value;
+                                var breakEnd = breakStart.AddHours(1);
+
+                                recordsList.Add(new
+                                {
+                                    CheckIn = breakStart.ToString("hh:mm tt"),
+                                    CheckOut = breakEnd.ToString("hh:mm tt"),
+                                    Status = "Break",
+                                    WorkingHours = 0
+                                });
+
+                                breakAdded = true;
+                            }
+                        }
+
+                        result.Add(new { date = date.ToString("yyyy-MM-dd"), records = recordsList, TotalWorkingHours = Math.Round(totalHours, 2) });
+                    }
+                    else
+                    {
+                        // No record found for this day, mark as Absent
+                        result.Add(new
+                        {
+                            date = date.ToString("yyyy-MM-dd"),
+                            records = new List<object>
+                {
+                    new { CheckIn = "N/A", CheckOut = "N/A", Status = "Absent", WorkingHours = 0 }
+                },
+                            TotalWorkingHours = 0
+                        });
+                    }
+                }
+
+                return Ok(result);
+            
         }
 
         // DELETE: api/AttendanceUser/{id}
@@ -184,102 +269,150 @@ namespace Attendance.Controllers
 
             return Ok(latestAttendance);
         }
-        //   private AttendanceDb db = new AttendanceDb();
+        [HttpGet]
+        [Route("api/AttendanceUser/user/{userId}/month/{year}/{month}")]
+        [ResponseType(typeof(IEnumerable<AttendanceUser>))]
+        public async Task<IHttpActionResult> GetUserAttendanceByMonth(int userId, int year, int month)
+        {
+            if (year < 1 || month < 1 || month > 12)
+            {
+                return BadRequest("Invalid year or month.");
+            }
+
+            // Start and end dates (pre-calculated)
+            var startDate = new DateTime(year, month, 1).Date;
+            var endDate = startDate.AddMonths(1); // Corrected: EF can compare directly
 
 
-        //    [HttpPost]
-        //    [Route("api/CreateAttendance")]
-        //    public IHttpActionResult Create(int id, AttendanceUser model)
+            var attendanceRecords = await db.AttendanceUsers
+                .Where(a => a.UserId == userId
+                    && !a.IsDeleted
+                    && a.CheckIn >= startDate
+                    && a.CheckIn < endDate)
+                .ToListAsync();
+
+            if (!attendanceRecords.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(attendanceRecords);
+        }
+        //[HttpGet]
+        //public async Task<IHttpActionResult> GetAttendanceUsers(int userId)
+        //{
+        //    var attendanceRecords = await db.AttendanceUsers
+        //        .Where(a => a.UserId == userId && !a.IsDeleted)
+        //        .OrderBy(a => a.CheckIn)
+        //        .ToListAsync();
+
+        //    // Dictionary to group records by date
+        //    var groupedRecords = attendanceRecords
+        //        .GroupBy(a => a.CheckIn.Date)
+        //        .ToDictionary(g => g.Key, g => g.ToList());
+
+        //    var startDate = attendanceRecords.Min(a => a.CheckIn).Date;
+        //    var endDate = DateTime.Today;
+
+        //    var result = new List<object>();
+
+        //    for (var date = startDate; date <= endDate; date = date.AddDays(1))
         //    {
-        //        AttendanceUser attendanceUser = new AttendanceUser()
+        //        var dayRecords = groupedRecords.ContainsKey(date) ? groupedRecords[date] : new List<AttendanceUser>();
+        //        List<object> recordsList = new List<object>();
+
+        //        if (dayRecords.Any())
         //        {
-        //            CheckIn = DateTime.Now,
-        //            CheckOut = null,
-        //            Status = model.Status,
-        //            WorkingHours = model.WorkingHours,
-        //            UserId = id
-        //        };
+        //            double totalHours = 0;
+        //            bool breakAdded = false;
 
-        //        db.AttendanceUsers.Add(attendanceUser);
-        //        db.SaveChanges();
-        //        return Ok();
-        //    }
+        //            for (int i = 0; i < dayRecords.Count; i++)
+        //            {
+        //                var record = dayRecords[i];
 
+        //                // Determine status
+        //                if (record.CheckIn.TimeOfDay < TimeSpan.FromHours(8))
+        //                    record.Status = "Present On Time";
+        //                else
+        //                    record.Status = "Present Late";
 
-        //    [HttpDelete]
-        //    [Route("api/AttendanceUsersDelete")]
-        //    public IHttpActionResult Delete(int id)
-        //    {
-        //        var attendance = db.AttendanceUsers.Find(id);
-        //        if (attendance != null)
-        //        {
-        //            db.AttendanceUsers.Remove(attendance);
-        //            db.SaveChanges();
+        //                if (record.CheckOut.HasValue)
+        //                {
+        //                    var checkOutTime = record.CheckOut.Value.TimeOfDay;
+        //                    if (checkOutTime < TimeSpan.FromHours(17))
+        //                        record.Status = "Leave";
+        //                    else if (checkOutTime <= TimeSpan.FromHours(17.5))
+        //                        record.Status = "Leave On Time";
+        //                    else
+        //                        record.Status = "Over Time";
+        //                }
+
+        //                // Calculate working hours for this record
+        //                double hoursWorked = record.CheckOut.HasValue ?
+        //                    (record.CheckOut.Value - record.CheckIn).TotalHours : 0;
+        //                totalHours += hoursWorked;
+
+        //                recordsList.Add(new
+        //                {
+        //                    CheckIn = record.CheckIn.ToString("hh:mm tt"),
+        //                    CheckOut = record.CheckOut?.ToString("hh:mm tt"),
+        //                    Status = record.Status,
+        //                    WorkingHours = Math.Round(hoursWorked, 2)
+        //                });
+
+        //                // Add break after the first work session
+        //                if (!breakAdded && record.CheckOut.HasValue && totalHours >= 4)
+        //                {
+        //                    var breakStart = record.CheckOut.Value;
+        //                    var breakEnd = breakStart.AddHours(1);
+
+        //                    recordsList.Add(new
+        //                    {
+        //                        CheckIn = breakStart.ToString("hh:mm tt"),
+        //                        CheckOut = breakEnd.ToString("hh:mm tt"),
+        //                        Status = "Break",
+        //                        WorkingHours = 0
+        //                    });
+
+        //                    breakAdded = true;
+        //                }
+        //            }
+
+        //            result.Add(new { date = date.ToString("yyyy-MM-dd"), records = recordsList, TotalWorkingHours = Math.Round(totalHours, 2) });
         //        }
-        //        return NotFound();
-        //    }
-
-        //    [HttpGet]
-        //    [Route("api/GetAllAttendance")]
-        //    public IHttpActionResult GetAll()
-        //    {
-        //        List<AttendanceUserViewModel> result = new List<AttendanceUserViewModel>();
-        //        result = db.AttendanceUsers.Select(a => new AttendanceUserViewModel
+        //        else
         //        {
-        //            CheckIn = a.CheckIn,
-        //            CheckOut = (DateTime)a.CheckOut,
-        //            Status = a.Status,
-        //            WorkingHours = a.WorkingHours,
-        //            UserId = a.UserId
-        //        }).ToList();
-        //        return Ok(result);
-        //    }
-
-
-        //    [HttpGet]
-        //    [Route("api/GetAttendanceById/{id}")]
-        //    public IHttpActionResult GetById(int id)
-        //    {
-        //        var attendance = db.AttendanceUsers.Find(id);
-        //        if (attendance == null)
+        //            // No record found for this day, mark as Absent
+        //            result.Add(new
+        //            {
+        //                date = date.ToString("yyyy-MM-dd"),
+        //                records = new List<object>
         //        {
-        //            return NotFound();
+        //            new { CheckIn = "N/A", CheckOut = "N/A", Status = "Absent", WorkingHours = 0 }
+        //        },
+        //                TotalWorkingHours = 0
+        //            });
         //        }
-        //        AttendanceUserViewModel result = new AttendanceUserViewModel();
-        //        result.CheckIn = attendance.CheckIn;
-        //        result.CheckOut = (DateTime)attendance.CheckOut;
-        //        result.Status = attendance.Status;
-        //        result.WorkingHours = attendance.WorkingHours;
-        //        result.UserId = attendance.UserId;
-        //        return Ok(result);
         //    }
 
-        //    [HttpPut]
-        //    [Route("api/UpdateAttendance/{id}")]
-        //    public IHttpActionResult Update(int id, AttendanceUser model)
-        //    {
-        //        if (id == 0)
-        //        {
-        //            return NotFound();
-        //        }
+        //    return Ok(result);
+        //}
 
-        //        var attendanceUser = new AttendanceUser()
-        //        {
-        //            //Id = id,
-        //            //CheckIn = model.CheckIn,
-        //            CheckOut = (DateTime)model.CheckOut,
-        //            //Status = model.Status,
-        //            //WorkingHours = model.WorkingHours,
-        //            //UserId = model.UserId,
-        //            //IsDeleted = model.IsDeleted,
-        //            CreatedAt = DateTime.Now,
-        //            CreatedBy = model.User.Name,
-        //            ModificationDate = DateTime.Now,
-        //        };
 
-        //        db.AttendanceUsers.AddOrUpdate(attendanceUser);
-        //        db.SaveChanges();
-        //        return Ok();
-        //    }
+        // Method to calculate total working hours in a day
+        private double CalculateWorkingHours(List<AttendanceUser> records)
+        {
+            double totalHours = 0;
+            foreach (var record in records)
+            {
+                if (record.CheckOut.HasValue)
+                {
+                    totalHours += (record.CheckOut.Value - record.CheckIn).TotalHours;
+                }
+            }
+            return Math.Round(totalHours, 2);
+        }
+
     }
+
 }
