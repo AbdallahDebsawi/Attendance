@@ -7,19 +7,13 @@
         <button class="filter-button" (click)="onFilterClick()">
           <img src="../../../assets/images/filter.png" alt="Filter" />
         </button>
-        <button
-          class="add-req-btn"
-          *ngIf="role !== 'hr' && tableTitle !== 'Attendance History'"
-        >
-          Add Request
-        </button>
-        <!-- Hide for HR -->
+
+        <button class="add-req-btn" *ngIf="role == 2 && tableTitle !== 'Attendance History'">Add Request</button>
       </div>
     </div>
 
     <div class="table-inner-container">
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-        <!-- Dynamically add columns -->
         <ng-container
           *ngFor="let column of displayedColumns"
           [matColumnDef]="column"
@@ -33,7 +27,13 @@
         <ng-container matColumnDef="action">
           <th mat-header-cell *matHeaderCellDef>Action</th>
           <td mat-cell *matCellDef="let element">
-            <button mat-button (click)="takeAction(element)" class="action-but">
+
+            <button
+              mat-button
+              (click)="takeAction(element)"
+              class="action-but"
+              *ngIf="role !== 2"
+            >
               Actions
               <img
                 src="../../../assets/images/action.png"
@@ -47,11 +47,7 @@
         <!-- Table Header -->
         <tr
           mat-header-row
-          *matHeaderRowDef="
-            role !== 'employee' && tableTitle !== 'Attendance History'
-              ? displayedColumns.concat(['action'])
-              : displayedColumns
-          "
+          *matHeaderRowDef="role !== 2 && tableTitle !== 'Attendance History' ? displayedColumns.concat(['action']) : displayedColumns"
         ></tr>
 
         <!-- Table Rows -->
@@ -59,9 +55,7 @@
           mat-row
           *matRowDef="
             let row;
-            columns: role !== 'employee' && tableTitle !== 'Attendance History'
-              ? displayedColumns.concat(['action'])
-              : displayedColumns
+            columns: role !== 2 && tableTitle !== 'Attendance History'? displayedColumns.concat(['action']) : displayedColumns
           "
         ></tr>
       </table>

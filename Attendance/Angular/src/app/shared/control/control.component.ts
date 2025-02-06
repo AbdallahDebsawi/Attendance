@@ -6,7 +6,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   styleUrls: ['./control.component.css'],
 })
 export class ControlComponent implements OnInit {
-  role: string = 'manager';
+  role: number = 3;
   @Input() displayedColumns: string[] = [];
   @Input() dataSource: any[] = [];
   @Input() tableTitle: string = '';
@@ -39,14 +39,14 @@ export class ControlComponent implements OnInit {
   ngOnInit(): void {}
 
   takeAction(element: any): void {
-    if (this.role === 'hr') {
+    if (this.role === 3) {
       // HR role can update hrStatus
       if (element.hrStatus === 'Pending') {
         element.hrStatus = 'Approved'; // Update to 'Approved' when action is taken
       } else {
         element.hrStatus = 'Pending'; // Toggle back to 'Pending'
       }
-    } else if (this.role === 'manager') {
+    } else if (this.role === 1) {
       // Manager role can update managerStatus
       if (element.managerStatus === 'Pending') {
         element.managerStatus = 'Approved';

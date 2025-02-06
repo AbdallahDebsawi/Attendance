@@ -29,6 +29,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { AttendanceService } from './services/attendance.service';
 import { EmployeesComponent } from './components/employees/employees.component';
 import { AttendanceComponent } from './components/attendance/attendance.component';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatMenuModule } from '@angular/material/menu';
 // import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatNativeDateModule } from '@angular/material/core';
 
@@ -67,6 +70,11 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatDatepickerModule,
     MatNativeDateModule,
     // MatProgressBarModule,
+    MatNativeDateModule,
+    MatSelectModule,
+    MatMenuModule,
+    MatIconModule
+    
   ],
   providers: [AttendanceService],
   bootstrap: [AppComponent],

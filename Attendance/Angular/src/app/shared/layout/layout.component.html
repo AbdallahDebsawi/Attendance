@@ -39,26 +39,28 @@
               class="option-icon"
             />
             <a routerLink="/dashboard">Dashboard</a>
-            <!-- <span>Dashboard</span> -->
           </div>
-          <div class="option-item" *ngIf="role == 'hr'">
+
+          <!-- Employees link (Visible only for HR) -->
+          <div class="option-item" *ngIf="role !== 2">
             <img
               src="../../../assets/images/employee.png"
               alt="Employee Icon"
               class="option-icon"
             />
             <a routerLink="/employee">Employees</a>
-            <!-- <span>Request</span> -->
           </div>
-          <div class="option-item" *ngIf="role !== 'hr'">
+
+          <!-- Attendance link (Visible only for non-HR roles) -->
+          <div class="option-item">
             <img
               src="../../../assets/images/employee.png"
               alt="Employee Icon"
               class="option-icon"
             />
             <a routerLink="/attendance">Your Attendance</a>
-            <!-- <span>Request</span> -->
           </div>
+
           <!-- Request Option -->
           <div class="option-item">
             <img
@@ -67,7 +69,6 @@
               class="option-icon"
             />
             <a routerLink="/request">Requests</a>
-            <!-- <span>Request</span> -->
           </div>
         </div>
       </div>
@@ -77,8 +78,7 @@
           <span>Organization</span>
         </div>
         <div class="attendance-options">
-          <!-- Check In Button -->
-          <!-- Merged Check In / Check Out Button -->
+          <!-- Check In / Check Out Button -->
           <button class="attendance-button" (click)="toggleCheckInOut()">
             <img
               src="../../../assets/images/check.png"
@@ -88,8 +88,8 @@
             {{ attendanceStatus === "CheckedIn" ? "Check Out" : "Check In" }}
           </button>
 
-          <!-- Check Out Button -->
-          <button class="attendance-button" style="background-color: cadetblue;" (click)="openDialog()">
+          <!-- Register Button (Visible only for HR) -->
+          <button *ngIf="role === 3" class="attendance-button" style="background-color: cadetblue;" (click)="openDialog()">
             <img
               src="../../../assets/images/check.png"
               alt="Check Out Icon"
@@ -113,6 +113,7 @@
         </div>
       </div>
     </div>
+
     <div class="bottom-pic">
       <img
         src="../../../assets/images/bottomSidebar.png"

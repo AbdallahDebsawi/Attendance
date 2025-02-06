@@ -1,86 +1,42 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { Route } from '@angular/router';
+import { ServiceApiService } from 'src/app/Service/service-api.service';
+import { Request } from 'src/app/shared/models/request';
+import { RequestEntryComponent } from './request-entry/request-entry.component';
 
 @Component({
   selector: 'app-request',
   templateUrl: './request.component.html',
-  styleUrls: ['./request.component.css'],
+  styleUrls: ['./request.component.css']
 })
 export class RequestComponent implements OnInit {
   pageTitle: string = '';
   from: string = '';
-  leaveRequests = [
-    {
-      name: 'John Doe',
-      duration: '3 days',
-      startDate: '01-01-2025',
-      endDate: '01-04-2025',
-      type: 'sick leave',
-      reason: 'Personal',
-      managerStatus: 'Approved',
-      hrStatus: 'Pending',
-    },
-    {
-      name: 'Jane Smith',
-      duration: '6 days',
-      startDate: '15-02-2025',
-      endDate: '15-08-2025',
-      type: 'Annual Vacation',
-      reason: 'Medical',
-      managerStatus: 'Pending',
-      hrStatus: 'Approved',
-    },
-    {
-      name: 'Alex Johnson',
-      duration: '1 day',
-      startDate: '20-03-2025',
-      endDate: '20-03-2026',
-      type: 'Sick Leave',
-      reason: 'Travel',
-      managerStatus: 'Approved',
-      hrStatus: 'Pending',
-    },
-    {
-      name: 'Michael Brown',
-      duration: '2 hours',
-      startDate: '10-05-2025',
-      endDate: '10-07-2025',
-      type: 'leave ',
-      reason: 'Training',
-      managerStatus: 'Pending',
-      hrStatus: 'Approved',
-    },
-    {
-      name: 'Emily Davis',
-      duration: '5 days',
-      startDate: '05-06-2025',
-      endDate: '05-03-2026',
-      type: 'Paternity',
-      reason: 'Relocation',
-      managerStatus: 'Approved',
-      hrStatus: 'Pending',
-    },
+  requestList: Request[] = [];
+  displayedColumns: string[] = [
+    'TypeOfAbsence',
+    'From', 
+    'To', 
+    'ReasonOfAbsence', 
+    'MangerStatus', 
+    'HRStatus'
   ];
-  constructor(private router: Router) {}
+  constructor(private apiUrl : ServiceApiService , public dialog:MatDialog) { }
 
   ngOnInit() {
-    // this.updateTitleBasedOnRoute();
+    this.loadRequest();
   }
 
-  updateTitleBasedOnRoute() {
-    const currentPath = this.router.url.split('/').pop(); // Get the last part of the URL
-    if (currentPath === 'request') {
-      this.pageTitle = 'Dashboard / Requests';
-      this.from = 'request';
-    } else if (currentPath === 'employee') {
-      this.pageTitle = 'Dashboard / Employees';
-      this.from = 'employee';
-    } else if (currentPath === 'attendance') {
-      this.pageTitle = 'Dashboard / Attendance';
-      this.from = 'attendance';
-    } else {
-      this.pageTitle = 'Dashboard';
-      this.from = '';
-    }
+  loadRequest(): void{
+    this.apiUrl.getAll('GetAllRequest').subscribe(
+      (data : Request[]) => {
+        console.log('data :', data);
+        this.requestList = data;
+      },
+      (error) => {
+        console.error('Error fetching Data Request List' , error);
+      }
+    )
   }
 }

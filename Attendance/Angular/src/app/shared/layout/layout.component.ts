@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { RegisterComponent } from 'src/app/components/register/register.component';
 import { AttendanceService } from 'src/app/services/attendance.service';
+import { ServiceApiService } from 'src/app/Service/service-api.service';
 import { Attendance } from '../models/attendance';
 
 @Component({
@@ -11,7 +12,7 @@ import { Attendance } from '../models/attendance';
   styleUrls: ['./layout.component.css'],
 })
 export class LayoutComponent implements OnInit {
-  role = 'manager';
+  role: any; // This will be dynamically set based on the user role
   userId: number = 8;
   attendanceId?: number | null = null;
   attendanceStatus: string = '';
@@ -21,21 +22,35 @@ export class LayoutComponent implements OnInit {
   constructor(
     private router: Router,
     private attendanceService: AttendanceService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private apiService: ServiceApiService
   ) {}
 
   ngOnInit(): void {
+    this.setUserRole();
     this.getAttendanceStatus();
   }
 
+  // Fetch and set the user role from the service
+  setUserRole(): void {
+    const loggedInEmployee = this.apiService.getLoggedInEmployee();
+    if (loggedInEmployee) {
+      this.role = loggedInEmployee.RoleId; // Dynamically set the role
+      console.log('User Role:', this.role);
+    }
+  }
+
+  // Toggle the sidebar visibility
   toggleSidebar(sidenav: any) {
     sidenav.toggle();
   }
 
+  // Sign out from the application
   signOut() {
     this.router.navigate(['/login'], { replaceUrl: true });
   }
 
+  // Open the registration dialog
   openDialog() {
     const dialogRef = this.dialog.open(RegisterComponent, {
       width: '500px',
@@ -47,6 +62,8 @@ export class LayoutComponent implements OnInit {
       }
     });
   }
+
+
   toggleCheckInOut() {
     const currentTime = new Date();
     const todayDate = currentTime.toISOString().split('T')[0];
@@ -134,14 +151,14 @@ export class LayoutComponent implements OnInit {
         return;
       }
 
-      const status = currentTime.getHours() < 17 ? 'Leave' : 'Present';
-      const attendanceData: Attendance = {
-        Id: this.attendanceId,
-        UserId: this.userId,
-        CheckIn: this.checkInTime,
-        CheckOut: currentTime,
-        Status: status,
-      };
+    const status = currentTime.getHours() < 17 ? 'Leave' : 'Present';
+    const attendanceData: Attendance = {
+      Id: this.attendanceId!,
+      UserId: this.userId,
+      CheckIn: this.checkInTime!,
+      CheckOut: currentTime,
+      Status: status,
+    };
 
       this.attendanceService
         .updateAttendanceUser(this.attendanceId, attendanceData)
