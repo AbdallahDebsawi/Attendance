@@ -33,7 +33,6 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
 // import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -74,7 +73,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatSelectModule,
     MatMenuModule,
     MatIconModule
-    
+
   ],
   providers: [AttendanceService],
   bootstrap: [AppComponent],
