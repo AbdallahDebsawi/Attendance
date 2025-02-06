@@ -204,13 +204,6 @@ p {
     top: 0px;
 }
 
-/* .leave-progress-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 0;
-  width: 100%;
-} */
 
 .leave-info {
   display: flex;
@@ -253,7 +246,6 @@ p {
 }
 
 .division {
-  /* width: calc(100% / 4); */
   height: 60%;
   border-right: 1px solid #bbb;
 }

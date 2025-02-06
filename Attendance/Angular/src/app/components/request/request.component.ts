@@ -26,7 +26,6 @@ export class RequestComponent implements OnInit {
 
   ngOnInit() {
     this.loadRequest();
-    //this.updateTitleBasedOnRoute();
   }
 
   loadRequest(): void{
@@ -40,18 +39,4 @@ export class RequestComponent implements OnInit {
       }
     )
   }
-
-  //  updateTitleBasedOnRoute() {
-  //   const currentPath = this.router.url.split('/').pop(); // Get the last part of the URL
-  //   if (currentPath === 'request') {
-  //     this.pageTitle = 'Dashboard / Requests';
-  //   this.from = 'request';
-  // } else if (currentPath === 'employee') {
-  //     this.pageTitle = 'Dashboard / Employees';
-  //  this.from = 'employee';
-  //  } else {
-  // this.pageTitle = 'Dashboard';
-  //     this.from = '';
-  //  }
-  //  }
 }

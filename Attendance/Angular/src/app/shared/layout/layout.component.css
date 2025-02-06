@@ -5,7 +5,7 @@
 }
 
 .example-container {
-    height: 100vh; /* Full viewport height */
+    height: 100vh; 
 }
 
 .example-sidenav {
@@ -154,7 +154,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: auto; /* Push to bottom */
+    margin-top: auto; 
 }
 
 .logout-button {
@@ -185,7 +185,7 @@
 
 .bottom-pic {
     display: flex;
-    align-items: center; /* Center the image vertically */
+    align-items: center; 
 }
 
 .bottom-pic img {

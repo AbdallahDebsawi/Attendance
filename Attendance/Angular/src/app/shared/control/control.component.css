@@ -28,9 +28,9 @@ th, td {
   text-align: left;
   border: none !important;
   outline: none !important;
-  white-space: nowrap; /* Prevents breaking text */
+  white-space: nowrap; 
   overflow: hidden;
-  text-overflow: ellipsis; /* Adds '...' for overflowed content */
+  text-overflow: ellipsis;
 
 }
 

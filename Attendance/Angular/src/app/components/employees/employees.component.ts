@@ -18,7 +18,7 @@ export class EmployeesComponent implements OnInit {
   loadEmployees(): void {
     this.employeeService.getAllEmployees().subscribe(
       (data: Employee[]) => {
-        console.log('Fetched data:', data); // Debugging: Check the structure
+        console.log('Fetched data:', data); 
         this.employeeList = data;
       },
       (error) => {

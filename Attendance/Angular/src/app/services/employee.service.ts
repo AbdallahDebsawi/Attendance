@@ -25,7 +25,7 @@ export class EmployeeService {
 
   getAllEmployees(): Observable<Employee[]> {
     return this.http.get<{ Message: string; Data: Employee[] }>(this.apiUrl).pipe(
-      map(response => response.Data) // Extracting the actual array from the response
+      map(response => response.Data)
     );
   }
   

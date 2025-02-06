@@ -99,7 +99,7 @@
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Department</mat-label>
       <mat-select formControlName="department" required>
-        <mat-option value="" disabled>Select Department</mat-option> <!-- Added default empty value -->
+        <mat-option value="" disabled>Select Department</mat-option>
         <mat-option *ngFor="let dept of departments" [value]="dept.Id">
           {{ dept.DepartmentName }}
         </mat-option>
@@ -118,7 +118,7 @@
     
         <!-- Display options with manager IDs -->
         <mat-option *ngFor="let manager of managers" [value]="manager.Id">
-          {{ manager.Id }}  <!-- Display manager's ID -->
+          {{ manager.Id }} 
         </mat-option>
       </mat-select>
       <mat-error *ngIf="userForm.get('managerId')?.hasError('required')">

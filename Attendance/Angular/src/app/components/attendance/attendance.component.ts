@@ -26,14 +26,6 @@ export class AttendanceComponent implements OnInit {
       next: (data) => {
         this.attendanceRecords = data.map((record) => ({
           ...record,
-          // CheckIn: record.CheckIn ? new Date(record.CheckIn) : null,
-          // CheckOut: record.CheckOut ? new Date(record.CheckOut) : null,
-          // formattedCheckIn: record.CheckIn
-          //   ? this.datePipe.transform(record.CheckIn, 'dd/MM/yyyy hh:mm a')
-          //   : null,
-          // formattedCheckOut: record.CheckOut
-          //   ? this.datePipe.transform(record.CheckOut, 'dd/MM/yyyy hh:mm a')
-          //   : null,
         }));
       },
       error: (err) => {
