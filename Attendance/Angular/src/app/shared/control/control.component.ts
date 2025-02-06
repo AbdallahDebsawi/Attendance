@@ -1,4 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { RequestEntryComponent } from 'src/app/components/request/request-entry/request-entry.component';
 
 @Component({
   selector: 'app-control',
@@ -36,7 +39,19 @@ export class ControlComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
+
+  // openDialog() {
+  //   const dialogRef = this.dialog.open(RequestEntryComponent, {
+  //     width: '800px',
+  //   });
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if (result) {
+  //       console.log('Form Data:', result);
+  //     }
+  //   });
+  // }
 
   takeAction(element: any): void {
     if (this.role === 3) {

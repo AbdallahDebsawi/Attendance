@@ -1,11 +1,12 @@
 export class Request{
-    id? : number;
+    Id? : number;
     TypeOfAbsence? : string;
     From? : Date;
     To? : Date;
     ReasonOfAbsence? : string;
-    MangerStatus? : boolean;
+    ManagerStatus? : boolean;
     HRStatus? : boolean;
     UserId? : number;
+    FilePath? : string;
 
 }
