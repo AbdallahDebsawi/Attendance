@@ -23,7 +23,7 @@ export class LayoutComponent implements OnInit {
     private router: Router,
     private attendanceService: AttendanceService,
     private dialog: MatDialog,
-    private apiService: ServiceApiService
+    public apiService: ServiceApiService
   ) {}
 
   ngOnInit(): void {

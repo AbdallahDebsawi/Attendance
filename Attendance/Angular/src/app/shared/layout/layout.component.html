@@ -16,11 +16,18 @@
         <!-- Username -->
         <div class="username-section">
           <div>
-            <span>John Doe</span>
+            <span>{{ apiService.getLoggedInEmployee()?.Name || 'Guest' }}</span>
           </div>
 
           <div class="job">
-            <span>Employee</span>
+            <span>
+              {{
+                apiService.getLoggedInEmployee()?.RoleId === 1 ? 'Manager' :
+                apiService.getLoggedInEmployee()?.RoleId === 2 ? 'Employee' :
+                apiService.getLoggedInEmployee()?.RoleId === 3 ? 'HR' :
+                'Guest'
+              }}
+            </span>
           </div>
         </div>
       </div>

@@ -8,7 +8,8 @@ import { employee } from 'src/app/shared/models/employee';
 })
 export class ServiceApiService {
   private apiUrl = 'https://localhost:44323/api/';
-  private loggedInEmployee: employee | null = null;  // To store the logged-in employee
+  private loggedInEmployeeKey = 'loggedInEmployee'; // Key for localStorage
+  private loggedInEmployee: employee | null = null;  // Define loggedInEmployee in memory
 
   constructor(private http: HttpClient) {}
 
@@ -20,14 +21,24 @@ export class ServiceApiService {
     return this.http.post<any>(`${this.apiUrl}/${endPoint}`, body);
   }
 
-  // Method to get the logged-in employee
+  // Method to get the logged-in employee from localStorage and memory
   getLoggedInEmployee(): employee | null {
-    return this.loggedInEmployee;
+    if (this.loggedInEmployee) {
+      return this.loggedInEmployee; // Return from memory if available
+    }
+
+    const employeeData = localStorage.getItem(this.loggedInEmployeeKey);
+    if (employeeData) {
+      this.loggedInEmployee = JSON.parse(employeeData); // Store in memory
+      return this.loggedInEmployee;
+    }
+    return null;
   }
 
-  // Method to set the logged-in employee
+  // Method to set the logged-in employee in both memory and localStorage
   setLoggedInEmployee(employee: employee): void {
     this.loggedInEmployee = employee;
+    localStorage.setItem(this.loggedInEmployeeKey, JSON.stringify(employee)); // Store in localStorage
   }
 
   putData(endPoint: string, body: any): Observable<any> {
@@ -38,3 +49,4 @@ export class ServiceApiService {
     return this.http.delete<any>(`${this.apiUrl}/${endPoint}`);
   }
 }
+
