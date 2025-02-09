@@ -1,7 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { RequestEntryComponent } from 'src/app/components/request/request-entry/request-entry.component';
+import { ServiceApiService } from 'src/app/Service/service-api.service';
+import { Request } from '../models/request';
 
 @Component({
   selector: 'app-control',
@@ -10,14 +13,18 @@ import { RequestEntryComponent } from 'src/app/components/request/request-entry/
 })
 export class ControlComponent implements OnInit {
   role: number = 3;
+  requests : any[] =[];
+  isUpdateMode : boolean = false;
   @Input() displayedColumns: string[] = [];
   @Input() dataSource: any[] = [];
   @Input() tableTitle: string = '';
+  requestForm! : FormGroup;
+  @Output() editRequest = new EventEmitter<any>();
   @Output() filterClicked = new EventEmitter<void>();
 
   columnMapping: { [key: string]: string } = {
     name: 'Name',
-    duratiom: 'Duration',
+    duration: 'Duration',
     startDate: 'Start Date',
     endDate: 'End Date',
     type: 'Type',
@@ -37,21 +44,46 @@ export class ControlComponent implements OnInit {
     formattedCheckOut: 'Check Out',
   };
 
-  constructor() {}
+  constructor(public dialog : MatDialog ,private apiUrl : ServiceApiService ,private fb: FormBuilder) {}
 
   ngOnInit(): void {
+    this.loadRequests();
   }
 
-  // openDialog() {
-  //   const dialogRef = this.dialog.open(RequestEntryComponent, {
-  //     width: '800px',
-  //   });
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (result) {
-  //       console.log('Form Data:', result);
-  //     }
-  //   });
-  // }
+  loadRequests(){
+    this.apiUrl.getAll('GetAllRequest').subscribe(
+      (data : Request[]) => {
+        this.requests = data;
+      },
+      (error) => {
+        console.error('Error fetching Data');
+      });
+  }
+
+  openCreateDialog(){
+    const dialogRef = this.dialog.open(RequestEntryComponent , {
+      data : null,
+    });
+  }
+
+
+  openEditDialog(element: any) {
+    this.isUpdateMode = true;
+    this.requestForm = this.fb.group({
+      typeOfAbsence: [element.typeOfAbsence],
+      from: [element.from],
+      to: [element.to],
+      reasonOfAbsence: [element.reasonOfAbsence],
+      userId: [element.userId],
+      managerStatus: [element.managerStatus],
+      hrStatus: [element.hrStatus],
+    });
+    this.dialog.open(RequestEntryComponent, {
+      width: '500px',
+      data: { form: this.requestForm, isUpdateMode: this.isUpdateMode },
+    });
+    console.log(this.isUpdateMode = this.isUpdateMode)
+  }
 
   takeAction(element: any): void {
     if (this.role === 3) {
