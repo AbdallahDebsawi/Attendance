@@ -10,7 +10,7 @@ import { Attendance } from 'src/app/shared/models/attendance';
 export class DashboardComponent implements OnInit {
   attendance: Attendance | null = null;
   attendanceData: Attendance[] = [];
-  userId: number = 8;
+  userId: number = 37;
   today: Date = new Date();
   todayDate: string = '';
 

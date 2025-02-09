@@ -21,6 +21,7 @@ namespace Attendance.Controllers
 
         // POST: api/AttendanceUser
         [HttpPost]
+        [Route("api/AttendanceUser")]
         public async Task<IHttpActionResult> PostAttendanceUser([FromBody] AttendanceUser attendanceUser)
         {
             if (attendanceUser == null)
@@ -92,6 +93,7 @@ namespace Attendance.Controllers
 
         // GET: api/AttendanceUser
         [HttpGet]
+        [Route("api/AttendanceUser")]
         public async Task<IHttpActionResult> GetAttendanceUsers()
         {
             // Fetch only non-deleted records
