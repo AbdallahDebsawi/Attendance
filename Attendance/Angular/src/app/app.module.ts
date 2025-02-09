@@ -32,6 +32,7 @@ import { AttendanceComponent } from './components/attendance/attendance.componen
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 // import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
@@ -72,8 +73,9 @@ import { MatMenuModule } from '@angular/material/menu';
     MatNativeDateModule,
     MatSelectModule,
     MatMenuModule,
-    MatIconModule
-
+    MatIconModule,
+    MatCheckboxModule
+    
   ],
   providers: [AttendanceService],
   bootstrap: [AppComponent],
