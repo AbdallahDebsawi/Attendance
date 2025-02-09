@@ -8,7 +8,7 @@
           <img src="../../../assets/images/filter.png" alt="Filter" />
         </button>
 
-        <button class="add-req-btn" *ngIf="role == 2 && tableTitle !== 'Attendance History'">Add Request</button>
+        <button class="add-req-btn" (click)="openCreateDialog()">Add Request</button>
       </div>
     </div>
 
@@ -29,11 +29,20 @@
           <th mat-header-cell *matHeaderCellDef>Action</th>
           <td mat-cell *matCellDef="let element">
 
+            <mat-menu #actionMenu="matMenu">
+              <button mat-menu-item (click)="openEditDialog(element)">
+                <mat-icon>edit</mat-icon> Update
+              </button>
+              <button mat-menu-item>
+                <mat-icon>delete</mat-icon> Delete
+              </button>
+            </mat-menu>
+            
             <button
               mat-button
-              (click)="takeAction(element)"
+              [matMenuTriggerFor]="actionMenu"
               class="action-but"
-              *ngIf="role !== 2"
+              *ngIf="role !== 1"
             >
               Actions
               <img
@@ -42,15 +51,6 @@
                 class="action-icon1"
               />
             </button>
-        
-            <mat-menu #actionMenu="matMenu">
-              <button mat-menu-item>
-                <mat-icon>edit</mat-icon> Update
-              </button>
-              <button mat-menu-item>
-                <mat-icon>delete</mat-icon> Delete
-              </button>
-            </mat-menu>
           </td>
         </ng-container>
 

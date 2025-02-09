@@ -19,14 +19,16 @@ export class RequestEntryComponent implements OnInit {
     private fb: FormBuilder,
     private apiService: ServiceApiService,
     private dialogRef: MatDialogRef<RequestEntryComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { request?: Request } // Optional request data
+    @Inject(MAT_DIALOG_DATA) public data: { request?: Request }
   ) {
     this.requestForm = this.fb.group({
       typeOfAbsence: ['', Validators.required],
       from: ['', Validators.required],
       to: ['', Validators.required],
       reasonOfAbsence: ['', Validators.required],
-      userId: ['', Validators.required]
+      userId: ['', Validators.required],
+      managerStatus : ['' , Validators.required],
+      hrStatus : ['' ,Validators.required]
     });
   }
 
@@ -39,7 +41,9 @@ export class RequestEntryComponent implements OnInit {
         from: this.data.request.From,
         to: this.data.request.To,
         reasonOfAbsence: this.data.request.ReasonOfAbsence,
-        userId: this.data.request.UserId
+        userId: this.data.request.UserId,
+        managerStatus : this.data.request.ManagerStatus,
+        hrStatus : this.data.request.HRStatus
       });
     }
   }
@@ -54,7 +58,7 @@ export class RequestEntryComponent implements OnInit {
         this.apiService.putData(`request/${this.requestId}`, request).subscribe(
           (data) => {
             console.log('Request Updated:', data);
-            this.dialogRef.close(data);
+            this.dialogRef.close({ success: true , data});
           },
           (error) => {
             console.error('Error Updating Request:', error);
