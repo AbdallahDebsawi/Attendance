@@ -45,7 +45,7 @@ namespace Attendance.Controllers
         }
 
         [HttpDelete]
-        [Route("api/RequestDelete")]
+        [Route("api/RequestDelete/{id}")]
         public IHttpActionResult Delete(int id)
         {
             var request = db.Requests.Find(id);
@@ -65,6 +65,7 @@ namespace Attendance.Controllers
             List<RequestViewModel> result = new List<RequestViewModel>();
             result = db.Requests.Select(r => new RequestViewModel
             {
+                Id = r.Id,
                 TypeOfAbsence = r.TypeOfAbsence,
                 From = r.From,
                 To = r.To,
@@ -98,29 +99,28 @@ namespace Attendance.Controllers
         }
 
         [HttpPut]
-        [Route("api/request/{id}")]
+        [Route("api/UpdateRequest/{id}")]
         public IHttpActionResult Update(int id, Request model)
         {
-            if (id == 0)
+            
+            var request = db.Requests.FirstOrDefault(r => r.Id == id);
+
+            if (request == null)
             {
                 return NotFound();
             }
 
-            var request = new Request()
-            {
-                Id = id,
-                TypeOfAbsence = model.TypeOfAbsence,
-                From = model.From,
-                To = model.To,
-                ReasonOfAbsence = model.ReasonOfAbsence,
-                MangerStatus = model.MangerStatus,
-                HRStatus = model.HRStatus,
-                UserId = model.UserId
-            };
+            request.TypeOfAbsence = model.TypeOfAbsence;
+            request.From = model.From;
+            request.To = model.To;
+            request.ReasonOfAbsence = model.ReasonOfAbsence;
+            request.MangerStatus = model.MangerStatus;
+            request.HRStatus = model.HRStatus;
+            request.UserId = model.UserId;
 
-            db.Requests.AddOrUpdate(request);
             db.SaveChanges();
-            return Ok();
+            return Ok(); 
         }
+
     }
 }
