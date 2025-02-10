@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ServiceApiService } from 'src/app/Service/service-api.service';
 import { AttendanceService } from 'src/app/services/attendance.service';
 import { Attendance } from 'src/app/shared/models/attendance';
 
@@ -10,11 +11,14 @@ import { Attendance } from 'src/app/shared/models/attendance';
 export class DashboardComponent implements OnInit {
   attendance: Attendance | null = null;
   attendanceData: Attendance[] = [];
-  userId: number = 12;
+  userId?: number = 0;
   today: Date = new Date();
   todayDate: string = '';
 
-  constructor(private attendanceService: AttendanceService) {}
+  constructor(
+    private attendanceService: AttendanceService,
+    private apiService : ServiceApiService
+  ) {}
 
   role: string = 'hr';
   totalDays: number = 14;
@@ -57,9 +61,13 @@ export class DashboardComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.attendanceService.getLastAttendanceForUser(this.userId).subscribe((data) => {
-      this.attendance = data;
-    });
+    const loggedInEmployee = this.apiService.getLoggedInEmployee();
+    this.userId = loggedInEmployee!.Id;
+    this.attendanceService
+      .getLastAttendanceForUser(this.userId!)
+      .subscribe((data) => {
+        this.attendance = data;
+      });
     this.todayDate = new Date().toLocaleDateString('en-GB', {
       day: '2-digit',
       month: 'short',
@@ -68,7 +76,7 @@ export class DashboardComponent implements OnInit {
     const month = this.today.getMonth() + 1; // Months are 0-based in JS
 
     this.attendanceService
-      .getUserAttendanceByMonth(this.userId, year, month)
+      .getUserAttendanceByMonth(this.userId!, year, month)
       .subscribe((data) => {
         this.attendanceData = data;
         this.updateChartOptions();

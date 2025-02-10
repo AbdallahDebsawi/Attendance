@@ -22,9 +22,8 @@ export class AttendanceComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // const loggedInEmployee = this.apiService.getLoggedInEmployee();
-    // this.userId = loggedInEmployee!.Id;
-    // console.log('User Id:', this.userId);
+    const loggedInEmployee = this.apiService.getLoggedInEmployee();
+    this.userId = loggedInEmployee!.Id;
     this.loadAttendanceRecords();
   }
 

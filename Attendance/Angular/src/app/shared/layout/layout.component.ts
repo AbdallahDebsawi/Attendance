@@ -13,7 +13,7 @@ import { Attendance } from '../models/attendance';
 })
 export class LayoutComponent implements OnInit {
   role: any;
-  userId: number = 12;
+  userId?: number = 0;
   isCheckedIn: boolean = false;
   lastAttendance: Attendance | null = null;
   checkInTime?: string | null = null;
@@ -34,6 +34,7 @@ export class LayoutComponent implements OnInit {
     const loggedInEmployee = this.apiService.getLoggedInEmployee();
     if (loggedInEmployee) {
       this.role = loggedInEmployee.RoleId;
+      this.userId = loggedInEmployee!.Id;
       console.log('User Role:', this.role);
     }
   }
@@ -77,7 +78,7 @@ export class LayoutComponent implements OnInit {
     }
 
     // If not found in local storage, fetch from DB
-    this.attendanceService.getLastAttendanceForUser(this.userId).subscribe(
+    this.attendanceService.getLastAttendanceForUser(this.userId!).subscribe(
       (data) => {
         if (data) {
           this.lastAttendance = data;
@@ -120,7 +121,7 @@ export class LayoutComponent implements OnInit {
       (data) => {
         this.lastAttendance = data;
         this.isCheckedIn = true;
-        localStorage.setItem('checkInTime', now.toISOString()); // ✅ Store check-in time
+        localStorage.setItem('checkInTime', now.toISOString());
         console.log('Checked in successfully:', data);
       },
       (error) => {
@@ -140,19 +141,19 @@ export class LayoutComponent implements OnInit {
 
     const newCheckoutRecord: Attendance = {
       UserId: this.userId,
-      CheckIn: this.lastAttendance.CheckIn, // Keep the same check-in time
-      CheckOut: now.toISOString(), // ✅ Ensure checkout time is set
+      CheckIn: this.lastAttendance.CheckIn,
+      CheckOut: now.toISOString(),
     };
 
-    console.log('Sending check-out request:', newCheckoutRecord); // ✅ Debugging line
+    console.log('Sending check-out request:', newCheckoutRecord);
 
     this.attendanceService.createAttendanceUser(newCheckoutRecord).subscribe(
       (data) => {
-        console.log('API Response:', data); // ✅ Debugging line
+        console.log('API Response:', data);
         if (data && data.CheckOut) {
-          this.lastAttendance = null; // ✅ Reset lastAttendance after successful check-out
+          this.lastAttendance = null;
           this.isCheckedIn = false;
-          localStorage.removeItem('checkInTime'); // ✅ Remove local storage check-in time
+          localStorage.removeItem('checkInTime');
           console.log('Checked out successfully:', data);
         } else {
           console.error('Check-out response missing CheckOut time:', data);
