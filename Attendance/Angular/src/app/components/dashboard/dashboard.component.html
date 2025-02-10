@@ -29,19 +29,26 @@
   <div class="attendance-row">
     <div class="attendance-card">
       <div class="date">
-        <span>{{ attendance?.CheckIn || today | date : "MMMM d, yyyy" }}</span>
+        <!-- <span>{{ attendance?.CheckIn || today | date : "MMMM d, yyyy" }}</span> -->
+        <span>{{ today | date : "MMMM d, yyyy" }}</span>
       </div>
       <div class="status-time">
-        <span class="entry-label">Entry Time</span>
+        <span class="entry-label">
+          {{ attendance?.CheckOut !== "N/A" ? "Leave Time" : "Entry Time" }}
+        </span>
         <div class="status-time-row">
-          <span class="status">{{
-            attendance?.Status || "Not Checked In"
-          }}</span>
-          <span class="time">{{
-            attendance?.CheckIn
-              ? (attendance!.CheckIn | date : "hh:mm a")
-              : "--:--"
-          }}</span>
+          <span class="status">
+            {{ attendance?.Status || "Not Checked In" }}
+          </span>
+          <span class="time">
+            {{
+              attendance?.CheckOut && attendance?.CheckOut !== "N/A"
+                ? attendance!.CheckOut
+                : attendance?.CheckIn && attendance?.CheckIn !== "N/A"
+                ? attendance!.CheckIn
+                : "--:--"
+            }}
+          </span>
         </div>
       </div>
     </div>

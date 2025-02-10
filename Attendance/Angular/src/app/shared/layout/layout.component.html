@@ -85,11 +85,17 @@
               alt="Check Icon"
               class="attendance-icon"
             />
-            {{ attendanceStatus === "CheckedIn" ? "Check Out" : "Check In" }}
+            <!-- {{ attendanceStatus === "CheckedIn" ? "Check Out" : "Check In" }} -->
+            {{ isCheckedIn ? "Check Out" : "Check In" }}
           </button>
 
           <!-- Register Button (Visible only for HR) -->
-          <button *ngIf="role === 3" class="attendance-button" style="background-color: cadetblue;" (click)="openDialog()">
+          <button
+            *ngIf="role === 3"
+            class="attendance-button"
+            style="background-color: cadetblue"
+            (click)="openDialog()"
+          >
             <img
               src="../../../assets/images/check.png"
               alt="Check Out Icon"

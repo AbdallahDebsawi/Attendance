@@ -32,6 +32,7 @@ export class ControlComponent implements OnInit {
     WorkingHours: 'Working Hours',
     formattedCheckIn: 'Check In',
     formattedCheckOut: 'Check Out',
+    Date: 'Date',
   };
 
   constructor() {}

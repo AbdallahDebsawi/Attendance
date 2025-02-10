@@ -30,8 +30,8 @@ export class AttendanceService {
     return this.http.get<Attendance[]>(this.apiUrl);
   }
 
-  getAttendanceUserById(id: number): Observable<Attendance> {
-    return this.http.get<Attendance>(`${this.apiUrl}/${id}`);
+  getAttendanceUserById(id: number): Observable<Attendance[]> {
+    return this.http.get<Attendance[]>(`${this.apiUrl}/${id}`);
   }
 
   deleteAttendanceUser(id: number): Observable<void> {

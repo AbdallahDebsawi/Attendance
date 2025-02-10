@@ -297,6 +297,10 @@
     <Compile Include="Migrations\202502041252003_selfjoin.designer.cs">
       <DependentUpon>202502041252003_selfjoin.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202502090832483_AllowNullCheckIn.cs" />
+    <Compile Include="Migrations\202502090832483_AllowNullCheckIn.designer.cs">
+      <DependentUpon>202502090832483_AllowNullCheckIn.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AttendanceUser.cs" />
     <Compile Include="Models\Department.cs" />
@@ -429,6 +433,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202502041252003_selfjoin.resx">
       <DependentUpon>202502041252003_selfjoin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202502090832483_AllowNullCheckIn.resx">
+      <DependentUpon>202502090832483_AllowNullCheckIn.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

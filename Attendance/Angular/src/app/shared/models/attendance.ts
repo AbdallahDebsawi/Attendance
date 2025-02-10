@@ -1,8 +1,9 @@
 export class Attendance {
   Id?: number;
   UserId?: number;
-  CheckIn?: Date | null ; // Allow null here
-  CheckOut?: Date | null; // Allow null here
+  CheckIn?: string | null; // Allow null here
+  CheckOut?: string | null; // Allow null here
+  Date?: string| null; // Allow null here
   WorkingHours?: number;
   Status?: string;
 }

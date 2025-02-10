@@ -10,7 +10,7 @@ import { Attendance } from 'src/app/shared/models/attendance';
 export class DashboardComponent implements OnInit {
   attendance: Attendance | null = null;
   attendanceData: Attendance[] = [];
-  userId: number = 8;
+  userId: number = 12;
   today: Date = new Date();
   todayDate: string = '';
 
@@ -57,7 +57,7 @@ export class DashboardComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.attendanceService.currentAttendanceData.subscribe((data) => {
+    this.attendanceService.getLastAttendanceForUser(this.userId).subscribe((data) => {
       this.attendance = data;
     });
     this.todayDate = new Date().toLocaleDateString('en-GB', {
@@ -95,7 +95,7 @@ export class DashboardComponent implements OnInit {
   updateChartOptions(): void {
     const attendanceCounts = {
       'Present On Time': 0,
-      Late: 0,
+      'Present Late': 0,
       Absent: 0,
       Leave: 0,
     };
@@ -106,7 +106,7 @@ export class DashboardComponent implements OnInit {
       if (status in attendanceCounts) {
         attendanceCounts[status as keyof typeof attendanceCounts]++;
       } else {
-        console.warn(`Unexpected status found: ${status}`);
+        // console.warn(`Unexpected status found: ${status}`);
       }
     });
 
@@ -132,7 +132,7 @@ export class DashboardComponent implements OnInit {
               color: '#008080',
             },
             {
-              y: attendanceCounts['Late'],
+              y: attendanceCounts['Present Late'],
               name: 'Present Late',
               color: '#EF2B1F',
             },

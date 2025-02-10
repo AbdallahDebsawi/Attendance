@@ -12,12 +12,11 @@ import { Attendance } from '../models/attendance';
   styleUrls: ['./layout.component.css'],
 })
 export class LayoutComponent implements OnInit {
-  role: any; // This will be dynamically set based on the user role
-  userId: number = 8;
-  attendanceId?: number | null = null;
-  attendanceStatus: string = '';
-  checkInTime: Date | null = null;
-  checkOutTime: Date | null = null;
+  role: any;
+  userId: number = 12;
+  isCheckedIn: boolean = false;
+  lastAttendance: Attendance | null = null;
+  checkInTime?: string | null = null;
 
   constructor(
     private router: Router,
@@ -28,29 +27,25 @@ export class LayoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.setUserRole();
-    this.getAttendanceStatus();
+    this.loadLastAttendance();
   }
 
-  // Fetch and set the user role from the service
   setUserRole(): void {
     const loggedInEmployee = this.apiService.getLoggedInEmployee();
     if (loggedInEmployee) {
-      this.role = loggedInEmployee.RoleId; // Dynamically set the role
+      this.role = loggedInEmployee.RoleId;
       console.log('User Role:', this.role);
     }
   }
 
-  // Toggle the sidebar visibility
   toggleSidebar(sidenav: any) {
     sidenav.toggle();
   }
 
-  // Sign out from the application
   signOut() {
     this.router.navigate(['/login'], { replaceUrl: true });
   }
 
-  // Open the registration dialog
   openDialog() {
     const dialogRef = this.dialog.open(RegisterComponent, {
       width: '500px',
@@ -63,304 +58,109 @@ export class LayoutComponent implements OnInit {
     });
   }
 
+  loadLastAttendance() {
+    const storedCheckIn = localStorage.getItem('checkInTime');
+
+    if (storedCheckIn) {
+      this.isCheckedIn = true;
+      this.checkInTime = storedCheckIn;
+
+      // ✅ Also store lastAttendance locally for proper check-out
+      this.lastAttendance = {
+        UserId: this.userId,
+        CheckIn: storedCheckIn,
+        CheckOut: null, // Since user is checked in, checkout is null
+      };
+
+      console.log('Restored check-in time from local storage:', storedCheckIn);
+      return;
+    }
+
+    // If not found in local storage, fetch from DB
+    this.attendanceService.getLastAttendanceForUser(this.userId).subscribe(
+      (data) => {
+        if (data) {
+          this.lastAttendance = data;
+          this.isCheckedIn = data.CheckOut === null;
+
+          if (this.isCheckedIn) {
+            localStorage.setItem('checkInTime', data.CheckIn!); // ✅ Store check-in time
+          }
+        } else {
+          this.isCheckedIn = false;
+        }
+        console.log('Last attendance from DB:', data);
+      },
+      (error) => {
+        console.error('Error fetching last attendance:', error);
+        this.isCheckedIn = false;
+      }
+    );
+  }
 
   toggleCheckInOut() {
-    const currentTime = new Date();
-    const todayDate = currentTime.toISOString().split('T')[0];
-    // console.log('todayDate', todayDate);
-
-    if (!this.checkInTime) {
-      this.attendanceService
-        .getUserAttendanceByDate(this.userId, todayDate)
-        .subscribe(
-          (existingAttendance: Attendance | null) => {
-            if (existingAttendance && existingAttendance.CheckIn) {
-              console.warn('You have already checked in today.');
-              alert('You have already checked in today.');
-              return;
-            }
-
-            const status =
-              currentTime.getHours() < 9 ? 'Present On Time' : 'Present Late';
-            const attendanceData: Attendance = {
-              UserId: this.userId,
-              CheckIn: currentTime,
-              Status: status,
-            };
-
-            this.attendanceService
-              .createAttendanceUser(attendanceData)
-              .subscribe(
-                (response) => {
-                  console.log('Check-In Success:', response);
-                  this.attendanceId = response.Id;
-                  this.attendanceStatus = 'CheckedIn';
-                  this.checkInTime = currentTime;
-                  localStorage.setItem('attendanceId', response.Id!.toString());
-
-                  // Update BehaviorSubject
-                  this.attendanceService.updateAttendanceData(response);
-                },
-                (error) => {
-                  console.error('Check-In Failed:', error);
-                }
-              );
-          },
-          (error) => {
-            if (error.status === 404) {
-              console.log(
-                'No previous attendance record found for today. Proceeding with check-in.'
-              );
-              const status =
-                currentTime.getHours() < 9 ? 'Present On Time' : 'Present Late';
-              const attendanceData: Attendance = {
-                UserId: this.userId,
-                CheckIn: currentTime,
-                Status: status,
-              };
-
-              this.attendanceService
-                .createAttendanceUser(attendanceData)
-                .subscribe(
-                  (response) => {
-                    console.log('Check-In Success:', response);
-                    this.attendanceId = response.Id;
-                    this.attendanceStatus = 'CheckedIn';
-                    this.checkInTime = currentTime;
-                    localStorage.setItem(
-                      'attendanceId',
-                      response.Id!.toString()
-                    );
-
-                    // Update BehaviorSubject
-                    this.attendanceService.updateAttendanceData(response);
-                  },
-                  (error) => {
-                    console.error('Check-In Failed:', error);
-                  }
-                );
-            } else {
-              console.error('Error checking previous attendance:', error);
-            }
-          }
-        );
-    } else if (this.attendanceId) {
-      if (this.checkOutTime) {
-        console.warn('You have already checked out today.');
-        alert('You have already checked out today.');
-        return;
-      }
-
-    const status = currentTime.getHours() < 17 ? 'Leave' : 'Present';
-    const attendanceData: Attendance = {
-      Id: this.attendanceId!,
-      UserId: this.userId,
-      CheckIn: this.checkInTime!,
-      CheckOut: currentTime,
-      Status: status,
-    };
-
-      this.attendanceService
-        .updateAttendanceUser(this.attendanceId, attendanceData)
-        .subscribe(
-          (response) => {
-            console.log('Check-Out Success:', response);
-            this.attendanceStatus = 'CheckedOut';
-            this.checkOutTime = currentTime;
-            localStorage.removeItem('attendanceId');
-
-            // Update BehaviorSubject
-            this.attendanceService.updateAttendanceData(response);
-          },
-          (error) => {
-            console.error('Check-Out Failed:', error);
-          }
-        );
+    if (this.isCheckedIn) {
+      this.checkOut();
+    } else {
+      this.checkIn();
     }
   }
-  getAttendanceStatus() {
-    this.attendanceService.getLastAttendanceForUser(this.userId).subscribe(
-      (attendance: Attendance | null) => {
-        if (attendance) {
-          this.attendanceId = attendance.Id!;
-          this.checkInTime = attendance.CheckIn
-            ? new Date(attendance.CheckIn)
-            : null;
-          this.checkOutTime = attendance.CheckOut
-            ? new Date(attendance.CheckOut)
-            : null;
 
-          if (this.checkOutTime) {
-            this.attendanceStatus = 'CheckedOut';
-            localStorage.removeItem('attendanceId');
-          } else if (this.checkInTime) {
-            this.attendanceStatus = 'CheckedIn';
-            localStorage.setItem('attendanceId', this.attendanceId.toString());
-          }
+  checkIn() {
+    const now = new Date();
+    now.setHours(now.getHours() + 3); // Convert to Jordan time (UTC+3)
 
-          // Update BehaviorSubject
-          this.attendanceService.updateAttendanceData(attendance);
+    const newAttendance: Attendance = {
+      UserId: this.userId,
+      CheckIn: now.toISOString(),
+      CheckOut: null,
+    };
+
+    this.attendanceService.createAttendanceUser(newAttendance).subscribe(
+      (data) => {
+        this.lastAttendance = data;
+        this.isCheckedIn = true;
+        localStorage.setItem('checkInTime', now.toISOString()); // ✅ Store check-in time
+        console.log('Checked in successfully:', data);
+      },
+      (error) => {
+        console.error('Check-in failed:', error);
+      }
+    );
+  }
+
+  checkOut() {
+    if (!this.lastAttendance || !this.lastAttendance.CheckIn) {
+      console.error('Check-out failed: No check-in record found.');
+      return;
+    }
+
+    const now = new Date();
+    now.setHours(now.getHours() + 3); // Convert to Jordan time (UTC+3)
+
+    const newCheckoutRecord: Attendance = {
+      UserId: this.userId,
+      CheckIn: this.lastAttendance.CheckIn, // Keep the same check-in time
+      CheckOut: now.toISOString(), // ✅ Ensure checkout time is set
+    };
+
+    console.log('Sending check-out request:', newCheckoutRecord); // ✅ Debugging line
+
+    this.attendanceService.createAttendanceUser(newCheckoutRecord).subscribe(
+      (data) => {
+        console.log('API Response:', data); // ✅ Debugging line
+        if (data && data.CheckOut) {
+          this.lastAttendance = null; // ✅ Reset lastAttendance after successful check-out
+          this.isCheckedIn = false;
+          localStorage.removeItem('checkInTime'); // ✅ Remove local storage check-in time
+          console.log('Checked out successfully:', data);
         } else {
-          this.attendanceStatus = 'New';
+          console.error('Check-out response missing CheckOut time:', data);
         }
       },
       (error) => {
-        if (error.status === 404) {
-          this.attendanceStatus = 'New';
-        } else {
-          console.error('Error fetching attendance status:', error);
-        }
+        console.error('Check-out failed:', error);
       }
     );
   }
 }
-
-// toggleCheckInOut() {
-//   const currentTime = new Date();
-//   const todayDate = currentTime.toISOString().split('T')[0];
-//   // console.log('todayDate', todayDate);
-
-//   if (!this.checkInTime) {
-//     this.attendanceService
-//       .getUserAttendanceByDate(this.userId, todayDate)
-//       .subscribe(
-//         (existingAttendance: Attendance | null) => {
-//           if (existingAttendance && existingAttendance.CheckIn) {
-//             console.warn('You have already checked in today.');
-//             alert('You have already checked in today.');
-//             return;
-//           }
-
-//           const status =
-//             currentTime.getHours() < 9 ? 'Present On Time' : 'Present Late';
-//           const attendanceData: Attendance = {
-//             UserId: this.userId,
-//             CheckIn: currentTime,
-//             Status: status,
-//           };
-
-//           this.attendanceService
-//             .createAttendanceUser(attendanceData)
-//             .subscribe(
-//               (response) => {
-//                 console.log('Check-In Success:', response);
-//                 this.attendanceId = response.Id;
-//                 this.attendanceStatus = 'CheckedIn';
-//                 this.checkInTime = currentTime;
-//                 localStorage.setItem('attendanceId', response.Id!.toString());
-
-//                 // Update BehaviorSubject
-//                 this.attendanceService.updateAttendanceData(response);
-//               },
-//               (error) => {
-//                 console.error('Check-In Failed:', error);
-//               }
-//             );
-//         },
-//         (error) => {
-//           if (error.status === 404) {
-//             console.log(
-//               'No previous attendance record found for today. Proceeding with check-in.'
-//             );
-//             const status =
-//               currentTime.getHours() < 9 ? 'Present On Time' : 'Present Late';
-//             const attendanceData: Attendance = {
-//               UserId: this.userId,
-//               CheckIn: currentTime,
-//               Status: status,
-//             };
-
-//             this.attendanceService
-//               .createAttendanceUser(attendanceData)
-//               .subscribe(
-//                 (response) => {
-//                   console.log('Check-In Success:', response);
-//                   this.attendanceId = response.Id;
-//                   this.attendanceStatus = 'CheckedIn';
-//                   this.checkInTime = currentTime;
-//                   localStorage.setItem(
-//                     'attendanceId',
-//                     response.Id!.toString()
-//                   );
-
-//                   // Update BehaviorSubject
-//                   this.attendanceService.updateAttendanceData(response);
-//                 },
-//                 (error) => {
-//                   console.error('Check-In Failed:', error);
-//                 }
-//               );
-//           } else {
-//             console.error('Error checking previous attendance:', error);
-//           }
-//         }
-//       );
-//   } else if (this.attendanceId) {
-//     if (this.checkOutTime) {
-//       console.warn('You have already checked out today.');
-//       alert('You have already checked out today.');
-//       return;
-//     }
-
-//     const status = currentTime.getHours() < 17 ? 'Leave' : 'Present';
-//     const attendanceData: Attendance = {
-//       Id: this.attendanceId,
-//       UserId: this.userId,
-//       CheckIn: this.checkInTime,
-//       CheckOut: currentTime,
-//       Status: status,
-//     };
-
-//     this.attendanceService
-//       .updateAttendanceUser(this.attendanceId, attendanceData)
-//       .subscribe(
-//         (response) => {
-//           console.log('Check-Out Success:', response);
-//           this.attendanceStatus = 'CheckedOut';
-//           this.checkOutTime = currentTime;
-//           localStorage.removeItem('attendanceId');
-
-//           // Update BehaviorSubject
-//           this.attendanceService.updateAttendanceData(response);
-//         },
-//         (error) => {
-//           console.error('Check-Out Failed:', error);
-//         }
-//       );
-//   }
-// }
-// getAttendanceStatus() {
-//   this.attendanceService.getLastAttendanceForUser(this.userId).subscribe(
-//     (attendance: Attendance | null) => {
-//       if (attendance) {
-//         this.attendanceId = attendance.Id!;
-//         this.checkInTime = attendance.CheckIn
-//           ? new Date(attendance.CheckIn)
-//           : null;
-//         this.checkOutTime = attendance.CheckOut
-//           ? new Date(attendance.CheckOut)
-//           : null;
-
-//         if (this.checkOutTime) {
-//           this.attendanceStatus = 'CheckedOut';
-//           localStorage.removeItem('attendanceId');
-//         } else if (this.checkInTime) {
-//           this.attendanceStatus = 'CheckedIn';
-//           localStorage.setItem('attendanceId', this.attendanceId.toString());
-//         }
-
-//         // Update BehaviorSubject
-//         this.attendanceService.updateAttendanceData(attendance);
-//       } else {
-//         this.attendanceStatus = 'New';
-//       }
-//     },
-//     (error) => {
-//       if (error.status === 404) {
-//         this.attendanceStatus = 'New';
-//       } else {
-//         console.error('Error fetching attendance status:', error);
-//       }
-//     }
-//   );
-// }

@@ -3,6 +3,7 @@ import { AttendanceService } from 'src/app/services/attendance.service';
 import { Attendance } from 'src/app/shared/models/attendance';
 import { DatePipe } from '@angular/common';
 import { MatDatepicker } from '@angular/material/datepicker';
+import { ServiceApiService } from 'src/app/Service/service-api.service';
 
 @Component({
   selector: 'app-attendance',
@@ -13,29 +14,32 @@ import { MatDatepicker } from '@angular/material/datepicker';
 export class AttendanceComponent implements OnInit {
   attendanceRecords: Attendance[] = [];
   @ViewChild(MatDatepicker) picker: MatDatepicker<Date> | undefined;
-  userId = 8;
+  userId? = 12;
   constructor(
     private attendanceService: AttendanceService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private apiService: ServiceApiService
   ) {}
 
   ngOnInit(): void {
+    // const loggedInEmployee = this.apiService.getLoggedInEmployee();
+    // this.userId = loggedInEmployee!.Id;
+    // console.log('User Id:', this.userId);
     this.loadAttendanceRecords();
   }
 
   loadAttendanceRecords(): void {
-    this.attendanceService.getAllAttendanceUsers().subscribe({
+    this.attendanceService.getAttendanceUserById(this.userId!).subscribe({
       next: (data) => {
         this.attendanceRecords = data.map((record) => ({
           ...record,
-          CheckIn: record.CheckIn ? new Date(record.CheckIn) : null,
-          CheckOut: record.CheckOut ? new Date(record.CheckOut) : null,
-          formattedCheckIn: record.CheckIn
-            ? this.datePipe.transform(record.CheckIn, 'dd/MM/yyyy hh:mm a')
-            : null,
-          formattedCheckOut: record.CheckOut
-            ? this.datePipe.transform(record.CheckOut, 'dd/MM/yyyy hh:mm a')
-            : null,
+
+          // formattedCheckIn: record.CheckIn
+          //   ? this.datePipe.transform(record.CheckIn, 'dd/MM/yyyy hh:mm a')
+          //   : null,
+          // formattedCheckOut: record.CheckOut
+          //   ? this.datePipe.transform(record.CheckOut, 'dd/MM/yyyy hh:mm a')
+          //   : null,
         }));
       },
       error: (err) => {
@@ -46,19 +50,19 @@ export class AttendanceComponent implements OnInit {
 
   getUserAttendanceByMonth(year: number, month: number): void {
     this.attendanceService
-      .getUserAttendanceByMonth(this.userId, year, month)
+      .getUserAttendanceByMonth(this.userId!, year, month)
       .subscribe({
         next: (data) => {
           this.attendanceRecords = data.map((record) => ({
             ...record,
-            CheckIn: record.CheckIn ? new Date(record.CheckIn) : null,
-            CheckOut: record.CheckOut ? new Date(record.CheckOut) : null,
-            formattedCheckIn: record.CheckIn
-              ? this.datePipe.transform(record.CheckIn, 'dd/MM/yyyy hh:mm a')
-              : null,
-            formattedCheckOut: record.CheckOut
-              ? this.datePipe.transform(record.CheckOut, 'dd/MM/yyyy hh:mm a')
-              : null,
+            // CheckIn: record.CheckIn ? new Date(record.CheckIn) : null,
+            // CheckOut: record.CheckOut ? new Date(record.CheckOut) : null,
+            // formattedCheckIn: record.CheckIn
+            //   ? this.datePipe.transform(record.CheckIn, 'dd/MM/yyyy hh:mm a')
+            //   : null,
+            // formattedCheckOut: record.CheckOut
+            //   ? this.datePipe.transform(record.CheckOut, 'dd/MM/yyyy hh:mm a')
+            //   : null,
           }));
         },
         error: (err) => {
