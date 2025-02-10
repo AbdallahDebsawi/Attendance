@@ -8,6 +8,7 @@ namespace Attendance.Models.ViewModel
 {
     public class RequestViewModel
     {
+        public int Id { get; set; }
         public string TypeOfAbsence { get; set; }
         public DateTime From { get; set; }
         public DateTime To { get; set; }

@@ -1,78 +1,62 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ServiceApiService } from 'src/app/Service/service-api.service';
-import { RequestComponent } from '../request.component';
+import { Request } from 'src/app/shared/models/request';
 
 @Component({
   selector: 'app-request-entry',
   templateUrl: './request-entry.component.html',
   styleUrls: ['./request-entry.component.css']
 })
-export class RequestEntryComponent implements OnInit {
-  requestForm : FormGroup;
-  fileName : string = '';
+export class RequestEntryComponent {
+  requestForm: FormGroup;
+  fileName: string = '';
+  selectedFile: File | null = null;
 
   constructor(
-    private fb : FormBuilder,
-    public dialog : MatDialog,
-    private apiService : ServiceApiService,
-    private dialogRef : MatDialogRef<RequestEntryComponent>,
-    @Inject(MAT_DIALOG_DATA) public data : any
+    private fb: FormBuilder,
+    private apiUrl : ServiceApiService,
+    public dialogRef: MatDialogRef<RequestEntryComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: Request
   ) {
+    this.data = this.data || {};
     this.requestForm = this.fb.group({
-      typeOfAbsence : ['',Validators.required],
-      from : ['' ,Validators.required],
-      to : ['' ,Validators.required],
-      reasonOfAbsence : ['' ,Validators.required],
-      //fileDocument : ['' ,Validators.required],
-      userId : ['' , Validators.required]
-
+      id: [data?.Id || null],
+      typeOfAbsence: [data?.TypeOfAbsence, Validators.required],
+      from: [data?.From, Validators.required],
+      to: [data?.To, Validators.required],
+      reasonOfAbsence: [data?.ReasonOfAbsence, Validators.required],
+      MangarStatus : [data?.ManagerStatus || false],
+      hRStatus: [data?.HRStatus || false],
+      userId: [data?.UserId]
     });
-   }
-
-  ngOnInit(): void {
   }
 
-  save(): void{
-    if(this.requestForm.valid){
-      const request = this.requestForm.value;
-      console.log('Form Data Being Sent:', request);
-
-      if(request.Id){
-        this.apiService.putData(request.Id, request).subscribe(
-          (data) => {
-            console.log('Book Updated' , data);
-            this.dialogRef.close(data);
-          },
-          (error) => {
-            console.error('Error Updating Book :' , error)
-          }
-        );
+  saveRequest(): void {
+    if (this.requestForm.valid) {
+      const requestData = this.requestForm.value;
+      
+      if (requestData.id) {
+        this.apiUrl.putData(`UpdateRequest/${requestData.id}`, requestData).subscribe(() => {
+          this.dialogRef.close(true);
+        });
+      } else {
+        this.apiUrl.postData('CreateRequest', requestData).subscribe(() => {
+          this.dialogRef.close(true);
+        });
       }
-      else {
-        this.apiService.postData('CreateRequest',request).subscribe(
-          (data) => {
-            console.log('Book Created Successfully : ' , data);
-            this.dialogRef.close(data);
-            
-          },
-          (error) => {
-            console.error('Error Creating Book : ' , error)
-          }
-        );
-      }
-    } else {
-      console.warn('form is invalid')
     }
-   }
+  }
+  
+  
 
-  close(): void{
-    this.dialogRef.close();
-   }
-
-   onFileSelected(event: any) {
+  onFileSelected(event: any) {
     const file = event.target.files[0];
-    console.log(file);
+    if (file) {
+      this.selectedFile = file;
+      this.fileName = file.name;
+      this.requestForm.patchValue({ fileDocument: file });
+    }
   }
 }

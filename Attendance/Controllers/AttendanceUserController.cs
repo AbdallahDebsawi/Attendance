@@ -56,6 +56,7 @@ namespace Attendance.Controllers
         }
         // POST: api/AttendanceUser
         [HttpPost]
+        [Route("api/AttendanceUser")]
         public async Task<IHttpActionResult> PostAttendanceUser([FromBody] AttendanceUser attendanceUser)
         {
             if (attendanceUser == null)

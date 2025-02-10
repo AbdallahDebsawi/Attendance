@@ -2,7 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Role } from 'src/app/enums/role';
-import { ServiceApiService } from 'src/app/Service/service-api.service'; 
+import { ServiceApiService } from 'src/app/Service/service-api.service';
+import { EmployeeService } from 'src/app/services/employee.service'; // Import EmployeeService
 
 @Component({
   selector: 'app-register',
@@ -11,15 +12,19 @@ import { ServiceApiService } from 'src/app/Service/service-api.service';
 })
 export class RegisterComponent implements OnInit {
   userForm: FormGroup;
-  roles = Object.keys(Role).filter(key => isNaN(Number(key))) as (keyof typeof Role)[];  
+  roles = Object.entries(Role)
+    .filter(([key, value]) => isNaN(Number(key)))
+    .map(([key, value]) => ({ key, value }));
   Role = Role; // Allow template access to enum values
-  
+
   departments: any[] = []; // Store department list
   managers: any[] = []; // Store manager list
 
+  // Inject EmployeeService into the constructor
   constructor(
     private fb: FormBuilder,
     private apiService: ServiceApiService,
+    private employeeService: EmployeeService, // Inject EmployeeService
     private dialogRef: MatDialogRef<RegisterComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -35,7 +40,7 @@ export class RegisterComponent implements OnInit {
       role: ['', Validators.required],
       phoneNumber: ['', Validators.required],
       joinDate: ['', Validators.required],
-      managerId: ['', Validators.required]
+      managerId: ['']
     }, {
       validator: this.passwordMatchValidator('password', 'confirmPassword')
     });
@@ -111,18 +116,21 @@ export class RegisterComponent implements OnInit {
       const formValues = this.userForm.value;
   
       formValues.name = `${formValues.firstName} ${formValues.lastName}`;
-      
       delete formValues.confirmPassword;
   
-      // Map department to DepartmentId
       formValues.departmentId = formValues.department;
-      delete formValues.department; // Remove the department field from the request
+      delete formValues.department;
   
-      // Call API to register the user
+      formValues.roleId = Number(formValues.role);
+      delete formValues.role;
+  
       this.apiService.postData('user/register', formValues).subscribe(
         (response) => {
           console.log('User registered successfully:', response);
-          this.dialogRef.close(formValues); // Close the dialog with the form data
+          this.dialogRef.close(formValues);
+  
+          // Notify the EmployeeService to refresh the employee data
+          this.employeeService.notifyEmployeesUpdated(); // Notify that data should be refreshed
         },
         (error) => {
           console.error('Error registering user:', error);
@@ -130,4 +138,5 @@ export class RegisterComponent implements OnInit {
       );
     }
   }
+  
 }

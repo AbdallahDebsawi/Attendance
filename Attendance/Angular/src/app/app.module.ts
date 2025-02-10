@@ -19,12 +19,10 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { LayoutComponent } from './shared/layout/layout.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { RequestComponent } from './components/request/request.component';
 import { ControlComponent } from './shared/control/control.component';
 import { RegisterComponent } from './components/register/register.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
-import { RequestEntryComponent } from './components/request/request-entry/request-entry.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { AttendanceService } from './services/attendance.service';
 import { EmployeesComponent } from './components/employees/employees.component';
@@ -32,6 +30,9 @@ import { AttendanceComponent } from './components/attendance/attendance.componen
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { RequestComponent } from './components/request/request.component';
+import { RequestEntryComponent } from './components/request/request-entry/request-entry.component';
 // import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
@@ -40,12 +41,12 @@ import { MatMenuModule } from '@angular/material/menu';
     LoginComponent,
     LayoutComponent,
     DashboardComponent,
-    RequestComponent,
     ControlComponent,
     RegisterComponent,
-    RequestEntryComponent,
     EmployeesComponent,
     AttendanceComponent,
+    RequestComponent,
+    RequestEntryComponent,
   ],
   imports: [
     BrowserModule,
@@ -72,8 +73,10 @@ import { MatMenuModule } from '@angular/material/menu';
     MatNativeDateModule,
     MatSelectModule,
     MatMenuModule,
-    MatIconModule
-
+    MatIconModule,
+    MatCheckboxModule,
+    FormsModule
+    
   ],
   providers: [AttendanceService],
   bootstrap: [AppComponent],

@@ -84,17 +84,19 @@
     </mat-form-field>
 
     <!-- Role -->
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Role</mat-label>
-      <mat-select formControlName="role" required>
-        <mat-option *ngFor="let role of roles" [value]="role">
-          {{ role }}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="userForm.get('role')?.hasError('required')">
-        Role is required
-      </mat-error>
-    </mat-form-field>
+    <!-- Role Selection -->
+<mat-form-field appearance="outline" class="full-width">
+  <mat-label>Role</mat-label>
+  <mat-select formControlName="role" required>
+    <mat-option *ngFor="let role of roles" [value]="role.value">
+      {{ role.key }}
+    </mat-option>
+  </mat-select>
+  <mat-error *ngIf="userForm.get('role')?.hasError('required')">
+    Role is required
+  </mat-error>
+</mat-form-field>
+
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Department</mat-label>
@@ -113,17 +115,10 @@
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Manager</mat-label>
       <mat-select formControlName="managerId">
-        <!-- Add an empty option for null/empty value -->
-        <mat-option value="">None</mat-option>
-    
-        <!-- Display options with manager IDs -->
         <mat-option *ngFor="let manager of managers" [value]="manager.Id">
           {{ manager.Id }} 
         </mat-option>
       </mat-select>
-      <mat-error *ngIf="userForm.get('managerId')?.hasError('required')">
-        Manager is required
-      </mat-error>
     </mat-form-field>
     
     

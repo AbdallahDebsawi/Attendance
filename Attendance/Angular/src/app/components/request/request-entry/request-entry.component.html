@@ -8,11 +8,11 @@
     <form [formGroup]="requestForm">
         <label>Leave Type</label>
       <mat-form-field appearance="fill" style="width: 100%;">
-        <mat-select matinput formControlName="typeOfAbsence">
-          <mat-option value="annual">Annual Leave</mat-option>
-          <mat-option value="sick">Sick Leave</mat-option>
-          <mat-option value="personal">Personal Leave</mat-option>
-          <mat-option value="other">Other</mat-option>
+        <mat-select matinput  formControlName="typeOfAbsence">
+          <mat-option value="Annual Leave">Annual Leave</mat-option>
+          <mat-option value="Sick Leave">Sick Leave</mat-option>
+          <mat-option value="Personal Leave">Personal Leave</mat-option>
+          <mat-option value="Other">Other</mat-option>
         </mat-select>
       </mat-form-field>
   
@@ -55,7 +55,7 @@
       </div>
 
       <mat-dialog-actions style="width: 100%; display: flex; justify-content: space-between;">
-        <button mat-button style="background-color: green; color: white; flex: 1;" type="submit" (click)="save()">Submit</button>
+        <button mat-button style="background-color: green; color: white; flex: 1;" type="submit" (click)="saveRequest()">Submit</button>
         <button mat-button color="warn" type="button" (click)="requestForm.reset()" style="flex: 1;">Reset</button>
       </mat-dialog-actions>
   

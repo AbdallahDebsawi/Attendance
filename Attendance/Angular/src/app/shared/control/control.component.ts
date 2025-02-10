@@ -1,4 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { ServiceApiService } from 'src/app/Service/service-api.service';
+import { Request } from '../models/request';
 
 @Component({
   selector: 'app-control',
@@ -7,14 +11,20 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class ControlComponent implements OnInit {
   role: number = 3;
+  element: Request = {} as Request;;
+  isUpdateMode : boolean = false;
   @Input() displayedColumns: string[] = [];
   @Input() dataSource: any[] = [];
   @Input() tableTitle: string = '';
+  @Output() createRequest = new EventEmitter<void>();
+  @Output() editRequest = new EventEmitter<any>();
+  @Output() deleteRequest = new EventEmitter<Request>();
+  @Input() request! : Request
   @Output() filterClicked = new EventEmitter<void>();
 
   columnMapping: { [key: string]: string } = {
     name: 'Name',
-    duratiom: 'Duration',
+    duration: 'Duration',
     startDate: 'Start Date',
     endDate: 'End Date',
     type: 'Type',
@@ -35,9 +45,13 @@ export class ControlComponent implements OnInit {
     Date: 'Date',
   };
 
-  constructor() {}
+  constructor(public dialog : MatDialog ,private apiUrl : ServiceApiService ,private fb: FormBuilder) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (!this.deleteRequest) {
+      console.error('deleteRequest method is not passed correctly!');
+    }
+  }
 
   takeAction(element: any): void {
     if (this.role === 3) {
@@ -59,7 +73,19 @@ export class ControlComponent implements OnInit {
     }
   }
 
+  onCreateRequest(): void {
+    this.createRequest.emit(); 
+  }
+
+  onUpdateRequest(request : Request): void {
+    this.editRequest.emit(request);
+  }
+
+  onDelete(request: Request) {
+    this.deleteRequest.emit(request); 
+  }
+
   onFilterClick(): void {
-    this.filterClicked.emit(); // Emit event to trigger the date picker opening
+    this.filterClicked.emit(); 
   }
 }
