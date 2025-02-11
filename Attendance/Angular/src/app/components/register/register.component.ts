@@ -29,6 +29,7 @@ export class RegisterComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.userForm = this.fb.group({
+      id: [''],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -47,16 +48,34 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("roles:", this.roles);
+    console.log("Roles:", this.roles);
+    console.log("Departments:", this.departments);
+    console.log("Managers:", this.managers);
     
-    // Fetch Departments and Managers
     this.getDepartments();
     this.getManagers();
+    
+    console.log("Data passed to dialog:", this.data);
 
-    // If updating user data, prefill the form
-    if (this.data && this.data.Id) {
-      this.userForm.patchValue(this.data);
-      this.userForm.patchValue({ joinDate: this.formatDate(this.data.joinDate) });
+    // If updating, prefill form fields
+    if (this.data?.Id) {
+      // Patch form values
+      this.userForm.patchValue({
+        id: this.data.Id,
+        firstName: this.data.Name.split(' ')[0], 
+        lastName: this.data.Name.split(' ')[1] || '',
+        email: this.data.Email,
+        password: this.data.Password || '', 
+        confirmPassword: this.data.Password,
+        salary: this.data.Salary,
+        gender: this.data.Gender,
+        department: this.data.DepartmentId || '',
+        role: this.data.RoleId,
+        joinDate: this.formatDate(this.data.JoinDate),
+        managerId: this.data.ManagerId || ''
+      });
+
+      console.log("Form after patching values:", this.userForm.value);
     }
   }
 
@@ -114,29 +133,39 @@ export class RegisterComponent implements OnInit {
   save() {
     if (this.userForm.valid) {
       const formValues = this.userForm.value;
-  
+
       formValues.name = `${formValues.firstName} ${formValues.lastName}`;
       delete formValues.confirmPassword;
-  
+
       formValues.departmentId = formValues.department;
       delete formValues.department;
-  
+
       formValues.roleId = Number(formValues.role);
       delete formValues.role;
-  
-      this.apiService.postData('user/register', formValues).subscribe(
-        (response) => {
-          console.log('User registered successfully:', response);
-          this.dialogRef.close(formValues);
-  
-          // Notify the EmployeeService to refresh the employee data
-          this.employeeService.notifyEmployeesUpdated(); // Notify that data should be refreshed
-        },
-        (error) => {
-          console.error('Error registering user:', error);
-        }
-      );
+
+      if (this.data?.Id) {  // If Id exists, update the user
+        this.apiService.putData(`user/${this.data.Id}`, formValues).subscribe(
+          (response) => {
+            console.log('User updated successfully:', response);
+            this.dialogRef.close(formValues);
+            this.employeeService.notifyEmployeesUpdated();
+          },
+          (error) => {
+            console.error('Error updating user:', error);
+          }
+        );
+      } else {  // Otherwise, create a new user
+        this.apiService.postData('user/register', formValues).subscribe(
+          (response) => {
+            console.log('User registered successfully:', response);
+            this.dialogRef.close(formValues);
+            this.employeeService.notifyEmployeesUpdated();
+          },
+          (error) => {
+            console.error('Error registering user:', error);
+          }
+        );
+      }
     }
   }
-  
 }

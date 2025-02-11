@@ -44,16 +44,16 @@
             <mat-menu #actionMenu="matMenu">
               <button
                 mat-menu-item
-                (click)="onUpdateRequest(element)"
-                [disabled]="isEmployeeComponent"
+                (click)="isEmployeeComponent ? onUpdateUser(element) : onUpdateRequest(element)"
+                
               >
                 <mat-icon>edit</mat-icon> Update
               </button>
               <button
                 mat-menu-item
                 *ngIf="element?.Id"
-                (click)="onDelete(element)"
-                [disabled]="isEmployeeComponent"
+                (click)="isEmployeeComponent ? onDeleteUser(element) : onDelete(element)"
+
               >
                 <mat-icon>delete</mat-icon> Delete
               </button>

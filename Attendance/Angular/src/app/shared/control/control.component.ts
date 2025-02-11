@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ServiceApiService } from 'src/app/Service/service-api.service';
 import { Request } from '../models/request';
+import { employee } from '../models/employee';
 
 @Component({
   selector: 'app-control',
@@ -16,6 +17,8 @@ export class ControlComponent implements OnInit {
   @Input() dataSource: any[] = [];
   @Input() tableTitle: string = '';
   @Output() createUser = new EventEmitter<void>();
+  @Output() editUser = new EventEmitter <any>();
+  @Output() deleteUser = new EventEmitter <employee>();
   @Output() createRequest = new EventEmitter<void>();
   @Output() editRequest = new EventEmitter<any>();
   @Output() deleteRequest = new EventEmitter<Request>();
@@ -96,6 +99,20 @@ export class ControlComponent implements OnInit {
     if (!this.isEmployeeComponent) {
       this.deleteRequest.emit(request);  // Only emit delete if not Employee
     }
+  }
+
+  onUpdateUser(emp: employee): void {
+    if (this.isEmployeeComponent)
+    {
+      this.editUser.emit(emp);
+    }
+  }
+
+  onDeleteUser(emp: employee) : void {
+    if (this.isEmployeeComponent)
+      {
+        this.deleteUser.emit(emp);
+      }
   }
 
   onFilterClick(): void {

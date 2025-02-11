@@ -4,7 +4,11 @@
  [displayedColumns]="['Id','Name', 'ManagerId', 'Email', 'Gender', 'Salary', 'JoinDate', 'RoleId', 'DepartmentId']"
  [dataSource]="employeeList"
  [tableTitle]="'Employee List'"
- (createUser)="openDialog()">
+ (createUser)="openDialog()"
+ (editUser)="openDialog($event)"
+ (deleteUser)="deleteUser($event)"
+ 
+ >
  
 </app-control>
 </div>
