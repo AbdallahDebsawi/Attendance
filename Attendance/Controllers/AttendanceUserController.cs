@@ -54,6 +54,7 @@ namespace Attendance.Controllers
             var result = ApplyStatusLogic(attendanceRecords);
             return Ok(result);
         }
+       
         // POST: api/AttendanceUser
         [HttpPost]
         public async Task<IHttpActionResult> PostAttendanceUser([FromBody] AttendanceUser attendanceUser)
@@ -76,8 +77,6 @@ namespace Attendance.Controllers
 
             return CreatedAtRoute("DefaultApi", new { id = newRecord.Id }, newRecord);
         }
-     
-
 
         // PUT: api/AttendanceUser/{id}
         [HttpPut]
@@ -129,6 +128,7 @@ namespace Attendance.Controllers
 
             return StatusCode(System.Net.HttpStatusCode.NoContent);
         }
+       
         //  Get today's attendance record for a user
         [HttpGet]
         [Route("api/AttendanceUser/user/{userId}/date/{date}")]
@@ -188,6 +188,7 @@ namespace Attendance.Controllers
         [HttpGet]
         [Route("api/AttendanceUser/user/{userId}/month/{year}/{month}")]
         [ResponseType(typeof(IEnumerable<AttendanceUser>))]
+       
         public async Task<IHttpActionResult> GetUserAttendanceByMonth(int userId, int year, int month)
         {
             if (year < 1 || month < 1 || month > 12)
@@ -211,6 +212,7 @@ namespace Attendance.Controllers
             var result = ApplyStatusLogic(attendanceRecords);
             return Ok(result);
         }
+        
         private List<object> ApplyStatusLogic(List<AttendanceUser> attendanceRecords)
         {
             List<object> result = new List<object>();

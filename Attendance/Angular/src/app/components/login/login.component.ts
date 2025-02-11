@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { employee } from 'src/app/shared/models/employee'; 
+import { employee } from 'src/app/shared/models/employee';
 import { ServiceApiService } from 'src/app/Service/service-api.service';
 
 @Component({
@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
           this.apiService.setLoggedInEmployee(this.loggedInEmployee);
 
           console.log('Logged in employee:', this.loggedInEmployee);
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/dashboard', this.loggedInEmployee.Id]);
         }
       },
       (error) => {

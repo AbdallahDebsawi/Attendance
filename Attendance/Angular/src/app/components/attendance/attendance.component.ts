@@ -4,6 +4,7 @@ import { Attendance } from 'src/app/shared/models/attendance';
 import { DatePipe } from '@angular/common';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { ServiceApiService } from 'src/app/Service/service-api.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-attendance',
@@ -15,15 +16,31 @@ export class AttendanceComponent implements OnInit {
   attendanceRecords: Attendance[] = [];
   @ViewChild(MatDatepicker) picker: MatDatepicker<Date> | undefined;
   userId? = 12;
+  name: string = '';
   constructor(
     private attendanceService: AttendanceService,
-    private apiService: ServiceApiService
+    private apiService: ServiceApiService,
+    private route: ActivatedRoute // Inject ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    const loggedInEmployee = this.apiService.getLoggedInEmployee();
-    this.userId = loggedInEmployee!.Id;
-    this.loadAttendanceRecords();
+    // Get userId from the URL
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      if (id) {
+        this.userId = +id; // Convert string to number
+      } else {
+        const loggedInEmployee = this.apiService.getLoggedInEmployee();
+        this.userId = loggedInEmployee?.Id;
+      }
+
+      this.loadAttendanceRecords();
+    });
+
+    this.route.queryParams.subscribe((queryParams) => {
+      this.name = queryParams['name'] || '';
+    });
+
     // Subscribe to changes in attendance data
     this.attendanceService.attendanceData$.subscribe((data) => {
       this.attendanceRecords = data;

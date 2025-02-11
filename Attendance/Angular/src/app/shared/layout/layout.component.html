@@ -16,16 +16,19 @@
         <!-- Username -->
         <div class="username-section">
           <div>
-            <span>{{ apiService.getLoggedInEmployee()?.Name || 'Guest' }}</span>
+            <span>{{ apiService.getLoggedInEmployee()?.Name || "Guest" }}</span>
           </div>
 
           <div class="job">
             <span>
               {{
-                apiService.getLoggedInEmployee()?.RoleId === 1 ? 'Manager' :
-                apiService.getLoggedInEmployee()?.RoleId === 2 ? 'Employee' :
-                apiService.getLoggedInEmployee()?.RoleId === 3 ? 'HR' :
-                'Guest'
+                apiService.getLoggedInEmployee()?.RoleId === 1
+                  ? "Manager"
+                  : apiService.getLoggedInEmployee()?.RoleId === 2
+                  ? "Employee"
+                  : apiService.getLoggedInEmployee()?.RoleId === 3
+                  ? "HR"
+                  : "Guest"
               }}
             </span>
           </div>
@@ -45,7 +48,7 @@
               alt="Dashboard Icon"
               class="option-icon"
             />
-            <a routerLink="/dashboard">Dashboard</a>
+            <a [routerLink]="['/dashboard', userId]">Dashboard</a>
           </div>
 
           <!-- Employees link (Visible only for HR) -->
@@ -65,7 +68,7 @@
               alt="Employee Icon"
               class="option-icon"
             />
-            <a routerLink="/attendance">Your Attendance</a>
+            <a [routerLink]="['/attendance', userId]">Attendance</a>
           </div>
 
           <!-- Request Option -->
