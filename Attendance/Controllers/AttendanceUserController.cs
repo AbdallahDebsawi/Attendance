@@ -76,43 +76,7 @@ namespace Attendance.Controllers
 
             return CreatedAtRoute("DefaultApi", new { id = newRecord.Id }, newRecord);
         }
-        //public async Task<IHttpActionResult> PostAttendanceUser([FromBody] AttendanceUser attendanceUser)
-        //{
-        //    if (attendanceUser == null)
-        //    {
-        //        return BadRequest("Invalid attendance data.");
-        //    }
-
-        //    // Check if there's an open check-in (without a check-out)
-        //    var existingRecord = await db.AttendanceUsers
-        //        .Where(a => a.UserId == attendanceUser.UserId && a.CheckOut == null)
-        //        .OrderByDescending(a => a.CheckIn)
-        //        .FirstOrDefaultAsync();
-
-        //    if (existingRecord != null)
-        //    {
-        //        // User is checking out (update existing record)
-        //        existingRecord.CheckOut = DateTime.UtcNow;
-        //        await db.SaveChangesAsync();
-        //        return Ok(existingRecord); // Return updated record
-        //    }
-        //    else
-        //    {
-        //        // User is checking in (create a new record)
-        //        var newRecord = new AttendanceUser
-        //        {
-        //            UserId = attendanceUser.UserId,
-        //            CheckIn = DateTime.UtcNow,  // Set check-in time
-        //            CheckOut = null,           // Leave check-out as null
-        //            IsDeleted = false
-        //        };
-
-        //        db.AttendanceUsers.Add(newRecord);
-        //        await db.SaveChangesAsync();
-        //        return CreatedAtRoute("DefaultApi", new { id = newRecord.Id }, newRecord);
-        //    }
-        //}
-
+     
 
 
         // PUT: api/AttendanceUser/{id}

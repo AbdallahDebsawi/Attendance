@@ -17,7 +17,6 @@ export class AttendanceComponent implements OnInit {
   userId? = 12;
   constructor(
     private attendanceService: AttendanceService,
-    private datePipe: DatePipe,
     private apiService: ServiceApiService
   ) {}
 
@@ -25,21 +24,16 @@ export class AttendanceComponent implements OnInit {
     const loggedInEmployee = this.apiService.getLoggedInEmployee();
     this.userId = loggedInEmployee!.Id;
     this.loadAttendanceRecords();
+    // Subscribe to changes in attendance data
+    this.attendanceService.attendanceData$.subscribe((data) => {
+      this.attendanceRecords = data;
+    });
   }
 
   loadAttendanceRecords(): void {
     this.attendanceService.getAttendanceUserById(this.userId!).subscribe({
       next: (data) => {
-        this.attendanceRecords = data.map((record) => ({
-          ...record,
-
-          // formattedCheckIn: record.CheckIn
-          //   ? this.datePipe.transform(record.CheckIn, 'dd/MM/yyyy hh:mm a')
-          //   : null,
-          // formattedCheckOut: record.CheckOut
-          //   ? this.datePipe.transform(record.CheckOut, 'dd/MM/yyyy hh:mm a')
-          //   : null,
-        }));
+        this.attendanceRecords = data;
       },
       error: (err) => {
         console.error('Error fetching attendance records:', err);
@@ -52,17 +46,7 @@ export class AttendanceComponent implements OnInit {
       .getUserAttendanceByMonth(this.userId!, year, month)
       .subscribe({
         next: (data) => {
-          this.attendanceRecords = data.map((record) => ({
-            ...record,
-            // CheckIn: record.CheckIn ? new Date(record.CheckIn) : null,
-            // CheckOut: record.CheckOut ? new Date(record.CheckOut) : null,
-            // formattedCheckIn: record.CheckIn
-            //   ? this.datePipe.transform(record.CheckIn, 'dd/MM/yyyy hh:mm a')
-            //   : null,
-            // formattedCheckOut: record.CheckOut
-            //   ? this.datePipe.transform(record.CheckOut, 'dd/MM/yyyy hh:mm a')
-            //   : null,
-          }));
+          this.attendanceRecords = data;
         },
         error: (err) => {
           if ((err.status = 404)) {
