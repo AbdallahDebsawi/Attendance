@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ServiceApiService } from 'src/app/Service/service-api.service';
@@ -15,51 +15,42 @@ export class RequestComponent implements OnInit {
   requestList: Request[] = [];
   dataSource = new MatTableDataSource<Request>();
 
-  constructor(private apiUrl: ServiceApiService, private dialog: MatDialog) {}
+  constructor(private apiUrl: ServiceApiService,
+     private dialog: MatDialog,
+     private cdRef : ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loadRequests();
   }
 
   loadRequests(): void {
-    this.apiUrl.getAll('GetAllRequest').subscribe(
-      (data : Request[]) => {
-        console.log('Fetched Data :' , data);
-        this.requestList = data;
-        this.dataSource.data = data;
-      },
-      (error) => {
-        console.error('Error Fetching Data : ', error)
-      }
-    )
+    const userId = this.apiUrl.getLoggedInEmployee()?.Id;
+
+    if (userId) {
+      this.apiUrl.getAll(`GetAllRequest?userId=${userId}`).subscribe(
+        (data: Request[]) => {
+          console.log('Fetched Data:', data);
+          this.requestList = data;
+          this.dataSource.data = data;
+          this.cdRef.detectChanges();
+        },
+        (error) => {
+          console.error('Error Fetching Data:', error);
+        }
+      );
+    } else {
+      console.error('User not logged in');
+    }
   }
 
   openDialog(request?: Request): void {
-    console.log('Id',request?.Id)
     const dialogRef = this.dialog.open(RequestEntryComponent, {
-      width: '400px',
+      width: '800px',
       data: request ? { ...request } : null,
     });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        if (result.id){
-          this.updateRequest(result);
-        }else {
-          this.createRequest()
-        }
-      }
-    });
-  }
-
-
-  createRequest(){
-    this.apiUrl.postData('CreateRequest', this.requestList).subscribe(() => {
+    dialogRef.afterClosed().subscribe(() => {
       this.loadRequests();
-    });
-  }
-  updateRequest(request : Request) : void {
-    this.apiUrl.putData(`UpdateRequest/${request.Id}`, request).subscribe(() => {
-      this.loadRequests();
+      this.cdRef.detectChanges();
     });
   }
 
@@ -67,10 +58,9 @@ export class RequestComponent implements OnInit {
     this.apiUrl.deleteData(`RequestDelete/${request.Id}`).subscribe(
       () => {
         this.loadRequests();
+        this.cdRef.detectChanges();
+      },(error) => {
+        console.error('Error Deleting Request' , error);
       });
   }
-  
-  
-
-  
 }

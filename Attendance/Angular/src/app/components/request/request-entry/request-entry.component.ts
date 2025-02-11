@@ -1,8 +1,9 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ServiceApiService } from 'src/app/Service/service-api.service';
 import { Request } from 'src/app/shared/models/request';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-request-entry',
@@ -10,16 +11,23 @@ import { Request } from 'src/app/shared/models/request';
   styleUrls: ['./request-entry.component.css']
 })
 export class RequestEntryComponent {
+  requestList: Request[] = [];
+  dataSource = new MatTableDataSource<Request>();
   requestForm: FormGroup;
   fileName: string = '';
   selectedFile: File | null = null;
 
   constructor(
     private fb: FormBuilder,
+    private cdRef : ChangeDetectorRef,
     private apiUrl : ServiceApiService,
     public dialogRef: MatDialogRef<RequestEntryComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Request
   ) {
+    const loggedInEmployee = this.apiUrl.getLoggedInEmployee();
+
+
+
     this.data = this.data || {};
     this.requestForm = this.fb.group({
       id: [data?.Id || null],
@@ -29,7 +37,7 @@ export class RequestEntryComponent {
       reasonOfAbsence: [data?.ReasonOfAbsence, Validators.required],
       MangarStatus : [data?.ManagerStatus || false],
       hRStatus: [data?.HRStatus || false],
-      userId: [data?.UserId]
+      userId: [loggedInEmployee?.Id || null]
     });
   }
 
@@ -40,10 +48,12 @@ export class RequestEntryComponent {
       if (requestData.id) {
         this.apiUrl.putData(`UpdateRequest/${requestData.id}`, requestData).subscribe(() => {
           this.dialogRef.close(true);
+          this.cdRef.detectChanges();
         });
       } else {
         this.apiUrl.postData('CreateRequest', requestData).subscribe(() => {
           this.dialogRef.close(true);
+          this.cdRef.detectChanges();
         });
       }
     }
