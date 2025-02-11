@@ -5,9 +5,11 @@ using Attendance.Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Migrations;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
@@ -28,31 +30,36 @@ namespace Attendance.Controllers
             {
                 return BadRequest("Invalid Request data");
             }
-
-            Request request = new Request()
+            try
             {
-                TypeOfAbsence = model.TypeOfAbsence,
-                From = model.From,
-                To = model.To,
-                ReasonOfAbsence = model.ReasonOfAbsence,
-                MangerStatus = model.MangerStatus,
-                HRStatus = model.HRStatus,
-                UserId = model.UserId
-            };
-            db.Requests.Add(request);
-            db.SaveChanges();
-            return Ok();
+                db.Requests.Add(model);
+                db.SaveChanges();
+                return Ok();
+
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpDelete]
         [Route("api/RequestDelete/{id}")]
         public IHttpActionResult Delete(int id)
         {
-            var request = db.Requests.Find(id);
+            var request = db.Requests.FirstOrDefault(r => r.Id == id);
             if (request != null)
             {
-                db.Requests.Remove(request);
-                db.SaveChanges();
+                try
+                {
+                    db.Requests.Remove(request);
+                    db.SaveChanges();
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    return InternalServerError(ex);
+                }
             }
             return NotFound();
         }
@@ -60,22 +67,38 @@ namespace Attendance.Controllers
 
         [HttpGet]
         [Route("api/GetAllRequest")]
-        public IHttpActionResult GetAll()
+        public IHttpActionResult GetAll([FromUri] int userId)
         {
-            List<RequestViewModel> result = new List<RequestViewModel>();
-            result = db.Requests.Select(r => new RequestViewModel
+            if (userId == 0)
             {
-                Id = r.Id,
-                TypeOfAbsence = r.TypeOfAbsence,
-                From = r.From,
-                To = r.To,
-                ReasonOfAbsence = r.ReasonOfAbsence,
-                MangerStatus = r.MangerStatus,
-                HRStatus = r.HRStatus,
-                UserId = r.UserId
-            }).ToList();
-            return Ok(result);
+                return BadRequest("User ID is required.");
+            }
+            try
+            {
+                var result = db.Requests
+                .Where(r => r.UserId == userId)
+                .Select(r => new RequestViewModel
+                {
+                    Id = r.Id,
+                    TypeOfAbsence = r.TypeOfAbsence,
+                    From = r.From,
+                    To = r.To,
+                    ReasonOfAbsence = r.ReasonOfAbsence,
+                    MangerStatus = r.MangerStatus,
+                    HRStatus = r.HRStatus,
+                    UserId = r.UserId,
+                    Name = r.User.Name
+                })
+                .ToList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
+            
+
 
 
         [HttpGet]
@@ -102,24 +125,13 @@ namespace Attendance.Controllers
         [Route("api/UpdateRequest/{id}")]
         public IHttpActionResult Update(int id, Request model)
         {
-            
-            var request = db.Requests.FirstOrDefault(r => r.Id == id);
+            var request = db.Requests.Find(id);
+            if (request == null) return NotFound();
 
-            if (request == null)
-            {
-                return NotFound();
-            }
-
-            request.TypeOfAbsence = model.TypeOfAbsence;
-            request.From = model.From;
-            request.To = model.To;
-            request.ReasonOfAbsence = model.ReasonOfAbsence;
-            request.MangerStatus = model.MangerStatus;
-            request.HRStatus = model.HRStatus;
-            request.UserId = model.UserId;
-
+            db.Entry(request).CurrentValues.SetValues(model);
             db.SaveChanges();
-            return Ok(); 
+
+            return Ok();
         }
 
     }

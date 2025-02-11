@@ -1,64 +1,83 @@
 <div style="text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px;">
-    <img src=".\assets\images\requestTitle.jpeg" width="25px">
-    <h1 mat-dialog-title style="margin: 0;">Leave Application</h1>
-  </div>
-  <h5 style="text-align: center;">Fill the required fields below to apply for annual leave</h5>
-  
-  <mat-dialog-content>
-    <form [formGroup]="requestForm">
-        <label>Leave Type</label>
-      <mat-form-field appearance="fill" style="width: 100%;">
-        <mat-select matinput  formControlName="typeOfAbsence">
-          <mat-option value="Annual Leave">Annual Leave</mat-option>
-          <mat-option value="Sick Leave">Sick Leave</mat-option>
-          <mat-option value="Personal Leave">Personal Leave</mat-option>
-          <mat-option value="Other">Other</mat-option>
-        </mat-select>
-      </mat-form-field>
-  
-      <div style="display: flex; gap: 10px; width: 100%;">
-        <div style="flex: 1;">
-          <label>Start Date</label>
-          <mat-form-field appearance="fill" style="width: 100%;">
-            <input matInput [matDatepicker]="picker1" formControlName="from">
-            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-            <mat-datepicker #picker1></mat-datepicker>
-          </mat-form-field>
-        </div>
-      
-        <div style="flex: 1;">
-          <label>End Date</label>
-          <mat-form-field appearance="fill" style="width: 100%;">
-            <input matInput [matDatepicker]="picker2" formControlName="to">
-            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-            <mat-datepicker #picker2></mat-datepicker>
-          </mat-form-field>
-        </div>
-      </div>
-        <label>Reason for Leave</label>
-      <mat-form-field appearance="fill" style="width: 100%;">
-        <textarea matInput formControlName="reasonOfAbsence" rows="3"></textarea>
-      </mat-form-field>
+  <img src=".\assets\images\requestTitle.jpeg" width="25px">
+  <h1 mat-dialog-title style="margin: 0;">Leave Application</h1>
+</div>
+<h5 style="text-align: center;">Fill the required fields below to apply for annual leave</h5>
 
-      <label>userId</label>
-      <mat-form-field appearance="fill" style="width: 100%;">
-        <input matInput formControlName="userId" >
-      </mat-form-field>
-  
-      <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
-        <label>Attach handover document (pdf, jpg, docx or any other format)</label>
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <button mat-button color="primary" (click)="fileInput.click()" style="background-color: black; color: white;">Choose File</button>
-          <input #fileInput type="file" (change)="onFileSelected($event)" hidden>
-          <span *ngIf="fileName" style="margin-left: 10px;">{{ fileName }}</span>
-        </div>
+<mat-dialog-content>
+  <form [formGroup]="requestForm">
+    
+    <!-- Leave Type -->
+    <label>Leave Type</label>
+    <mat-form-field appearance="fill" style="width: 100%;">
+      <mat-select matInput formControlName="typeOfAbsence">
+        <mat-option value="Annual Leave">Annual Leave</mat-option>
+        <mat-option value="Sick Leave">Sick Leave</mat-option>
+        <mat-option value="Personal Leave">Personal Leave</mat-option>
+        <mat-option value="Other">Other</mat-option>
+      </mat-select>
+      <mat-error *ngIf="requestForm.get('typeOfAbsence')?.hasError('required')">
+        Leave type is required.
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Start and End Date -->
+    <div style="display: flex; gap: 10px; width: 100%;">
+      <div style="flex: 1;">
+        <label>Start Date</label>
+        <mat-form-field appearance="fill" style="width: 100%;">
+          <input matInput [matDatepicker]="picker1" formControlName="from">
+          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+          <mat-error *ngIf="requestForm.get('from')?.hasError('required')">
+            Start date is required.
+          </mat-error>
+        </mat-form-field>
       </div>
 
-      <mat-dialog-actions style="width: 100%; display: flex; justify-content: space-between;">
-        <button mat-button style="background-color: green; color: white; flex: 1;" type="submit" (click)="saveRequest()">Submit</button>
-        <button mat-button color="warn" type="button" (click)="requestForm.reset()" style="flex: 1;">Reset</button>
-      </mat-dialog-actions>
-  
-    </form>
+      <div style="flex: 1;">
+        <label>End Date</label>
+        <mat-form-field appearance="fill" style="width: 100%;">
+          <input matInput [matDatepicker]="picker2" formControlName="to">
+          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+          <mat-error *ngIf="requestForm.get('to')?.hasError('required')">
+            End date is required.
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
 
-  </mat-dialog-content>
+    <!-- Reason for Leave -->
+    <label>Reason for Leave</label>
+    <mat-form-field appearance="fill" style="width: 100%;">
+      <textarea matInput formControlName="reasonOfAbsence" rows="3"></textarea>
+      <mat-error *ngIf="requestForm.get('reasonOfAbsence')?.hasError('required')">
+        Reason for leave is required.
+      </mat-error>
+    </mat-form-field>
+
+    <!-- File Upload -->
+    <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
+      <label>Attach handover document (pdf, jpg, docx or any other format)</label>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button mat-button color="primary" (click)="fileInput.click()" style="background-color: black; color: white;">
+          Choose File
+        </button>
+        <input #fileInput type="file" (change)="onFileSelected($event)" hidden>
+        <span *ngIf="fileName" style="margin-left: 10px;">{{ fileName }}</span>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <mat-dialog-actions style="width: 100%; display: flex; justify-content: space-between;">
+      <button mat-button style="background-color: green; color: white; flex: 1;" type="submit" (click)="saveRequest()">
+        Submit
+      </button>
+      <button mat-button color="warn" type="button" (click)="requestForm.reset()" style="flex: 1;">
+        Reset
+      </button>
+    </mat-dialog-actions>
+
+  </form>
+</mat-dialog-content>
