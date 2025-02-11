@@ -123,6 +123,7 @@ export class LayoutComponent implements OnInit {
         this.isCheckedIn = true;
         localStorage.setItem('checkInTime', now.toISOString());
         console.log('Checked in successfully:', data);
+        this.updateAttendanceRecords();
       },
       (error) => {
         console.error('Check-in failed:', error);
@@ -155,6 +156,7 @@ export class LayoutComponent implements OnInit {
           this.isCheckedIn = false;
           localStorage.removeItem('checkInTime');
           console.log('Checked out successfully:', data);
+          this.updateAttendanceRecords();
         } else {
           console.error('Check-out response missing CheckOut time:', data);
         }
@@ -163,5 +165,30 @@ export class LayoutComponent implements OnInit {
         console.error('Check-out failed:', error);
       }
     );
+  }
+  updateAttendanceRecords() {
+    this.attendanceService.getAttendanceUserById(this.userId!).subscribe({
+      next: (data) => {
+        this.attendanceService.updateAttendanceData(data); // ✅ Notify subscribers
+      },
+      error: (err) => {
+        console.error('Error fetching attendance records:', err);
+      },
+    });
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+
+    this.attendanceService
+      .getUserAttendanceByMonth(this.userId!, year, month)
+      .subscribe((data) => {
+        this.attendanceService.updateAttendanceByMonth(data);
+      });
+
+    this.attendanceService
+      .getLastAttendanceForUser(this.userId!)
+      .subscribe((data) => {
+        this.attendanceService.updateLastAttendance(data);
+      });
   }
 }

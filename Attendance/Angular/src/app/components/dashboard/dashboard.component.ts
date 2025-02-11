@@ -17,7 +17,7 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private attendanceService: AttendanceService,
-    private apiService : ServiceApiService
+    private apiService: ServiceApiService
   ) {}
 
   role: string = 'hr';
@@ -63,11 +63,29 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     const loggedInEmployee = this.apiService.getLoggedInEmployee();
     this.userId = loggedInEmployee!.Id;
+
+    // Subscribe to last attendance updates
+    this.attendanceService.lastAttendance$.subscribe((lastAttendance) => {
+      if (lastAttendance) {
+        this.attendance = lastAttendance;
+      }
+    });
+
+    // Subscribe to monthly attendance updates
+    this.attendanceService.attendanceMonth$.subscribe((monthlyData) => {
+      if (monthlyData.length > 0) {
+        this.attendanceData = monthlyData;
+        this.updateChartOptions();
+      }
+    });
+
+    // Fetch initial data
     this.attendanceService
       .getLastAttendanceForUser(this.userId!)
       .subscribe((data) => {
         this.attendance = data;
       });
+
     this.todayDate = new Date().toLocaleDateString('en-GB', {
       day: '2-digit',
       month: 'short',

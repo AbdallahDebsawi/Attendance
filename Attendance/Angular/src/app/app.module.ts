@@ -33,6 +33,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { RequestComponent } from './components/request/request.component';
 import { RequestEntryComponent } from './components/request/request-entry/request-entry.component';
+import { TestComponent } from './test/test.component';
 // import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
@@ -47,6 +48,7 @@ import { RequestEntryComponent } from './components/request/request-entry/reques
     AttendanceComponent,
     RequestComponent,
     RequestEntryComponent,
+    TestComponent,
   ],
   imports: [
     BrowserModule,
@@ -75,8 +77,7 @@ import { RequestEntryComponent } from './components/request/request-entry/reques
     MatMenuModule,
     MatIconModule,
     MatCheckboxModule,
-    FormsModule
-    
+    FormsModule,
   ],
   providers: [AttendanceService],
   bootstrap: [AppComponent],
