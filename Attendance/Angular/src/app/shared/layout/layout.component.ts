@@ -12,7 +12,6 @@ import { Attendance } from '../models/attendance';
   styleUrls: ['./layout.component.css'],
 })
 export class LayoutComponent implements OnInit {
-  role: any;
   userId?: number = 0;
   isCheckedIn: boolean = false;
   lastAttendance: Attendance | null = null;
@@ -33,9 +32,9 @@ export class LayoutComponent implements OnInit {
   setUserRole(): void {
     const loggedInEmployee = this.apiService.getLoggedInEmployee();
     if (loggedInEmployee) {
-      this.role = loggedInEmployee.RoleId;
+      this.apiService.role = loggedInEmployee.RoleId;
       this.userId = loggedInEmployee!.Id;
-      console.log('User Role:', this.role);
+      console.log('User Role:', this.apiService.role);
     }
   }
 
@@ -47,17 +46,6 @@ export class LayoutComponent implements OnInit {
     this.router.navigate(['/login'], { replaceUrl: true });
   }
 
-  openDialog() {
-    const dialogRef = this.dialog.open(RegisterComponent, {
-      width: '500px',
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        console.log('Form Data:', result);
-      }
-    });
-  }
 
   loadLastAttendance() {
     const storedCheckIn = localStorage.getItem('checkInTime');

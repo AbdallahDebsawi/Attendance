@@ -3,6 +3,8 @@
  <app-control
  [displayedColumns]="['Id','Name', 'ManagerId', 'Email', 'Gender', 'Salary', 'JoinDate', 'RoleId', 'DepartmentId']"
  [dataSource]="employeeList"
-  [tableTitle]="'Employee List'">
+ [tableTitle]="'Employee List'"
+ (createUser)="openDialog()">
+ 
 </app-control>
 </div>
