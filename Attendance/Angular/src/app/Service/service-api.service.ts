@@ -10,6 +10,8 @@ export class ServiceApiService {
   private apiUrl = 'https://localhost:44323/api/';
   private loggedInEmployeeKey = 'loggedInEmployee'; // Key for localStorage
   private loggedInEmployee: employee | null = null;  // Define loggedInEmployee in memory
+  role: any;
+  userId?: number = 0;
 
   constructor(private http: HttpClient) {}
 
@@ -47,6 +49,16 @@ export class ServiceApiService {
 
   deleteData(endPoint: string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${endPoint}`);
+  }
+
+
+  setUserRole(): void {
+    const loggedInEmployee = this.getLoggedInEmployee();
+    if (loggedInEmployee) {
+      this.role = loggedInEmployee.RoleId;
+      this.userId = loggedInEmployee!.Id;
+      console.log('User Role:', this.role);
+    }
   }
 }
 

@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ServiceApiService } from 'src/app/Service/service-api.service';
 import { Request } from '../models/request';
@@ -10,16 +9,17 @@ import { Request } from '../models/request';
   styleUrls: ['./control.component.css'],
 })
 export class ControlComponent implements OnInit {
-  role: number = 3;
-  element: Request = {} as Request;;
-  isUpdateMode : boolean = false;
+  element: Request = {} as Request;
+  isUpdateMode: boolean = false;
+  isEmployeeComponent: boolean = false;  // New flag to track if it's Employee component
   @Input() displayedColumns: string[] = [];
   @Input() dataSource: any[] = [];
   @Input() tableTitle: string = '';
+  @Output() createUser = new EventEmitter<void>();
   @Output() createRequest = new EventEmitter<void>();
   @Output() editRequest = new EventEmitter<any>();
   @Output() deleteRequest = new EventEmitter<Request>();
-  @Input() request! : Request
+  @Input() request!: Request;
   @Output() filterClicked = new EventEmitter<void>();
 
   columnMapping: { [key: string]: string } = {
@@ -45,23 +45,29 @@ export class ControlComponent implements OnInit {
     Date: 'Date',
   };
 
-  constructor(public dialog : MatDialog ,private apiUrl : ServiceApiService ,private fb: FormBuilder) {}
+  constructor(public dialog: MatDialog, public apiUrl: ServiceApiService) {}
 
   ngOnInit(): void {
     if (!this.deleteRequest) {
       console.error('deleteRequest method is not passed correctly!');
     }
+
+    this.apiUrl.setUserRole();
+
+
+    // Set the flag based on the role or component title
+    this.isEmployeeComponent = this.tableTitle === 'Employee List';  // Example condition
   }
 
   takeAction(element: any): void {
-    if (this.role === 3) {
+    if (this.apiUrl.role === 3) {
       // HR role can update hrStatus
       if (element.hrStatus === 'Pending') {
         element.hrStatus = 'Approved'; // Update to 'Approved' when action is taken
       } else {
         element.hrStatus = 'Pending'; // Toggle back to 'Pending'
       }
-    } else if (this.role === 1) {
+    } else if (this.apiUrl.role === 1) {
       // Manager role can update managerStatus
       if (element.managerStatus === 'Pending') {
         element.managerStatus = 'Approved';
@@ -74,18 +80,30 @@ export class ControlComponent implements OnInit {
   }
 
   onCreateRequest(): void {
-    this.createRequest.emit(); 
+    this.createRequest.emit();
+  }
+  onCreateUser() : void {
+    this.createUser.emit();
   }
 
-  onUpdateRequest(request : Request): void {
-    this.editRequest.emit(request);
+  onUpdateRequest(request: Request): void {
+    if (!this.isEmployeeComponent) {
+      this.editRequest.emit(request);  // Only emit update if not Employee
+    }
   }
 
-  onDelete(request: Request) {
-    this.deleteRequest.emit(request); 
+  onDelete(request: Request): void {
+    if (!this.isEmployeeComponent) {
+      this.deleteRequest.emit(request);  // Only emit delete if not Employee
+    }
   }
 
   onFilterClick(): void {
-    this.filterClicked.emit(); 
+    this.filterClicked.emit();
   }
+
+
+
+  
+  
 }

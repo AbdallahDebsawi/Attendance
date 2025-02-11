@@ -49,7 +49,7 @@
           </div>
 
           <!-- Employees link (Visible only for HR) -->
-          <div class="option-item" *ngIf="role !== 2">
+          <div class="option-item" *ngIf="apiService.role !== 2">
             <img
               src="../../../assets/images/employee.png"
               alt="Employee Icon"
@@ -96,20 +96,7 @@
             {{ isCheckedIn ? "Check Out" : "Check In" }}
           </button>
 
-          <!-- Register Button (Visible only for HR) -->
-          <button
-            *ngIf="role === 3"
-            class="attendance-button"
-            style="background-color: cadetblue"
-            (click)="openDialog()"
-          >
-            <img
-              src="../../../assets/images/check.png"
-              alt="Check Out Icon"
-              class="attendance-icon"
-            />
-            Register
-          </button>
+          
         </div>
       </div>
 
