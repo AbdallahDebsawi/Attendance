@@ -46,26 +46,21 @@ export class LayoutComponent implements OnInit {
     this.router.navigate(['/login'], { replaceUrl: true });
   }
 
-
   loadLastAttendance() {
-    const storedCheckIn = localStorage.getItem('checkInTime');
+    const storedCheckIn = localStorage.getItem(`checkInTime_${this.userId}`);
 
     if (storedCheckIn) {
       this.isCheckedIn = true;
       this.checkInTime = storedCheckIn;
-
-      // ✅ Also store lastAttendance locally for proper check-out
       this.lastAttendance = {
         UserId: this.userId,
         CheckIn: storedCheckIn,
-        CheckOut: null, // Since user is checked in, checkout is null
+        CheckOut: null,
       };
-
-      console.log('Restored check-in time from local storage:', storedCheckIn);
+      console.log(`Restored check-in for user ${this.userId}:`, storedCheckIn);
       return;
     }
 
-    // If not found in local storage, fetch from DB
     this.attendanceService.getLastAttendanceForUser(this.userId!).subscribe(
       (data) => {
         if (data) {
@@ -73,7 +68,7 @@ export class LayoutComponent implements OnInit {
           this.isCheckedIn = data.CheckOut === null;
 
           if (this.isCheckedIn) {
-            localStorage.setItem('checkInTime', data.CheckIn!); // ✅ Store check-in time
+            localStorage.setItem(`checkInTime_${this.userId}`, data.CheckIn!);
           }
         } else {
           this.isCheckedIn = false;
@@ -97,7 +92,7 @@ export class LayoutComponent implements OnInit {
 
   checkIn() {
     const now = new Date();
-    now.setHours(now.getHours() + 3); // Convert to Jordan time (UTC+3)
+    now.setHours(now.getHours() + 3);
 
     const newAttendance: Attendance = {
       UserId: this.userId,
@@ -109,7 +104,7 @@ export class LayoutComponent implements OnInit {
       (data) => {
         this.lastAttendance = data;
         this.isCheckedIn = true;
-        localStorage.setItem('checkInTime', now.toISOString());
+        localStorage.setItem(`checkInTime_${this.userId}`, now.toISOString());
         console.log('Checked in successfully:', data);
         this.updateAttendanceRecords();
       },
@@ -126,7 +121,7 @@ export class LayoutComponent implements OnInit {
     }
 
     const now = new Date();
-    now.setHours(now.getHours() + 3); // Convert to Jordan time (UTC+3)
+    now.setHours(now.getHours() + 3);
 
     const newCheckoutRecord: Attendance = {
       UserId: this.userId,
@@ -134,15 +129,12 @@ export class LayoutComponent implements OnInit {
       CheckOut: now.toISOString(),
     };
 
-    console.log('Sending check-out request:', newCheckoutRecord);
-
     this.attendanceService.createAttendanceUser(newCheckoutRecord).subscribe(
       (data) => {
-        console.log('API Response:', data);
         if (data && data.CheckOut) {
           this.lastAttendance = null;
           this.isCheckedIn = false;
-          localStorage.removeItem('checkInTime');
+          localStorage.removeItem(`checkInTime_${this.userId}`);
           console.log('Checked out successfully:', data);
           this.updateAttendanceRecords();
         } else {
@@ -180,3 +172,136 @@ export class LayoutComponent implements OnInit {
       });
   }
 }
+
+//  loadLastAttendance() {
+//     const storedCheckIn = localStorage.getItem('checkInTime');
+
+//     if (storedCheckIn) {
+//       this.isCheckedIn = true;
+//       this.checkInTime = storedCheckIn;
+
+//       // ✅ Also store lastAttendance locally for proper check-out
+//       this.lastAttendance = {
+//         UserId: this.userId,
+//         CheckIn: storedCheckIn,
+//         CheckOut: null, // Since user is checked in, checkout is null
+//       };
+
+//       console.log('Restored check-in time from local storage:', storedCheckIn);
+//       return;
+//     }
+
+//     // If not found in local storage, fetch from DB
+//     this.attendanceService.getLastAttendanceForUser(this.userId!).subscribe(
+//       (data) => {
+//         if (data) {
+//           this.lastAttendance = data;
+//           this.isCheckedIn = data.CheckOut === null;
+
+//           if (this.isCheckedIn) {
+//             localStorage.setItem('checkInTime', data.CheckIn!); // ✅ Store check-in time
+//           }
+//         } else {
+//           this.isCheckedIn = false;
+//         }
+//         console.log('Last attendance from DB:', data);
+//       },
+//       (error) => {
+//         console.error('Error fetching last attendance:', error);
+//         this.isCheckedIn = false;
+//       }
+//     );
+//   }
+
+//   toggleCheckInOut() {
+//     if (this.isCheckedIn) {
+//       this.checkOut();
+//     } else {
+//       this.checkIn();
+//     }
+//   }
+
+//   checkIn() {
+//     const now = new Date();
+//     now.setHours(now.getHours() + 3); // Convert to Jordan time (UTC+3)
+
+//     const newAttendance: Attendance = {
+//       UserId: this.userId,
+//       CheckIn: now.toISOString(),
+//       CheckOut: null,
+//     };
+
+//     this.attendanceService.createAttendanceUser(newAttendance).subscribe(
+//       (data) => {
+//         this.lastAttendance = data;
+//         this.isCheckedIn = true;
+//         localStorage.setItem('checkInTime', now.toISOString());
+//         console.log('Checked in successfully:', data);
+//         this.updateAttendanceRecords();
+//       },
+//       (error) => {
+//         console.error('Check-in failed:', error);
+//       }
+//     );
+//   }
+
+//   checkOut() {
+//     if (!this.lastAttendance || !this.lastAttendance.CheckIn) {
+//       console.error('Check-out failed: No check-in record found.');
+//       return;
+//     }
+
+//     const now = new Date();
+//     now.setHours(now.getHours() + 3); // Convert to Jordan time (UTC+3)
+
+//     const newCheckoutRecord: Attendance = {
+//       UserId: this.userId,
+//       CheckIn: this.lastAttendance.CheckIn,
+//       CheckOut: now.toISOString(),
+//     };
+
+//     console.log('Sending check-out request:', newCheckoutRecord);
+
+//     this.attendanceService.createAttendanceUser(newCheckoutRecord).subscribe(
+//       (data) => {
+//         console.log('API Response:', data);
+//         if (data && data.CheckOut) {
+//           this.lastAttendance = null;
+//           this.isCheckedIn = false;
+//           localStorage.removeItem('checkInTime');
+//           console.log('Checked out successfully:', data);
+//           this.updateAttendanceRecords();
+//         } else {
+//           console.error('Check-out response missing CheckOut time:', data);
+//         }
+//       },
+//       (error) => {
+//         console.error('Check-out failed:', error);
+//       }
+//     );
+//   }
+//   updateAttendanceRecords() {
+//     this.attendanceService.getAttendanceUserById(this.userId!).subscribe({
+//       next: (data) => {
+//         this.attendanceService.updateAttendanceData(data); // ✅ Notify subscribers
+//       },
+//       error: (err) => {
+//         console.error('Error fetching attendance records:', err);
+//       },
+//     });
+//     const now = new Date();
+//     const year = now.getFullYear();
+//     const month = now.getMonth() + 1;
+
+//     this.attendanceService
+//       .getUserAttendanceByMonth(this.userId!, year, month)
+//       .subscribe((data) => {
+//         this.attendanceService.updateAttendanceByMonth(data);
+//       });
+
+//     this.attendanceService
+//       .getLastAttendanceForUser(this.userId!)
+//       .subscribe((data) => {
+//         this.attendanceService.updateLastAttendance(data);
+//       });
+//   }

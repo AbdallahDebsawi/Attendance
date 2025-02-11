@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ServiceApiService } from 'src/app/Service/service-api.service';
 import { Request } from '../models/request';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-control',
@@ -11,7 +12,7 @@ import { Request } from '../models/request';
 export class ControlComponent implements OnInit {
   element: Request = {} as Request;
   isUpdateMode: boolean = false;
-  isEmployeeComponent: boolean = false;  // New flag to track if it's Employee component
+  isEmployeeComponent: boolean = false; // New flag to track if it's Employee component
   @Input() displayedColumns: string[] = [];
   @Input() dataSource: any[] = [];
   @Input() tableTitle: string = '';
@@ -45,7 +46,11 @@ export class ControlComponent implements OnInit {
     Date: 'Date',
   };
 
-  constructor(public dialog: MatDialog, public apiUrl: ServiceApiService) {}
+  constructor(
+    public dialog: MatDialog,
+    public apiUrl: ServiceApiService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     if (!this.deleteRequest) {
@@ -54,9 +59,8 @@ export class ControlComponent implements OnInit {
 
     this.apiUrl.setUserRole();
 
-
     // Set the flag based on the role or component title
-    this.isEmployeeComponent = this.tableTitle === 'Employee List';  // Example condition
+    this.isEmployeeComponent = this.tableTitle === 'Employee List'; // Example condition
   }
 
   takeAction(element: any): void {
@@ -82,19 +86,19 @@ export class ControlComponent implements OnInit {
   onCreateRequest(): void {
     this.createRequest.emit();
   }
-  onCreateUser() : void {
+  onCreateUser(): void {
     this.createUser.emit();
   }
 
   onUpdateRequest(request: Request): void {
     if (!this.isEmployeeComponent) {
-      this.editRequest.emit(request);  // Only emit update if not Employee
+      this.editRequest.emit(request); // Only emit update if not Employee
     }
   }
 
   onDelete(request: Request): void {
     if (!this.isEmployeeComponent) {
-      this.deleteRequest.emit(request);  // Only emit delete if not Employee
+      this.deleteRequest.emit(request); // Only emit delete if not Employee
     }
   }
 
@@ -102,8 +106,11 @@ export class ControlComponent implements OnInit {
     this.filterClicked.emit();
   }
 
+  viewAttendanceHistory(id: number, name: string) {
+    this.router.navigate(['/attendance', id], { queryParams: { name: name } });
+  }
 
-
-  
-  
+  viewAttendanceOverview(id: number, name: string) {
+    this.router.navigate(['/dashboard', id], { queryParams: { name: name } });
+  }
 }

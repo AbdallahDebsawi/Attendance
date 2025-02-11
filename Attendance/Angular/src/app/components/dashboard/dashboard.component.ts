@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ServiceApiService } from 'src/app/Service/service-api.service';
 import { AttendanceService } from 'src/app/services/attendance.service';
 import { Attendance } from 'src/app/shared/models/attendance';
@@ -14,10 +15,11 @@ export class DashboardComponent implements OnInit {
   userId?: number = 0;
   today: Date = new Date();
   todayDate: string = '';
-
+  name: string = '';
   constructor(
     private attendanceService: AttendanceService,
-    private apiService: ServiceApiService
+    private apiService: ServiceApiService,
+    private route: ActivatedRoute
   ) {}
 
   role: string = 'hr';
@@ -61,9 +63,21 @@ export class DashboardComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    const loggedInEmployee = this.apiService.getLoggedInEmployee();
-    this.userId = loggedInEmployee!.Id;
-    console.log('User id in dashborad:', this.userId);
+    // Get userId from the URL
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      if (id) {
+        this.userId = +id; // Convert string to number
+      } else {
+        const loggedInEmployee = this.apiService.getLoggedInEmployee();
+        this.userId = loggedInEmployee!.Id;
+      }
+    });
+
+    this.route.queryParams.subscribe((queryParams) => {
+      this.name = queryParams['name'] || '';
+    });
+
     // Subscribe to last attendance updates
     this.attendanceService.lastAttendance$.subscribe((lastAttendance) => {
       if (lastAttendance) {

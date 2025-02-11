@@ -9,7 +9,9 @@
       'WorkingHours'
     ]"
     [dataSource]="attendanceRecords.reverse()"
-    [tableTitle]="'Attendance History'"
+    [tableTitle]="
+      name ? name + '’s Attendance History' : 'Attendance History'
+    "
     (filterClicked)="openDatePicker()"
   >
   </app-control>
