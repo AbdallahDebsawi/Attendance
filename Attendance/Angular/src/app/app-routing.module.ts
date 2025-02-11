@@ -17,9 +17,9 @@ const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
-      { path: 'dashboard', component: DashboardComponent },
+      { path: 'dashboard/:id', component: DashboardComponent },
       { path: 'employee', component: EmployeesComponent },
-      { path: 'attendance', component: AttendanceComponent },
+      { path: 'attendance/:id', component: AttendanceComponent },
       { path: 'request', component: RequestComponent },
     ],
   },

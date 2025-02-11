@@ -63,7 +63,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     const loggedInEmployee = this.apiService.getLoggedInEmployee();
     this.userId = loggedInEmployee!.Id;
-
+    console.log('User id in dashborad:', this.userId);
     // Subscribe to last attendance updates
     this.attendanceService.lastAttendance$.subscribe((lastAttendance) => {
       if (lastAttendance) {

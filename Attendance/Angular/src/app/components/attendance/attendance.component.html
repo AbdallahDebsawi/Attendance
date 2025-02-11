@@ -8,7 +8,7 @@
       'Status',
       'WorkingHours'
     ]"
-    [dataSource]="attendanceRecords"
+    [dataSource]="attendanceRecords.reverse()"
     [tableTitle]="'Attendance History'"
     (filterClicked)="openDatePicker()"
   >
