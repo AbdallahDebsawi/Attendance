@@ -12,6 +12,7 @@ namespace Attendance.Models.Interfaces
         IHttpActionResult Create(T model);
         IHttpActionResult Delete(int id);
         IHttpActionResult GetAll(int id);
+        IHttpActionResult GetAllRequestByManager(int id);
         IHttpActionResult GetById(int id);
         IHttpActionResult Update(int id, T model);
     }
