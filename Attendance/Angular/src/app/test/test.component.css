@@ -9,3 +9,8 @@
   opacity: 0;
   transition: opacity 0.2s ease-in-out;
 }
+canvas {
+  max-height: 500px;
+  /* Adjust the height as needed */
+  width: 100%;
+}
