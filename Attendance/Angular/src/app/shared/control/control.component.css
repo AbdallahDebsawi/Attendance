@@ -31,7 +31,6 @@ th, td {
   white-space: nowrap; 
   overflow: hidden;
   text-overflow: ellipsis;
-
 }
 
 th {
@@ -76,6 +75,7 @@ button.mat-button:hover {
 td.mat-cell button {
   margin: auto;
 }
+
 .add-req-btn {
   font-size: 12px;
   background-color: #253D90;
@@ -87,12 +87,132 @@ td.mat-cell button {
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
+
 .add-req-btn:hover {
   transform: scale(1.05);
 }
-@media screen and (max-width: 1024px) {
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.table-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.filter-container {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  align-items: center;
+}
+
+.filter-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.filter-button img {
+  width: 30px;
+  height: 30px;
+}
+
+.filter-button:hover {
+  transform: scale(1.1);
+}
+
+.search-hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 10px 0;
+  border: 2px solid #ddd;
+  border-radius: 30px;
+  background-color: #fff;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 40px;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease-in-out; 
+  background: url("../../../assets/images/search.png") no-repeat left 12px center; 
+  background-size: 20px;
+  background-color: white;
+  text-indent: 35px; 
+}
+
+.form-control:focus {
+  border-color: #4CAF50;
+  box-shadow: 0 0 10px rgba(37, 61, 144, 0.5);
+  transform: scale(1.05);
+}
+
+
+
+
+.add-req-btn, button.mat-button {
+  font-size: 12px;
+  height: 35px;
+  padding: 5px 10px;
+}
+
+/* Revert actions button changes */
+.action-but {
+  font-size: 12px;
+  background-color: #253D90;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 5px 10px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.action-but:hover {
+  background-color: #253d99;
+  transform: scale(1.05);
+}
+
+.action-icon1 {
+  height: 15px;
+  width: 15px;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 1244px) {
   .table-inner-container {
     max-height: 300px;
+  }
+  .table-header {
+    flex-direction: column;
+    margin-bottom: 1.5%;
+  }
+
+  .table-title {
+    font-size: 18px;
+  }
+
+  .search-hero {
+    width: 100%;
+    margin-top: 15px;
+  }
+
+  .filter-container {
+    flex-direction: row;
+    gap: 8px;
+    margin-top: 10px;
   }
 }
 
@@ -102,6 +222,11 @@ td.mat-cell button {
     overflow-x: auto;
   }
 
+  .table-header {
+    flex-direction: column;
+    margin-bottom: 1.5%;
+  }
+
   th, td {
     padding: 8px;
     font-size: 14px;
@@ -109,11 +234,12 @@ td.mat-cell button {
 
   .table-title {
     font-size: 18px;
-    margin-bottom: 5px;
   }
 
   .filter-container {
-    width: 100%;
+    
+    justify-content: flex-start;
+    gap: 10px;
   }
 
   .filter-button img {
@@ -125,11 +251,19 @@ td.mat-cell button {
     max-width: 100px;
     font-size: 8px;
   }
+
+  .add-req-btn {
+    font-size: 12px;
+  }
 }
 
 @media screen and (max-width: 480px) {
   .table-inner-container {
     max-height: 200px;
+  }
+  .table-header {
+    flex-direction: column;
+    margin-bottom: 1.5%;
   }
 
   th, td {
@@ -151,50 +285,10 @@ td.mat-cell button {
     font-size: 10px;
     padding: 3px;
   }
-}
 
-.table-header {
-  display: flex;
-  justify-content: space-between;
-}
-
-.table-title {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.filter-container {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.filter-button {
-  background: none;
- margin-bottom: 20px;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out;
-}
-
-.filter-button img {
-  width: 30px;
-  height: 30px;
-}
-
-.filter-button:hover {
-  transform: scale(1.1);
-}
-
-.action-icon1 {
-  height: 15px;
-  width: 15px;
-}
-::ng-deep .custom-datepicker .mat-calendar {
-  position: absolute;
-  top: 50px;
-  /* Adjust top position as needed */
-  left: 50%;
-  /* Adjust left position as needed */
-  transform: translateX(-50%);
-  /* Center horizontally */
+  .add-req-btn {
+    font-size: 10px;
+    width: 80%;
+    margin-left: 10px;
+  }
 }

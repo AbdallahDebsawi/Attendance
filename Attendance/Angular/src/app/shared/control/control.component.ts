@@ -4,13 +4,14 @@ import { ServiceApiService } from 'src/app/Service/service-api.service';
 import { Request } from '../models/request';
 import { employee } from '../models/employee';
 import { Router } from '@angular/router';
-
+import { Pipe, PipeTransform } from '@angular/core';
 @Component({
   selector: 'app-control',
   templateUrl: './control.component.html',
   styleUrls: ['./control.component.css'],
 })
 export class ControlComponent implements OnInit {
+  searchtext:any;
   element: Request = {} as Request;
   isUpdateMode: boolean = false;
   isEmployeeComponent: boolean = false; // New flag to track if it's Employee component

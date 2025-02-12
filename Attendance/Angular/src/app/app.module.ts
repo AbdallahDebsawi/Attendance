@@ -34,6 +34,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { RequestComponent } from './components/request/request.component';
 import { RequestEntryComponent } from './components/request/request-entry/request-entry.component';
 import { TestComponent } from './test/test.component';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { FilterPipe } from './filter.pipe';
 // import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
@@ -49,6 +51,8 @@ import { TestComponent } from './test/test.component';
     RequestComponent,
     RequestEntryComponent,
     TestComponent,
+    FilterPipe,
+    
   ],
   imports: [
     BrowserModule,
@@ -78,6 +82,7 @@ import { TestComponent } from './test/test.component';
     MatIconModule,
     MatCheckboxModule,
     FormsModule,
+    Ng2SearchPipeModule
   ],
   providers: [AttendanceService],
   bootstrap: [AppComponent],
