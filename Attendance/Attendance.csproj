@@ -301,6 +301,14 @@
     <Compile Include="Migrations\202502090832483_AllowNullCheckIn.designer.cs">
       <DependentUpon>202502090832483_AllowNullCheckIn.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202502110720436_ManagerHRStatus.cs" />
+    <Compile Include="Migrations\202502110720436_ManagerHRStatus.Designer.cs">
+      <DependentUpon>202502110720436_ManagerHRStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202502110945565_UpdateManagerStatus.cs" />
+    <Compile Include="Migrations\202502110945565_UpdateManagerStatus.Designer.cs">
+      <DependentUpon>202502110945565_UpdateManagerStatus.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AttendanceUser.cs" />
     <Compile Include="Models\Department.cs" />
@@ -436,6 +444,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202502090832483_AllowNullCheckIn.resx">
       <DependentUpon>202502090832483_AllowNullCheckIn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202502110720436_ManagerHRStatus.resx">
+      <DependentUpon>202502110720436_ManagerHRStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202502110945565_UpdateManagerStatus.resx">
+      <DependentUpon>202502110945565_UpdateManagerStatus.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

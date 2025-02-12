@@ -19,9 +19,18 @@ export class RequestComponent implements OnInit {
      private dialog: MatDialog,
      private cdRef : ChangeDetectorRef) {}
 
-  ngOnInit(): void {
-    this.loadRequests();
-  }
+     ngOnInit(): void {
+      const loggedInEmployee = this.apiUrl.getLoggedInEmployee();
+      const role = loggedInEmployee?.RoleId;
+      const managerId = loggedInEmployee?.Id;
+      
+      if (role === 1) { 
+        this.loadRequestsByManager(managerId!);
+      } else {
+        this.loadRequests();
+      }
+    }
+    
 
   loadRequests(): void {
     const userId = this.apiUrl.getLoggedInEmployee()?.Id;
@@ -42,6 +51,21 @@ export class RequestComponent implements OnInit {
       console.error('User not logged in');
     }
   }
+
+  loadRequestsByManager(managerId: number): void {
+    this.apiUrl.getRequestbyManager(`GetEmployeeRequestByManager?managerId=${managerId}`).subscribe(
+      (data: Request[]) => {
+        console.log('Fetched Requests for Manager:', data);
+        this.requestList = data;
+        this.dataSource.data = data;
+        this.cdRef.detectChanges();
+      },
+      (error) => {
+        console.error('Error Fetching Data for Manager:', error);
+      }
+    );
+  }
+  
 
   openDialog(request?: Request): void {
     const dialogRef = this.dialog.open(RequestEntryComponent, {
