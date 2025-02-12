@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AttendanceService } from 'src/app/services/attendance.service';
 import { Attendance } from 'src/app/shared/models/attendance';
 import { DatePipe } from '@angular/common';

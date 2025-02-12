@@ -16,19 +16,19 @@ export interface Employee {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EmployeeService {
-  private apiUrl = 'https://localhost:44323/api/user'; 
+  private apiUrl = 'https://localhost:44323/api/user';
   private employeesUpdated = new BehaviorSubject<boolean>(false); // Notify when employees should be refreshed
 
   constructor(private http: HttpClient) {}
 
   // Fetch all employees
   getAllEmployees(): Observable<Employee[]> {
-    return this.http.get<{ Message: string; Data: Employee[] }>(this.apiUrl).pipe(
-      map(response => response.Data)
-    );
+    return this.http
+      .get<{ Message: string; Data: Employee[] }>(this.apiUrl)
+      .pipe(map((response) => response.Data));
   }
 
   // Get the employee update notification listener

@@ -1,4 +1,7 @@
-<div style="width: 100%; height: 400px; position: relative">
+<div>
   <canvas #barChart></canvas>
   <div #customTooltip class="custom-tooltip"></div>
+
+  <button (click)="prevPage()" [disabled]="currentPage === 0">Previous</button>
+  <button (click)="nextPage()" [disabled]="(currentPage + 1) * itemsPerPage >= fullLabels.length">Next</button>
 </div>
