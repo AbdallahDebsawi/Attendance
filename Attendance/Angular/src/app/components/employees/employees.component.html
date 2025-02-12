@@ -1,7 +1,7 @@
 <p>Dashboard / Employees</p>
 <div style="padding: 2%">
  <app-control
- [displayedColumns]="['Id','Name', 'ManagerId', 'Email', 'Gender', 'Salary', 'JoinDate', 'RoleId', 'DepartmentId']"
+ [displayedColumns]="['Id','Name', 'ManagerId', 'Email', 'Gender', 'Salary', 'JoinDate', 'RoleId', 'DepartmentName']"
  [dataSource]="employeeList"
  [tableTitle]="'Employee List'"
  (createUser)="openDialog()"
