@@ -84,10 +84,10 @@ namespace Attendance.Controllers
                     From = r.From,
                     To = r.To,
                     ReasonOfAbsence = r.ReasonOfAbsence,
-                    MangerStatus = r.MangerStatus,
+                    MangerStatus = r.ManagerStatus,
                     HRStatus = r.HRStatus,
                     UserId = r.UserId,
-                    Name = r.User.Name
+                    Name = r.Users.Name
                 })
                 .ToList();
                 return Ok(result);
@@ -97,9 +97,25 @@ namespace Attendance.Controllers
                 return InternalServerError(ex);
             }
         }
-            
 
-
+        [HttpGet]
+        [Route("api/GetEmployeeRequestByManager")]
+        public IHttpActionResult GetAllRequestByManager([FromUri] int managerId)
+        {
+            try
+            {
+                var employeeRequests = db.Requests.Where(r => db.Users
+                .Where(u => u.ManagerId == managerId)
+                .Select(u => u.Id)
+                .Contains(r.UserId))
+                .ToList();
+                return Ok(employeeRequests);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
 
         [HttpGet]
         [Route("api/GetRequestById")]
@@ -115,7 +131,7 @@ namespace Attendance.Controllers
             result.From = request.From;
             result.To = request.To;
             result.ReasonOfAbsence = request.ReasonOfAbsence;
-            result.MangerStatus = request.MangerStatus;
+            result.MangerStatus = request.ManagerStatus;
             result.HRStatus = request.HRStatus;
             result.UserId = request.UserId;
             return Ok(result);

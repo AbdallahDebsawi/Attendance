@@ -13,6 +13,7 @@ export interface Employee {
   joinDate: string;
   roleId: number;
   departmentId: number;
+  departmentName: string;
 }
 
 @Injectable({

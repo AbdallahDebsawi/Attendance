@@ -7,7 +7,6 @@
 <mat-dialog-content>
   <form [formGroup]="requestForm">
     
-    <!-- Leave Type -->
     <label>Leave Type</label>
     <mat-form-field appearance="fill" style="width: 100%;">
       <mat-select matInput formControlName="typeOfAbsence">
@@ -21,7 +20,6 @@
       </mat-error>
     </mat-form-field>
 
-    <!-- Start and End Date -->
     <div style="display: flex; gap: 10px; width: 100%;">
       <div style="flex: 1;">
         <label>Start Date</label>
@@ -48,7 +46,6 @@
       </div>
     </div>
 
-    <!-- Reason for Leave -->
     <label>Reason for Leave</label>
     <mat-form-field appearance="fill" style="width: 100%;">
       <textarea matInput formControlName="reasonOfAbsence" rows="3"></textarea>
@@ -56,8 +53,34 @@
         Reason for leave is required.
       </mat-error>
     </mat-form-field>
+    
+    
+    <mat-form-field appearance="fill" style="width: 100%;" *ngIf="isManager == true">
+      <label>Manager Status</label>
+      <mat-select matInput formControlName="managerStatus">
+        <mat-option value="Pending">Pending</mat-option>
+        <mat-option value="Approved">Approved</mat-option>
+        <mat-option value="Rejected">Rejected</mat-option>
+      </mat-select>
+      <mat-error *ngIf="requestForm.get('managerStatus')?.hasError('required')">
+        Manager Status is required.
+      </mat-error>
+    </mat-form-field>
 
-    <!-- File Upload -->
+    
+    <mat-form-field appearance="fill" style="width: 100%;" *ngIf="isHr || isManager">
+      <label>HR Status</label>
+      <mat-select matInput formControlName="hrStatus">
+        <mat-option value="Pending">Pending</mat-option>
+        <mat-option value="Approved">Approved</mat-option>
+        <mat-option value="Rejected">Rejected</mat-option>
+      </mat-select>
+      <mat-error *ngIf="requestForm.get('hrStatus')?.hasError('required')">
+        HR Status is required.
+      </mat-error>
+    </mat-form-field>
+
+
     <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
       <label>Attach handover document (pdf, jpg, docx or any other format)</label>
       <div style="display: flex; align-items: center; gap: 10px;">

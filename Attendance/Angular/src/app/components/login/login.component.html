@@ -3,7 +3,7 @@
     <div>
       <div class="login-card-title">Login</div>
       <p class="login-description">Login to your account</p>
-      <form (ngSubmit)="signIn()"> 
+      <form (ngSubmit)="signIn()">
         <div>
           <label>E-mail Address</label>
           <input 
@@ -15,6 +15,7 @@
             required 
           />
         </div>
+        
         <div>
           <label>Password</label>
           <input 
@@ -25,8 +26,9 @@
             placeholder="Enter your password" 
             required 
           />
+          <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
         </div>
-
+      
         <button type="submit" class="login-button">Sign In</button>
       </form>
     </div>

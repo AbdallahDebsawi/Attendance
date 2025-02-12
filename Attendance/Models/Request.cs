@@ -13,9 +13,9 @@ namespace Attendance.Models
         public DateTime From { get; set; }
         public DateTime To { get; set; }
         public string ReasonOfAbsence { get; set; }
-        public bool MangerStatus { get; set; }
-        public bool HRStatus { get; set; }
+        public string ManagerStatus { get; set; }
+        public string HRStatus { get; set; }
         public int UserId { get; set; }
-        public User User { get; set; }
+        public User Users { get; set; }
     }
 }

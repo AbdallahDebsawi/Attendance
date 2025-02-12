@@ -16,6 +16,9 @@ export class RequestEntryComponent {
   requestForm: FormGroup;
   fileName: string = '';
   selectedFile: File | null = null;
+  isManager : boolean = false;
+  isHr : boolean = false;
+  isEmployee : boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -24,21 +27,52 @@ export class RequestEntryComponent {
     public dialogRef: MatDialogRef<RequestEntryComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Request
   ) {
-    const loggedInEmployee = this.apiUrl.getLoggedInEmployee();
+  const loggedInEmployee = this.apiUrl.getLoggedInEmployee();
+  const roleId = loggedInEmployee?.RoleId;
 
+this.isManager = roleId === 1;
+this.isHr = roleId === 3;
+this.isEmployee = roleId === 2;
 
+console.log('Is Manager', this.isManager);
+console.log('Is Hr', this.isHr);
+console.log('Is Employee', this.isEmployee);
+this.data = this.data || {};
 
-    this.data = this.data || {};
-    this.requestForm = this.fb.group({
-      id: [data?.Id || null],
-      typeOfAbsence: [data?.TypeOfAbsence, Validators.required],
-      from: [data?.From, Validators.required],
-      to: [data?.To, Validators.required],
-      reasonOfAbsence: [data?.ReasonOfAbsence, Validators.required],
-      MangarStatus : [data?.ManagerStatus || false],
-      hRStatus: [data?.HRStatus || false],
-      userId: [loggedInEmployee?.Id || null]
-    });
+this.requestForm = this.fb.group({
+  id: [this.data?.Id || null],
+  typeOfAbsence: [{ 
+    value: this.data?.TypeOfAbsence, 
+    disabled: this.data?.Id ? (this.isManager || this.isHr) : false 
+  }, Validators.required],
+  
+  from: [{ 
+    value: this.data?.From, 
+    disabled: this.data?.Id ? (this.isManager || this.isHr) : false 
+  }, Validators.required],
+  
+  to: [{ 
+    value: this.data?.To, 
+    disabled: this.data?.Id ? (this.isManager || this.isHr) : false 
+  }, Validators.required],
+  
+  reasonOfAbsence: [{ 
+    value: this.data?.ReasonOfAbsence, 
+    disabled: this.data?.Id ? (this.isManager || this.isHr) : false 
+  }, Validators.required],
+  
+  managerStatus: [{ 
+    value: this.data?.ManagerStatus || 'Under Review', 
+    disabled: this.data?.Id ? !this.isManager : false 
+  }],
+  
+  hrStatus: [{ 
+    value: this.data?.HRStatus || 'Under Review', 
+    disabled: this.data?.Id ? !this.isHr : false 
+  }],
+  
+  userId: [loggedInEmployee?.Id || null]
+});
   }
 
   saveRequest(): void {

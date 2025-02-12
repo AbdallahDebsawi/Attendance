@@ -21,8 +21,22 @@ namespace Attendance.Controllers
         {
             try
             {
-                var users = db.Users.Where(u => !u.IsDeleted).ToList();
-
+                var users = db.Users
+                                    .Where(u => !u.IsDeleted)
+                                    .Select(u => new
+                                    {
+                                        u.Id,
+                                        u.Name,
+                                        u.ManagerId,
+                                        u.Email,
+                                        u.Gender,
+                                        u.Salary,
+                                        u.JoinDate,
+                                        u.RoleId,
+                                        DepartmentName = u.Department.DepartmentName,
+                                        u.Password,
+                                        u.DepartmentId
+                                    }).ToList();
                 if (!users.Any())
                 {
                     return Content(HttpStatusCode.NotFound, new { Message = "No users found." });

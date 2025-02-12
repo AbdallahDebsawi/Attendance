@@ -19,6 +19,10 @@ export class ServiceApiService {
     return this.http.get<any>(`${this.apiUrl}/${endPoint}`);
   }
 
+  getRequestbyManager(endPoint : string):Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}${endPoint}`)
+  }
+
   postData(endPoint: string, body: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/${endPoint}`, body);
   }
