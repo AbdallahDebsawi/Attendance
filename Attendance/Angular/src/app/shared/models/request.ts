@@ -1,25 +1,27 @@
 export class Request {
     Id: number;
-    TypeOfAbsence?: string;
+    TypeOfAbsence?: number;
     From?: Date;
     To?: Date;
     ReasonOfAbsence?: string;
-    ManagerStatus?: boolean;
-    HRStatus?: boolean;
+    ManagerStatus?: string;
+    HRStatus?: string;
     UserId?: number;
     FilePath?: string;
+    Name? : string;
   
     
     constructor(
       Id: number,
-      TypeOfAbsence?: string,
+      TypeOfAbsence?: number,
       From?: Date,
       To?: Date,
       ReasonOfAbsence?: string,
-      ManagerStatus?: boolean,
-      HRStatus?: boolean,
+      ManagerStatus?: string,
+      HRStatus?: string,
       UserId?: number,
-      FilePath?: string
+      FilePath?: string,
+      Name? : string
     ) {
       this.Id = Id;
       this.TypeOfAbsence = TypeOfAbsence;
@@ -30,6 +32,7 @@ export class Request {
       this.HRStatus = HRStatus;
       this.UserId = UserId;
       this.FilePath = FilePath;
+      this.Name = Name; 
     }
   }
   

@@ -1,0 +1,6 @@
+export enum AbsenceType {
+  AnnualLeave = 1,
+  SickLeave = 2,
+  PersonalLeave = 3,
+  Other = 4
+}

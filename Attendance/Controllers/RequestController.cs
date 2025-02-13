@@ -4,6 +4,7 @@ using Attendance.Models.Interfaces;
 using Attendance.Models.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
 using System.Diagnostics;
 using System.Linq;
@@ -30,12 +31,15 @@ namespace Attendance.Controllers
             {
                 return BadRequest("Invalid Request data");
             }
+
             try
             {
+                model.From = model.From.Date;
+                model.To = model.To.Date;
+
                 db.Requests.Add(model);
                 db.SaveChanges();
                 return Ok();
-
             }
             catch (Exception ex)
             {
@@ -84,7 +88,7 @@ namespace Attendance.Controllers
                     From = r.From,
                     To = r.To,
                     ReasonOfAbsence = r.ReasonOfAbsence,
-                    MangerStatus = r.ManagerStatus,
+                    ManagerStatus = r.ManagerStatus,
                     HRStatus = r.HRStatus,
                     UserId = r.UserId,
                     Name = r.Users.Name
@@ -101,14 +105,26 @@ namespace Attendance.Controllers
         [HttpGet]
         [Route("api/GetEmployeeRequestByManager")]
         public IHttpActionResult GetAllRequestByManager([FromUri] int managerId)
-        {
+       {
             try
             {
-                var employeeRequests = db.Requests.Where(r => db.Users
-                .Where(u => u.ManagerId == managerId)
-                .Select(u => u.Id)
-                .Contains(r.UserId))
-                .ToList();
+                var employeeRequests = db.Requests
+                    .Where(r => db.Users
+                     .Any(u => u.ManagerId == managerId && u.Id == r.UserId))
+                    .Select(r => new RequestViewModel
+                    {
+                        Id = r.Id,
+                        TypeOfAbsence = r.TypeOfAbsence,
+                        From = r.From,
+                        To = r.To,
+                        ReasonOfAbsence = r.ReasonOfAbsence,
+                        ManagerStatus = r.ManagerStatus,
+                        HRStatus = r.HRStatus,
+                        UserId = r.UserId,
+                        Name = r.Users.Name,
+                    })
+                    .ToList();
+
                 return Ok(employeeRequests);
             }
             catch (Exception ex)
@@ -116,6 +132,7 @@ namespace Attendance.Controllers
                 return InternalServerError(ex);
             }
         }
+
 
         [HttpGet]
         [Route("api/GetRequestById")]
@@ -131,24 +148,47 @@ namespace Attendance.Controllers
             result.From = request.From;
             result.To = request.To;
             result.ReasonOfAbsence = request.ReasonOfAbsence;
-            result.MangerStatus = request.ManagerStatus;
+            result.ManagerStatus = request.ManagerStatus;
             result.HRStatus = request.HRStatus;
             result.UserId = request.UserId;
             return Ok(result);
         }
 
+
         [HttpPut]
         [Route("api/UpdateRequest/{id}")]
         public IHttpActionResult Update(int id, Request model)
         {
-            var request = db.Requests.Find(id);
-            if (request == null) return NotFound();
+            if (id == 0)
+            {
+                return BadRequest("Invalid Request Id");
+            }
 
-            db.Entry(request).CurrentValues.SetValues(model);
+            var request = new Request()
+            {
+                Id = id,
+                TypeOfAbsence = model.TypeOfAbsence,
+                From = model.From,
+                To = model.To,
+                ReasonOfAbsence = model.ReasonOfAbsence,
+                ManagerStatus = model.ManagerStatus,
+                HRStatus = model.HRStatus,
+                UserId = model.UserId
+            };
+            request.TypeOfAbsence = model.TypeOfAbsence;
+            request.From = model.From;
+            request.To = model.To;
+            request.ReasonOfAbsence = model.ReasonOfAbsence;
+            request.ManagerStatus = model.ManagerStatus;
+            request.HRStatus = model.HRStatus;
+            request.UserId = model.UserId;
+
+            db.Requests.AddOrUpdate(request);
             db.SaveChanges();
-
             return Ok();
         }
+
+
 
     }
 }

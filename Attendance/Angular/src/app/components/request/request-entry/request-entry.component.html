@@ -6,45 +6,50 @@
 
 <mat-dialog-content>
   <form [formGroup]="requestForm">
-    
     <label>Leave Type</label>
     <mat-form-field appearance="fill" style="width: 100%;">
       <mat-select matInput formControlName="typeOfAbsence">
-        <mat-option value="Annual Leave">Annual Leave</mat-option>
-        <mat-option value="Sick Leave">Sick Leave</mat-option>
-        <mat-option value="Personal Leave">Personal Leave</mat-option>
-        <mat-option value="Other">Other</mat-option>
+        <mat-option *ngFor="let type of absenceTypes" [value]="type.value">
+          {{ type.label }}
+        </mat-option>
       </mat-select>
       <mat-error *ngIf="requestForm.get('typeOfAbsence')?.hasError('required')">
         Leave type is required.
       </mat-error>
     </mat-form-field>
 
-    <div style="display: flex; gap: 10px; width: 100%;">
-      <div style="flex: 1;">
+
+    <div style="display: flex; gap: 10px; width: 100%; flex-wrap: wrap;">
+      <div style="flex: 1; min-width: 200px;">
         <label>Start Date</label>
         <mat-form-field appearance="fill" style="width: 100%;">
           <input matInput [matDatepicker]="picker1" formControlName="from">
           <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
           <mat-datepicker #picker1></mat-datepicker>
+          
           <mat-error *ngIf="requestForm.get('from')?.hasError('required')">
             Start date is required.
           </mat-error>
         </mat-form-field>
       </div>
-
-      <div style="flex: 1;">
+    
+      <div style="flex: 1; min-width: 200px;">
         <label>End Date</label>
         <mat-form-field appearance="fill" style="width: 100%;">
           <input matInput [matDatepicker]="picker2" formControlName="to">
           <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
           <mat-datepicker #picker2></mat-datepicker>
+          
           <mat-error *ngIf="requestForm.get('to')?.hasError('required')">
             End date is required.
+          </mat-error>
+          <mat-error *ngIf="requestForm.hasError('invalidDateRange')">
+            End date cannot be before Start date.
           </mat-error>
         </mat-form-field>
       </div>
     </div>
+    
 
     <label>Reason for Leave</label>
     <mat-form-field appearance="fill" style="width: 100%;">
@@ -55,21 +60,21 @@
     </mat-form-field>
     
     
+    <label *ngIf="isManager == true">ManagerStatus</label>
     <mat-form-field appearance="fill" style="width: 100%;" *ngIf="isManager == true">
-      <label>Manager Status</label>
       <mat-select matInput formControlName="managerStatus">
         <mat-option value="Pending">Pending</mat-option>
         <mat-option value="Approved">Approved</mat-option>
         <mat-option value="Rejected">Rejected</mat-option>
       </mat-select>
       <mat-error *ngIf="requestForm.get('managerStatus')?.hasError('required')">
-        Manager Status is required.
+        ManagerStatus is required.
       </mat-error>
     </mat-form-field>
 
     
+    <label *ngIf="isHr || isManager">HR Status</label>
     <mat-form-field appearance="fill" style="width: 100%;" *ngIf="isHr || isManager">
-      <label>HR Status</label>
       <mat-select matInput formControlName="hrStatus">
         <mat-option value="Pending">Pending</mat-option>
         <mat-option value="Approved">Approved</mat-option>

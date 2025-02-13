@@ -5,6 +5,18 @@ import { Request } from '../models/request';
 import { employee } from '../models/employee';
 import { Router } from '@angular/router';
 import { Pipe, PipeTransform } from '@angular/core';
+enum AbsenceType {
+  AnnualLeave = 1,
+  SickLeave = 2,
+  PersonalLeave = 3,
+  Other = 4
+};
+
+enum Status {
+  Approved = 1,
+  Rejected = 2,
+  Pending = 3
+}
 @Component({
   selector: 'app-control',
   templateUrl: './control.component.html',
@@ -12,6 +24,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class ControlComponent implements OnInit {
   searchText:any;
+
   element: Request = {} as Request;
   isUpdateMode: boolean = false;
   isEmployeeComponent: boolean = false; // New flag to track if it's Employee component
@@ -28,15 +41,28 @@ export class ControlComponent implements OnInit {
   @Input() request!: Request;
   @Output() filterClicked = new EventEmitter<void>();
 
+  absenceTypeLabels: { [key: number]: string } = {
+    [AbsenceType.AnnualLeave]: 'Annual Leave',
+    [AbsenceType.SickLeave]: 'Sick Leave',
+    [AbsenceType.PersonalLeave]: 'Personal Leave',
+    [AbsenceType.Other]: 'Other'
+  };
+
+  typeStatus : { [key : number] : string} = {
+    [Status.Approved] : 'Approved',
+    [Status.Rejected] : 'Rejected',
+    [Status.Pending] : 'Pending',
+  }
+
   columnMapping: { [key: string]: string } = {
     name: 'Name',
     duration: 'Duration',
     startDate: 'Start Date',
     endDate: 'End Date',
-    type: 'Type',
+    TypeOfAbsence: 'Type Of Absence',
     reasonl: 'Reason',
-    managerStatus: 'Manager Status',
-    hrStatus: 'HR Status',
+    ManagerStatus: 'ManagerStatus',
+    HRStatus: 'HRStatus',
     department: 'Department',
     jobTitle: 'Job Title',
     gender: 'Gender',
@@ -50,6 +76,11 @@ export class ControlComponent implements OnInit {
     formattedCheckOut: 'Check Out',
     Date: 'Date',
   };
+
+  getAbsenceTypeLabel(value: number): string {
+    console.log('Absence Type Value:', value);
+    return this.absenceTypeLabels[value] || 'Unknown';
+  }
 
   constructor(
     public dialog: MatDialog,
@@ -135,4 +166,10 @@ export class ControlComponent implements OnInit {
     localStorage.setItem('employeeName', name);
     this.router.navigate(['/dashboard', id]);
   }
+
+  isUpdateDisabled(request: Request): boolean {
+    return request.ManagerStatus === 'Approved' || request.HRStatus === 'Approved';
+  }
 }
+
+
