@@ -53,7 +53,9 @@
             <mat-menu #actionMenu="matMenu">
               <button
                 mat-menu-item
-                (click)="isEmployeeComponent ? onUpdateUser(element) : onUpdateRequest(element)" [disabled]="isUpdateDisabled(element)"
+                (click)="isEmployeeComponent ? onUpdateUser(element) : onUpdateRequest(element)"
+                    [disabled]="isEmployeeComponent ? isUpdateDisabled(element) : false"
+
                 
               >
                 <mat-icon>edit</mat-icon> Update

@@ -47,7 +47,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
       (data: Employee[]) => {
         console.log('Fetched data:', data);
         this.employeeList = data;
-        console.log("sdddddd",this.employeeList)
       },
       (error) => {
         console.error('Error fetching employees:', error);
@@ -59,9 +58,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
     this.apiUrl.getAll(`user/manager/${this.apiUrl.loggedInEmployee?.Id}`).subscribe(
       (data: Employee[]) => {
         console.log('Fetched data:', data);
-        this.employeeList= data;
-        console.log("kkkkk",this.employeeList);
-        
+        this.employeeList= data;        
       },
       (error) => {
         console.error('Error fetching employees:', error);
