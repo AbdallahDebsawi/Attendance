@@ -105,12 +105,12 @@ namespace Attendance.Controllers
         [HttpGet]
         [Route("api/GetEmployeeRequestByManager")]
         public IHttpActionResult GetAllRequestByManager([FromUri] int managerId)
-       {
+        {
             try
             {
-                var employeeRequests = db.Requests
-                    .Where(r => db.Users
-                     .Any(u => u.ManagerId == managerId && u.Id == r.UserId))
+                // Get requests for the manager (if manager is also a user)
+                var managerRequests = db.Requests
+                    .Where(r => r.UserId == managerId) // Filter manager's own requests
                     .Select(r => new RequestViewModel
                     {
                         Id = r.Id,
@@ -121,17 +121,68 @@ namespace Attendance.Controllers
                         ManagerStatus = r.ManagerStatus,
                         HRStatus = r.HRStatus,
                         UserId = r.UserId,
-                        Name = r.Users.Name,
+                        Name = r.Users.Name, // Manager's name
                     })
                     .ToList();
 
-                return Ok(employeeRequests);
+                // Get requests for users whose manager matches the managerId
+                var userRequests = db.Requests
+                    .Where(r => db.Users.Any(u => u.ManagerId == managerId && u.Id == r.UserId))
+                    .Select(r => new RequestViewModel
+                    {
+                        Id = r.Id,
+                        TypeOfAbsence = r.TypeOfAbsence,
+                        From = r.From,
+                        To = r.To,
+                        ReasonOfAbsence = r.ReasonOfAbsence,
+                        ManagerStatus = r.ManagerStatus,
+                        HRStatus = r.HRStatus,
+                        UserId = r.UserId,
+                        Name = r.Users.Name, // User's name
+                    })
+                    .ToList();
+
+                // Combine the manager's requests and the users' requests
+                var allRequests = managerRequests.Concat(userRequests).ToList();
+
+                return Ok(allRequests);
             }
             catch (Exception ex)
             {
                 return InternalServerError(ex);
             }
         }
+
+
+        [HttpGet]
+        [Route("api/GetAllRequestByHr")]
+        public IHttpActionResult GetAllByHr()
+        {
+            try
+            {
+                var result = db.Requests
+                    .Select(r => new RequestViewModel
+                    {
+                        Id = r.Id,
+                        TypeOfAbsence = r.TypeOfAbsence,
+                        From = r.From,
+                        To = r.To,
+                        ReasonOfAbsence = r.ReasonOfAbsence,
+                        ManagerStatus = r.ManagerStatus,
+                        HRStatus = r.HRStatus,
+                        UserId = r.UserId,
+                        Name = r.Users.Name
+                    })
+                    .ToList();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
 
 
         [HttpGet]

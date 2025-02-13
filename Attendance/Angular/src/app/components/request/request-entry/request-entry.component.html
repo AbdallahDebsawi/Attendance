@@ -102,12 +102,9 @@
       </mat-error>
     </mat-form-field>
 
-    <label *ngIf="isHr || isManager">HR Status</label>
-    <mat-form-field
-      appearance="fill"
-      style="width: 100%"
-      *ngIf="isHr || isManager"
-    >
+    
+    <label *ngIf="isHr">HR Status</label>
+    <mat-form-field appearance="fill" style="width: 100%;" *ngIf="isHr">
       <mat-select matInput formControlName="hrStatus">
         <mat-option value="Pending">Pending</mat-option>
         <mat-option value="Approved">Approved</mat-option>

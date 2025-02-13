@@ -168,7 +168,16 @@ export class ControlComponent implements OnInit {
   }
 
   isUpdateDisabled(request: Request): boolean {
+    const loggedInEmployee = this.apiUrl.getLoggedInEmployee();
+    const role = loggedInEmployee?.RoleId;
+
+    if(role === 2){
     return request.ManagerStatus === 'Approved' || request.HRStatus === 'Approved';
+    }
+    else if (role === 3){
+      return request.ManagerStatus !== 'Approved';
+    }
+    return false;
   }
 }
 

@@ -28,6 +28,7 @@ export class RequestComponent implements OnInit {
       
       if (role === 1) { 
         this.loadRequestsByManager(managerId!);
+        this.loadRequests();
       } else if (role === 3) {
         this.loadRequestHr();
       } else {
