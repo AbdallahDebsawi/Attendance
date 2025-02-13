@@ -87,7 +87,7 @@ namespace Attendance.Controllers
                     return Content(HttpStatusCode.BadRequest, new { Message = "Invalid user data." });
                 }
 
-                var existingUser = db.Users.SingleOrDefault(u => u.Email == user.Email);
+                var existingUser = db.Users.SingleOrDefault(u => u.Email == user.Email && !u.IsDeleted);
                 if (existingUser != null)
                 {
                     return Content(HttpStatusCode.BadRequest, new { Message = "User with this email already exists." });
