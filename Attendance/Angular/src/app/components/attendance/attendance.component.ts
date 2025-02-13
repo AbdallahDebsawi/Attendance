@@ -25,7 +25,6 @@ export class AttendanceComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Get userId from the URL
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id) {
@@ -35,11 +34,15 @@ export class AttendanceComponent implements OnInit {
         this.userId = loggedInEmployee?.Id;
       }
 
-      this.loadAttendanceRecords();
-    });
+      const loggedInEmployee = this.apiService.getLoggedInEmployee();
+      if (this.userId === loggedInEmployee?.Id) {
+        this.name = '';
+        // localStorage.removeItem('employeeName');
+      } else {
+        this.name = localStorage.getItem('employeeName') || '';
+      }
 
-    this.route.queryParams.subscribe((queryParams) => {
-      this.name = queryParams['name'] || '';
+      this.loadAttendanceRecords();
     });
 
     // Subscribe to changes in attendance data

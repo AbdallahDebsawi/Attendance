@@ -42,44 +42,52 @@
         </div>
         <div class="options">
           <!-- Dashboard Option -->
-          <div class="option-item">
-            <img
-              src="../../../assets/images/dashboard.png"
-              alt="Dashboard Icon"
-              class="option-icon"
-            />
-            <a [routerLink]="['/dashboard', userId]">Dashboard</a>
-          </div>
+          <a [routerLink]="['/dashboard', userId]">
+            <div class="option-item">
+              <img
+                src="../../../assets/images/dashboard.png"
+                alt="Dashboard Icon"
+                class="option-icon"
+              />
+              Dashboard
+            </div>
+          </a>
 
           <!-- Employees link (Visible only for HR) -->
-          <div class="option-item" *ngIf="apiService.role !== 2">
-            <img
-              src="../../../assets/images/employee.png"
-              alt="Employee Icon"
-              class="option-icon"
-            />
-            <a routerLink="/employee">Employees</a>
-          </div>
+          <a routerLink="/employee">
+            <div class="option-item" *ngIf="apiService.role !== 2">
+              <img
+                src="../../../assets/images/employee.png"
+                alt="Employee Icon"
+                class="option-icon"
+              />
+              Employees
+            </div>
+          </a>
 
           <!-- Attendance link (Visible only for non-HR roles) -->
-          <div class="option-item">
-            <img
-              src="../../../assets/images/employee.png"
-              alt="Employee Icon"
-              class="option-icon"
-            />
-            <a [routerLink]="['/attendance', userId]">Attendance</a>
-          </div>
+          <a [routerLink]="['/attendance', userId]">
+            <div class="option-item">
+              <img
+                src="../../../assets/images/employee.png"
+                alt="Employee Icon"
+                class="option-icon"
+              />
+              Attendance
+            </div>
+          </a>
 
           <!-- Request Option -->
-          <div class="option-item">
-            <img
-              src="../../../assets/images/request.png"
-              alt="Request Icon"
-              class="option-icon"
-            />
-            <a routerLink="/request">Requests</a>
-          </div>
+          <a routerLink="/request">
+            <div class="option-item">
+              <img
+                src="../../../assets/images/request.png"
+                alt="Request Icon"
+                class="option-icon"
+              />
+              Requests
+            </div>
+          </a>
         </div>
       </div>
 
@@ -98,8 +106,6 @@
             <!-- {{ attendanceStatus === "CheckedIn" ? "Check Out" : "Check In" }} -->
             {{ isCheckedIn ? "Check Out" : "Check In" }}
           </button>
-
-          
         </div>
       </div>
 

@@ -212,7 +212,7 @@ namespace Attendance.Controllers
             var result = ApplyStatusLogic(attendanceRecords);
             return Ok(result);
         }
-        
+
         private List<object> ApplyStatusLogic(List<AttendanceUser> attendanceRecords)
         {
             List<object> result = new List<object>();
@@ -259,7 +259,10 @@ namespace Attendance.Controllers
                 }
 
                 lastStatus = status;
-                double workingHours = record.CheckOut.HasValue ? (record.CheckOut.Value - record.CheckIn).TotalHours : 0;
+
+                // ✅ Convert Working Hours to HH hours MM minutes format
+                TimeSpan workingTime = record.CheckOut.HasValue ? (record.CheckOut.Value - record.CheckIn) : TimeSpan.Zero;
+                string formattedWorkingHours = $"{(int)workingTime.TotalHours} hours {workingTime.Minutes} minutes";
 
                 result.Add(new
                 {
@@ -267,12 +270,13 @@ namespace Attendance.Controllers
                     CheckIn = record.CheckIn.ToString("hh:mm tt"),
                     CheckOut = record.CheckOut?.ToString("hh:mm tt") ?? "N/A",
                     Status = status,
-                    WorkingHours = Math.Round(workingHours, 2)
+                    WorkingHours = formattedWorkingHours
                 });
             }
 
             return result;
         }
+
 
         //private double CalculateWorkingHours(List<AttendanceUser> records)
         //{

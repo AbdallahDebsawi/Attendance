@@ -71,7 +71,6 @@ export class DashboardComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    // Get userId from the URL
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id) {
@@ -80,13 +79,18 @@ export class DashboardComponent implements OnInit {
         const loggedInEmployee = this.apiService.getLoggedInEmployee();
         this.userId = loggedInEmployee!.Id;
       }
+
+      const loggedInEmployee = this.apiService.getLoggedInEmployee();
+      if (this.userId === loggedInEmployee?.Id) {
+        this.name = '';
+        // localStorage.removeItem('employeeName');
+      } else {
+        this.name = localStorage.getItem('employeeName') || '';
+      }
+
       this.loadLastAttendance();
       this.loadMonthAttendance();
-      // this.loadRequests();
-    });
-
-    this.route.queryParams.subscribe((queryParams) => {
-      this.name = queryParams['name'] || '';
+      this.loadRequests();
     });
 
     // Subscribe to last attendance updates
@@ -132,10 +136,8 @@ export class DashboardComponent implements OnInit {
       });
   }
   loadRequests(): void {
-    const userId = this.apiUrl.getLoggedInEmployee()?.Id;
-
-    if (userId) {
-      this.apiUrl.getAll(`GetAllRequest?userId=${userId}`).subscribe(
+    if (this.userId) {
+      this.apiUrl.getAll(`GetAllRequest?userId=${this.userId}`).subscribe(
         (data: any[]) => {
           console.log('Fetched Requests:', data);
 

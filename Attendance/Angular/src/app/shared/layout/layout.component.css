@@ -5,7 +5,7 @@
 }
 
 .example-container {
-    height: 100vh; 
+    height: 100vh;
 }
 
 .example-sidenav {
@@ -95,7 +95,10 @@
   gap: 10px;
   width: 100%;
 }
-
+a {
+  color: #fff !important;
+  text-decoration: none !important;
+}
 .option-item:hover {
     background-color: #2F3C77;
 }
@@ -154,7 +157,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: auto; 
+    margin-top: auto;
 }
 
 .logout-button {
@@ -185,7 +188,7 @@
 
 .bottom-pic {
     display: flex;
-    align-items: center; 
+    align-items: center;
 }
 
 .bottom-pic img {
