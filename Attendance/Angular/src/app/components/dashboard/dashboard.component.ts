@@ -136,54 +136,54 @@ export class DashboardComponent implements OnInit {
       });
   }
   loadRequests(): void {
-    if (this.userId) {
-      this.apiUrl.getAll(`GetAllRequest?userId=${this.userId}`).subscribe(
-        (data: any[]) => {
-          console.log('Fetched Requests:', data);
+    // if (this.userId) {
+    //   this.apiUrl.getAll(`GetAllRequest?userId=${this.userId}`).subscribe(
+    //     (data: any[]) => {
+    //       console.log('Fetched Requests:', data);
 
-          // Convert raw API response to Request[]
-          this.requestList = data.map(
-            (item) =>
-              new Request(
-                item.Id,
-                item.TypeOfAbsence,
-                item.From ? new Date(item.From) : undefined,
-                item.To ? new Date(item.To) : undefined,
-                item.ReasonOfAbsence,
-                item.ManagerStatus,
-                item.HRStatus,
-                item.UserId,
-                item.FilePath
-              )
-          );
+    //       // Convert raw API response to Request[]
+    //       this.requestList = data.map(
+    //         (item) =>
+    //           new Request(
+    //             item.Id,
+    //             item.TypeOfAbsence,
+    //             item.From ? new Date(item.From) : undefined,
+    //             item.To ? new Date(item.To) : undefined,
+    //             item.ReasonOfAbsence,
+    //             item.ManagerStatus,
+    //             item.HRStatus,
+    //             item.UserId,
+    //             item.FilePath
+    //           )
+    //       );
 
-          // Reset takenDays for all leave types
-          this.leaveTypes.forEach((leave) => (leave.takenDays = 0));
+    //       // Reset takenDays for all leave types
+    //       this.leaveTypes.forEach((leave) => (leave.takenDays = 0));
 
-          // Update takenDays based on API response
-          this.requestList.forEach((request) => {
-            const leaveType = this.leaveTypes.find(
-              (leave) => leave.type === request.TypeOfAbsence
-            );
+    //       // Update takenDays based on API response
+    //       this.requestList.forEach((request) => {
+    //         const leaveType = this.leaveTypes.find(
+    //           (leave) => leave.type === request.TypeOfAbsence
+    //         );
 
-            if (leaveType) {
-              leaveType.takenDays += this.calculateLeaveDays(
-                request.From ? request.From.toISOString().split('T')[0] : '', // Convert Date to 'YYYY-MM-DD'
-                request.To ? request.To.toISOString().split('T')[0] : '' // Convert Date to 'YYYY-MM-DD'
-              );
-            }
-          });
+    //         if (leaveType) {
+    //           leaveType.takenDays += this.calculateLeaveDays(
+    //             request.From ? request.From.toISOString().split('T')[0] : '', // Convert Date to 'YYYY-MM-DD'
+    //             request.To ? request.To.toISOString().split('T')[0] : '' // Convert Date to 'YYYY-MM-DD'
+    //           );
+    //         }
+    //       });
 
-          // Force UI update (Angular change detection)
-          this.leaveTypes = [...this.leaveTypes];
-        },
-        (error) => {
-          console.error('Error Fetching Data:', error);
-        }
-      );
-    } else {
-      console.error('User not logged in');
-    }
+    //       // Force UI update (Angular change detection)
+    //       this.leaveTypes = [...this.leaveTypes];
+    //     },
+    //     (error) => {
+    //       console.error('Error Fetching Data:', error);
+    //     }
+    //   );
+    // } else {
+    //   console.error('User not logged in');
+    // }
   }
 
   calculateLeaveDays(from: string, to: string): number {
