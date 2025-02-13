@@ -4,17 +4,14 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'filter'
 })
 export class FilterPipe implements PipeTransform {
+  transform(value: any[], searchText: string, column: string): any[] {
+    if (!value) return [];
+    if (!searchText || !column) return value;
 
-  transform(value: any, args?: any): any {
+    searchText = searchText.toLowerCase();
 
-    if(!value) return null;
-    if(!args) return value;
-
-    args=args.toLowerCase();
-    return value.filter(function(item:any){
-      return JSON.stringify(item).toLowerCase().includes(args);
-    })
-
+    return value.filter(item => 
+      item[column]?.toString().toLowerCase().includes(searchText)
+    );
   }
-
 }

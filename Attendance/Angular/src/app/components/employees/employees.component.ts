@@ -12,6 +12,7 @@ import { ServiceApiService } from 'src/app/Service/service-api.service';
   styleUrls: ['./employees.component.css'],
 })
 export class EmployeesComponent implements OnInit, OnDestroy {
+  
   employeeList: Employee[] = [];
   private employeeUpdateSub?: Subscription;
 

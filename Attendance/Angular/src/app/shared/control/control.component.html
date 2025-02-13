@@ -4,7 +4,7 @@
       <h2 class="table-title">{{ tableTitle }}</h2>
       <div class="search-hero">
         
-        <input type="search" [(ngModel)]="searchtext" id = "form1" class="form-control"  placeholder=" Search..." aria-label="search"/>
+        <input type="search" [(ngModel)]="searchText" class="form-control" placeholder="Search..." />
       </div>
 
       <div class="filter-container">
@@ -37,7 +37,7 @@
     </div>
 
     <div class="table-inner-container">
-      <table mat-table [dataSource]="dataSource | filter:searchtext" class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource | filter:searchText:searchColumn" class="mat-elevation-z8">
         <!-- Dynamically add columns -->
         <ng-container
           *ngFor="let column of displayedColumns "

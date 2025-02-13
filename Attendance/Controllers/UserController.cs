@@ -8,6 +8,7 @@ using System.Web.Http;
 using System.Collections.Generic;
 using Attendance.Models.dto_s;
 using Attendance.Models.Enums;
+using System.Data.Entity;
 
 namespace Attendance.Controllers
 {
@@ -23,7 +24,10 @@ namespace Attendance.Controllers
             {
                 var users = db.Users
                                     .Where(u => !u.IsDeleted)
+                                    .Include(u => u.Department)
+                                    .AsEnumerable()
                                     .Select(u => new
+
                                     {
                                         u.Id,
                                         u.Name,
@@ -31,7 +35,7 @@ namespace Attendance.Controllers
                                         u.Email,
                                         u.Gender,
                                         u.Salary,
-                                        u.JoinDate,
+                                        JoinDate = u.JoinDate.ToString("yyyy-MM-dd"),
                                         u.RoleId,
                                         DepartmentName = u.Department.DepartmentName,
                                         u.Password,

@@ -1,6 +1,7 @@
 ﻿using Attendance.Models.SharedProp;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -15,6 +16,8 @@ namespace Attendance.Models
         public string Password { get; set; }
         public string Gender { get; set; }
         public decimal Salary { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime JoinDate { get; set; }
         public DateTime? LeftDate { get; set; }
         public int RoleId { get; set; }

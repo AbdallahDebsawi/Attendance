@@ -11,13 +11,14 @@ import { Pipe, PipeTransform } from '@angular/core';
   styleUrls: ['./control.component.css'],
 })
 export class ControlComponent implements OnInit {
-  searchtext:any;
+  searchText:any;
   element: Request = {} as Request;
   isUpdateMode: boolean = false;
   isEmployeeComponent: boolean = false; // New flag to track if it's Employee component
   @Input() displayedColumns: string[] = [];
   @Input() dataSource: any[] = [];
   @Input() tableTitle: string = '';
+  @Input() searchColumn: string='';
   @Output() createUser = new EventEmitter<void>();
   @Output() editUser = new EventEmitter <any>();
   @Output() deleteUser = new EventEmitter <employee>();
@@ -61,10 +62,13 @@ export class ControlComponent implements OnInit {
       console.error('deleteRequest method is not passed correctly!');
     }
 
+
     this.apiUrl.setUserRole();
 
     // Set the flag based on the role or component title
     this.isEmployeeComponent = this.tableTitle === 'Employee List'; // Example condition
+
+    //this.searchColumn = 'Name'; // Default column if none is passed
   }
 
   takeAction(element: any): void {
