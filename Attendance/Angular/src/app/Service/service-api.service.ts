@@ -20,7 +20,11 @@ export class ServiceApiService {
   }
 
   getRequestbyManager(endPoint : string):Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}${endPoint}`)
+    return this.http.get<any>(`${this.apiUrl}${endPoint}`);
+  }
+
+  getRequestByHr(endPoint : string):Observable<any>{
+    return this.http.get<any>(`${this.apiUrl}${endPoint}`);
   }
 
   postData(endPoint: string, body: any): Observable<any> {

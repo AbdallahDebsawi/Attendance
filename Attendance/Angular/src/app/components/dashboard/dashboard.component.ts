@@ -163,7 +163,7 @@ export class DashboardComponent implements OnInit {
           // Update takenDays based on API response
           this.requestList.forEach((request) => {
             const leaveType = this.leaveTypes.find(
-              (leave) => leave.type === request.TypeOfAbsence
+              (leave) => leave.type === String(request.TypeOfAbsence)
             );
 
             if (leaveType) {
