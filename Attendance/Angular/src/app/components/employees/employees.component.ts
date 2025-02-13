@@ -24,7 +24,15 @@ export class EmployeesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.loadEmployees();
+    if(this.apiUrl.role == 3)
+    {
+      this.loadEmployees();
+    }
+    
+    else 
+    {
+      this.loadEmployeesForManager();
+    }
     
     // Subscribe to the employeesUpdated listener
     this.employeeUpdateSub = this.employeeService.getEmployeesUpdatedListener().subscribe((updated) => {
@@ -39,11 +47,26 @@ export class EmployeesComponent implements OnInit, OnDestroy {
       (data: Employee[]) => {
         console.log('Fetched data:', data);
         this.employeeList = data;
+        console.log("sdddddd",this.employeeList)
       },
       (error) => {
         console.error('Error fetching employees:', error);
       }
     );
+  }
+
+  loadEmployeesForManager(): void {
+    this.apiUrl.getAll(`user/manager/${this.apiUrl.loggedInEmployee?.Id}`).subscribe(
+      (data: Employee[]) => {
+        console.log('Fetched data:', data);
+        this.employeeList= data;
+        console.log("kkkkk",this.employeeList);
+        
+      },
+      (error) => {
+        console.error('Error fetching employees:', error);
+      }
+    )
   }
 
 

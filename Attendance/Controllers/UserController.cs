@@ -10,6 +10,7 @@ using Attendance.Models.dto_s;
 using Attendance.Models.Enums;
 using System.Data.Entity;
 
+
 namespace Attendance.Controllers
 {
     public class UserController : ApiController
@@ -211,12 +212,52 @@ namespace Attendance.Controllers
         {
             // Filter by roleId for Manager (1)
             var managers = db.Users
-                .Where(u => u.RoleId == (int)Role.Manager) 
+                .Where(u => u.RoleId == (int)Role.Manager && !u.IsDeleted) 
                 .Select(u => new { u.Id, u.Name })
                 .ToList();
 
             return Ok(new { Success = true, Data = managers });
         }
+
+        [HttpGet]
+        [Route("api/user/manager/{managerId}")]
+        public IHttpActionResult GetUsersByManager(int managerId)
+        {
+            try
+            {
+                var users = db.Users
+                                .Where(u => u.ManagerId == managerId && !u.IsDeleted)
+                                .Include(u => u.Department)
+                                .AsEnumerable()
+                                .Select(u => new
+                                {
+                                    u.Id,
+                                    u.Name,
+                                    u.ManagerId,
+                                    u.Email,
+                                    u.Gender,
+                                    u.Salary,
+                                    JoinDate = u.JoinDate.ToString("yyyy-MM-dd"),
+                                    u.RoleId,
+                                    DepartmentName = u.Department.DepartmentName,
+                                    u.Password,
+                                    u.DepartmentId
+                                }).ToList();
+
+                if (!users.Any())
+                {
+                    return Content(HttpStatusCode.NotFound, new { Message = "No users found for the specified manager." });
+                }
+
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.InternalServerError, new { Message = "An error occurred while fetching users.", Error = ex.Message });
+            }
+        }
+
+
 
     }
 

@@ -8,9 +8,9 @@ import { employee } from 'src/app/shared/models/employee';
 })
 export class ServiceApiService {
   private apiUrl = 'https://localhost:44323/api/';
-  private loggedInEmployeeKey = 'loggedInEmployee'; // Key for localStorage
-  private loggedInEmployee: employee | null = null;  // Define loggedInEmployee in memory
-  role: any;
+  public loggedInEmployeeKey = 'loggedInEmployee'; // Key for localStorage
+  public loggedInEmployee: employee | null = null;  // Define loggedInEmployee in memory
+  role: any;  
   userId?: number = 0;
 
   constructor(private http: HttpClient) {}
