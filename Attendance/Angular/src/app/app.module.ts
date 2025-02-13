@@ -36,6 +36,7 @@ import { RequestEntryComponent } from './components/request/request-entry/reques
 import { TestComponent } from './test/test.component';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { FilterPipe } from './filter.pipe';
+import { CommonModule } from '@angular/common';
 // import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
@@ -82,7 +83,8 @@ import { FilterPipe } from './filter.pipe';
     MatIconModule,
     MatCheckboxModule,
     FormsModule,
-    Ng2SearchPipeModule
+    Ng2SearchPipeModule,
+    CommonModule
   ],
   providers: [AttendanceService],
   bootstrap: [AppComponent],

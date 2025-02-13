@@ -34,11 +34,20 @@ namespace Attendance.Controllers
 
             try
             {
+                var user = db.Users.Find(model.UserId);
+                if (user == null)
+                {
+                    return BadRequest("User not found");
+                }
+
+                // Set the dates
                 model.From = model.From.Date;
                 model.To = model.To.Date;
 
+                // Add the request
                 db.Requests.Add(model);
                 db.SaveChanges();
+
                 return Ok();
             }
             catch (Exception ex)
@@ -46,6 +55,7 @@ namespace Attendance.Controllers
                 return InternalServerError(ex);
             }
         }
+
 
         [HttpDelete]
         [Route("api/RequestDelete/{id}")]
@@ -121,11 +131,10 @@ namespace Attendance.Controllers
                         ManagerStatus = r.ManagerStatus,
                         HRStatus = r.HRStatus,
                         UserId = r.UserId,
-                        Name = r.Users.Name, // Manager's name
+                        Name = r.Users.Name,
                     })
                     .ToList();
 
-                // Get requests for users whose manager matches the managerId
                 var userRequests = db.Requests
                     .Where(r => db.Users.Any(u => u.ManagerId == managerId && u.Id == r.UserId))
                     .Select(r => new RequestViewModel
@@ -138,11 +147,10 @@ namespace Attendance.Controllers
                         ManagerStatus = r.ManagerStatus,
                         HRStatus = r.HRStatus,
                         UserId = r.UserId,
-                        Name = r.Users.Name, // User's name
+                        Name = r.Users.Name,
                     })
                     .ToList();
 
-                // Combine the manager's requests and the users' requests
                 var allRequests = managerRequests.Concat(userRequests).ToList();
 
                 return Ok(allRequests);
@@ -152,7 +160,6 @@ namespace Attendance.Controllers
                 return InternalServerError(ex);
             }
         }
-
 
         [HttpGet]
         [Route("api/GetAllRequestByHr")]
@@ -182,7 +189,6 @@ namespace Attendance.Controllers
                 return InternalServerError(ex);
             }
         }
-
 
 
         [HttpGet]

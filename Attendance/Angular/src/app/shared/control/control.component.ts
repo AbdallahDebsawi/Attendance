@@ -78,7 +78,6 @@ export class ControlComponent implements OnInit {
   };
 
   getAbsenceTypeLabel(value: number): string {
-    // console.log('Absence Type Value:', value);
     return this.absenceTypeLabels[value] || 'Unknown';
   }
 
@@ -176,7 +175,9 @@ export class ControlComponent implements OnInit {
       );
     } else if (role === 3) {
       return request.ManagerStatus !== 'Approved';
+    }else{
+      return false;
     }
-    return false;
+    
   }
 }
