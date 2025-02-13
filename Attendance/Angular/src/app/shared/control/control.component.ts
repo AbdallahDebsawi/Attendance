@@ -11,7 +11,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   styleUrls: ['./control.component.css'],
 })
 export class ControlComponent implements OnInit {
-  searchtext:any;
+  searchtext: any;
   element: Request = {} as Request;
   isUpdateMode: boolean = false;
   isEmployeeComponent: boolean = false; // New flag to track if it's Employee component
@@ -19,8 +19,8 @@ export class ControlComponent implements OnInit {
   @Input() dataSource: any[] = [];
   @Input() tableTitle: string = '';
   @Output() createUser = new EventEmitter<void>();
-  @Output() editUser = new EventEmitter <any>();
-  @Output() deleteUser = new EventEmitter <employee>();
+  @Output() editUser = new EventEmitter<any>();
+  @Output() deleteUser = new EventEmitter<employee>();
   @Output() createRequest = new EventEmitter<void>();
   @Output() editRequest = new EventEmitter<any>();
   @Output() deleteRequest = new EventEmitter<Request>();
@@ -107,17 +107,15 @@ export class ControlComponent implements OnInit {
   }
 
   onUpdateUser(emp: employee): void {
-    if (this.isEmployeeComponent)
-    {
+    if (this.isEmployeeComponent) {
       this.editUser.emit(emp);
     }
   }
 
-  onDeleteUser(emp: employee) : void {
-    if (this.isEmployeeComponent)
-      {
-        this.deleteUser.emit(emp);
-      }
+  onDeleteUser(emp: employee): void {
+    if (this.isEmployeeComponent) {
+      this.deleteUser.emit(emp);
+    }
   }
 
   onFilterClick(): void {
@@ -125,10 +123,12 @@ export class ControlComponent implements OnInit {
   }
 
   viewAttendanceHistory(id: number, name: string) {
-    this.router.navigate(['/attendance', id], { queryParams: { name: name } });
+    localStorage.setItem('employeeName', name);
+    this.router.navigate(['/attendance', id]);
   }
 
   viewAttendanceOverview(id: number, name: string) {
-    this.router.navigate(['/dashboard', id], { queryParams: { name: name } });
+    localStorage.setItem('employeeName', name);
+    this.router.navigate(['/dashboard', id]);
   }
 }

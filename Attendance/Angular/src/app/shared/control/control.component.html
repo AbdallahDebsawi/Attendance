@@ -3,16 +3,20 @@
     <div class="table-header">
       <h2 class="table-title">{{ tableTitle }}</h2>
       <div class="search-hero">
-        
-        <input type="search" [(ngModel)]="searchtext" id = "form1" class="form-control"  placeholder=" Search..." aria-label="search"/>
+        <input
+          type="search"
+          [(ngModel)]="searchtext"
+          id="form1"
+          class="form-control"
+          placeholder=" Search..."
+          aria-label="search"
+        />
       </div>
 
       <div class="filter-container">
         <button class="filter-button" (click)="onFilterClick()">
           <img src="../../../assets/images/filter.png" alt="Filter" />
         </button>
-
-        
 
         <!-- Show Add Request button only if it's not an Employee component -->
         <button
@@ -37,10 +41,14 @@
     </div>
 
     <div class="table-inner-container">
-      <table mat-table [dataSource]="dataSource | filter:searchtext" class="mat-elevation-z8">
+      <table
+        mat-table
+        [dataSource]="dataSource | filter : searchtext"
+        class="mat-elevation-z8"
+      >
         <!-- Dynamically add columns -->
         <ng-container
-          *ngFor="let column of displayedColumns "
+          *ngFor="let column of displayedColumns"
           [matColumnDef]="column"
         >
           <th mat-header-cell *matHeaderCellDef>
@@ -55,37 +63,35 @@
             <mat-menu #actionMenu="matMenu">
               <button
                 mat-menu-item
-                (click)="isEmployeeComponent ? onUpdateUser(element) : onUpdateRequest(element)"
-                
+                (click)="
+                  isEmployeeComponent
+                    ? onUpdateUser(element)
+                    : onUpdateRequest(element)
+                "
               >
                 <mat-icon>edit</mat-icon> Update
               </button>
               <button
                 mat-menu-item
                 *ngIf="element?.Id"
-                (click)="isEmployeeComponent ? onDeleteUser(element) : onDelete(element)"
-
+                (click)="
+                  isEmployeeComponent
+                    ? onDeleteUser(element)
+                    : onDelete(element)
+                "
               >
                 <mat-icon>delete</mat-icon> Delete
               </button>
               <button
                 mat-menu-item
-                *ngIf="
-                  element?.Id &&
-                  !tableTitle.includes('Requests List') &&
-                  apiUrl.role == 3
-                "
+                *ngIf="element?.Id && !tableTitle.includes('Requests List')"
                 (click)="viewAttendanceHistory(element.Id, element.Name)"
               >
                 <mat-icon>history</mat-icon> Attendance History
               </button>
               <button
                 mat-menu-item
-                *ngIf="
-                  element?.Id &&
-                  !tableTitle.includes('Requests List') &&
-                  apiUrl.role == 3
-                "
+                *ngIf="element?.Id && !tableTitle.includes('Requests List')"
                 (click)="viewAttendanceOverview(element.Id, element.Name)"
               >
                 <mat-icon>bar_chart</mat-icon> Attendance Overview
