@@ -9,13 +9,13 @@ enum AbsenceType {
   AnnualLeave = 1,
   SickLeave = 2,
   PersonalLeave = 3,
-  Other = 4
-};
+  Other = 4,
+}
 
 enum Status {
   Approved = 1,
   Rejected = 2,
-  Pending = 3
+  Pending = 3,
 }
 @Component({
   selector: 'app-control',
@@ -23,7 +23,7 @@ enum Status {
   styleUrls: ['./control.component.css'],
 })
 export class ControlComponent implements OnInit {
-  searchText:any;
+  searchText: any;
 
   element: Request = {} as Request;
   isUpdateMode: boolean = false;
@@ -31,7 +31,7 @@ export class ControlComponent implements OnInit {
   @Input() displayedColumns: string[] = [];
   @Input() dataSource: any[] = [];
   @Input() tableTitle: string = '';
-  @Input() searchColumn: string='';
+  @Input() searchColumn: string = '';
   @Output() createUser = new EventEmitter<void>();
   @Output() editUser = new EventEmitter<any>();
   @Output() deleteUser = new EventEmitter<employee>();
@@ -45,14 +45,14 @@ export class ControlComponent implements OnInit {
     [AbsenceType.AnnualLeave]: 'Annual Leave',
     [AbsenceType.SickLeave]: 'Sick Leave',
     [AbsenceType.PersonalLeave]: 'Personal Leave',
-    [AbsenceType.Other]: 'Other'
+    [AbsenceType.Other]: 'Other',
   };
 
-  typeStatus : { [key : number] : string} = {
-    [Status.Approved] : 'Approved',
-    [Status.Rejected] : 'Rejected',
-    [Status.Pending] : 'Pending',
-  }
+  typeStatus: { [key: number]: string } = {
+    [Status.Approved]: 'Approved',
+    [Status.Rejected]: 'Rejected',
+    [Status.Pending]: 'Pending',
+  };
 
   columnMapping: { [key: string]: string } = {
     name: 'Name',
@@ -78,7 +78,7 @@ export class ControlComponent implements OnInit {
   };
 
   getAbsenceTypeLabel(value: number): string {
-    console.log('Absence Type Value:', value);
+    // console.log('Absence Type Value:', value);
     return this.absenceTypeLabels[value] || 'Unknown';
   }
 
@@ -92,7 +92,6 @@ export class ControlComponent implements OnInit {
     if (!this.deleteRequest) {
       console.error('deleteRequest method is not passed correctly!');
     }
-
 
     this.apiUrl.setUserRole();
 
@@ -171,14 +170,13 @@ export class ControlComponent implements OnInit {
     const loggedInEmployee = this.apiUrl.getLoggedInEmployee();
     const role = loggedInEmployee?.RoleId;
 
-    if(role === 2){
-    return request.ManagerStatus === 'Approved' || request.HRStatus === 'Approved';
-    }
-    else if (role === 3){
+    if (role === 2) {
+      return (
+        request.ManagerStatus === 'Approved' || request.HRStatus === 'Approved'
+      );
+    } else if (role === 3) {
       return request.ManagerStatus !== 'Approved';
     }
     return false;
   }
 }
-
-
