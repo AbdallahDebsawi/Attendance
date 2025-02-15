@@ -13,14 +13,14 @@ p {
 
 @media (max-width: 768px) {
   ::ng-deep .mat-datepicker-content {
-    width: 60% !important;
+    width: 80% !important;
     right: 10px !important;
   }
 }
 
 @media (max-width: 480px) {
   ::ng-deep .mat-datepicker-content {
-    width: 60% !important;
+    width: 100% !important;
     right: 5px !important;
   }
 }

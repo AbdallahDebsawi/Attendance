@@ -4,18 +4,11 @@ import { ServiceApiService } from 'src/app/Service/service-api.service';
 import { Request } from '../models/request';
 import { employee } from '../models/employee';
 import { Router } from '@angular/router';
-import { Pipe, PipeTransform } from '@angular/core';
 enum AbsenceType {
   AnnualLeave = 1,
   SickLeave = 2,
   PersonalLeave = 3,
-  Other = 4,
-}
-
-enum Status {
-  Approved = 1,
-  Rejected = 2,
-  Pending = 3,
+  Other = 4
 }
 @Component({
   selector: 'app-control',
@@ -23,7 +16,6 @@ enum Status {
   styleUrls: ['./control.component.css'],
 })
 export class ControlComponent implements OnInit {
-  searchText: any;
 
   element: Request = {} as Request;
   isUpdateMode: boolean = false;
@@ -31,10 +23,9 @@ export class ControlComponent implements OnInit {
   @Input() displayedColumns: string[] = [];
   @Input() dataSource: any[] = [];
   @Input() tableTitle: string = '';
-  @Input() searchColumn: string = '';
   @Output() createUser = new EventEmitter<void>();
-  @Output() editUser = new EventEmitter<any>();
-  @Output() deleteUser = new EventEmitter<employee>();
+  @Output() editUser = new EventEmitter <any>();
+  @Output() deleteUser = new EventEmitter <employee>();
   @Output() createRequest = new EventEmitter<void>();
   @Output() editRequest = new EventEmitter<any>();
   @Output() deleteRequest = new EventEmitter<Request>();
@@ -45,14 +36,8 @@ export class ControlComponent implements OnInit {
     [AbsenceType.AnnualLeave]: 'Annual Leave',
     [AbsenceType.SickLeave]: 'Sick Leave',
     [AbsenceType.PersonalLeave]: 'Personal Leave',
-    [AbsenceType.Other]: 'Other',
-  };
-
-  typeStatus: { [key: number]: string } = {
-    [Status.Approved]: 'Approved',
-    [Status.Rejected]: 'Rejected',
-    [Status.Pending]: 'Pending',
-  };
+    [AbsenceType.Other]: 'Other'
+  };;
 
   columnMapping: { [key: string]: string } = {
     name: 'Name',
@@ -78,6 +63,7 @@ export class ControlComponent implements OnInit {
   };
 
   getAbsenceTypeLabel(value: number): string {
+    console.log('Absence Type Value:', value);
     return this.absenceTypeLabels[value] || 'Unknown';
   }
 
@@ -88,28 +74,27 @@ export class ControlComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const loggedInEmployee = this.apiUrl.getLoggedInEmployee();
+    const role = loggedInEmployee?.RoleId;
+    const managerId = loggedInEmployee?.Id;
+
     if (!this.deleteRequest) {
       console.error('deleteRequest method is not passed correctly!');
     }
 
     this.apiUrl.setUserRole();
 
-    // Set the flag based on the role or component title
     this.isEmployeeComponent = this.tableTitle === 'Employee List'; // Example condition
-
-    //this.searchColumn = 'Name'; // Default column if none is passed
   }
 
   takeAction(element: any): void {
     if (this.apiUrl.role === 3) {
-      // HR role can update hrStatus
       if (element.hrStatus === 'Pending') {
-        element.hrStatus = 'Approved'; // Update to 'Approved' when action is taken
+        element.hrStatus = 'Approved';
       } else {
-        element.hrStatus = 'Pending'; // Toggle back to 'Pending'
+        element.hrStatus = 'Pending';
       }
     } else if (this.apiUrl.role === 1) {
-      // Manager role can update managerStatus
       if (element.managerStatus === 'Pending') {
         element.managerStatus = 'Approved';
         element.hrStatus = '--';
@@ -129,26 +114,28 @@ export class ControlComponent implements OnInit {
 
   onUpdateRequest(request: Request): void {
     if (!this.isEmployeeComponent) {
-      this.editRequest.emit(request); // Only emit update if not Employee
+      this.editRequest.emit(request);
     }
   }
 
   onDelete(request: Request): void {
     if (!this.isEmployeeComponent) {
-      this.deleteRequest.emit(request); // Only emit delete if not Employee
+      this.deleteRequest.emit(request);
     }
   }
 
   onUpdateUser(emp: employee): void {
-    if (this.isEmployeeComponent) {
+    if (this.isEmployeeComponent)
+    {
       this.editUser.emit(emp);
     }
   }
 
-  onDeleteUser(emp: employee): void {
-    if (this.isEmployeeComponent) {
-      this.deleteUser.emit(emp);
-    }
+  onDeleteUser(emp: employee) : void {
+    if (this.isEmployeeComponent)
+      {
+        this.deleteUser.emit(emp);
+      }
   }
 
   onFilterClick(): void {
@@ -156,28 +143,29 @@ export class ControlComponent implements OnInit {
   }
 
   viewAttendanceHistory(id: number, name: string) {
-    localStorage.setItem('employeeName', name);
-    this.router.navigate(['/attendance', id]);
+    this.router.navigate(['/attendance', id], { queryParams: { name: name } });
   }
 
   viewAttendanceOverview(id: number, name: string) {
-    localStorage.setItem('employeeName', name);
-    this.router.navigate(['/dashboard', id]);
+    this.router.navigate(['/dashboard', id], { queryParams: { name: name } });
   }
 
   isUpdateDisabled(request: Request): boolean {
-    const loggedInEmployee = this.apiUrl.getLoggedInEmployee();
-    const role = loggedInEmployee?.RoleId;
-
-    if (role === 2) {
-      return (
-        request.ManagerStatus === 'Approved' || request.HRStatus === 'Approved'
-      );
-    } else if (role === 3) {
-      return request.ManagerStatus !== 'Approved';
-    }else{
-      return false;
+    const getApprove = this.apiUrl.getLoggedInEmployee();
+    const role = getApprove?.Id
+    if(role === 1)
+    {
+      return request.ManagerStatus === 'Approved' && request.HRStatus !== 'Approved';
     }
-    
+    else if (role === 3)
+    {
+      return request.ManagerStatus === 'Approved' && request.HRStatus === 'Approved';
+    }
+    else {
+    return true;
+    }
   }
+    
 }
+
+

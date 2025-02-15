@@ -10,5 +10,4 @@ export class employee{
     JoinDate? : Date ;
     RoleId? : number ;
     DepartmentId? : number ;
-    DepartmentName? : string;
 }

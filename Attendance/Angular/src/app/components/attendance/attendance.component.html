@@ -9,9 +9,10 @@
       'WorkingHours'
     ]"
     [dataSource]="attendanceRecords.reverse()"
-    [tableTitle]="name ? name + '’s Attendance History' : 'Attendance History'"
+    [tableTitle]="
+      name ? name + '’s Attendance History' : 'Attendance History'
+    "
     (filterClicked)="openDatePicker()"
-    [searchColumn]="'Status'">
   >
   </app-control>
 </div>
@@ -29,6 +30,6 @@
   startView="multi-year"
   (yearSelected)="chosenYearHandler($event, picker)"
   (monthSelected)="chosenMonthHandler($event, picker)"
-  [panelClass]="'custom-datepicker'"
+  panelClass="custom-datepicker"
 >
 </mat-datepicker>

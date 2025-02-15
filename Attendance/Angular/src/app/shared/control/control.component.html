@@ -2,10 +2,6 @@
   <div class="table-container">
     <div class="table-header">
       <h2 class="table-title">{{ tableTitle }}</h2>
-      <div class="search-hero">
-        
-        <input type="search" [(ngModel)]="searchText" class="form-control" placeholder="Search..." />
-      </div>
 
       <div class="filter-container">
         <button class="filter-button" (click)="onFilterClick()">
@@ -35,7 +31,7 @@
     </div>
 
     <div class="table-inner-container">
-      <table mat-table [dataSource]="dataSource | filter:searchText:searchColumn" class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
         <ng-container
           *ngFor="let column of displayedColumns"
           [matColumnDef]="column"
@@ -53,9 +49,7 @@
             <mat-menu #actionMenu="matMenu">
               <button
                 mat-menu-item
-                (click)="isEmployeeComponent ? onUpdateUser(element) : onUpdateRequest(element)"
-                    [disabled]="isEmployeeComponent ? isUpdateDisabled(element) : false"
-
+                (click)="isEmployeeComponent ? onUpdateUser(element) : onUpdateRequest(element)" [disabled]="isUpdateDisabled(element)"
                 
               >
                 <mat-icon>edit</mat-icon> Update
@@ -63,24 +57,22 @@
               <button
                 mat-menu-item
                 *ngIf="element?.Id"
-                (click)="
-                  isEmployeeComponent
-                    ? onDeleteUser(element)
-                    : onDelete(element)
-                "
+                (click)="isEmployeeComponent ? onDeleteUser(element) : onDelete(element)"
+
               >
                 <mat-icon>delete</mat-icon> Delete
               </button>
               <button
                 mat-menu-item
-                *ngIf="element?.Id && !tableTitle.includes('Requests List')"
+                *ngIf="element?.Id"
                 (click)="viewAttendanceHistory(element.Id, element.Name)"
               >
                 <mat-icon>history</mat-icon> Attendance History
               </button>
+
               <button
                 mat-menu-item
-                *ngIf="element?.Id && !tableTitle.includes('Requests List')"
+                *ngIf="element?.Id"
                 (click)="viewAttendanceOverview(element.Id, element.Name)"
               >
                 <mat-icon>bar_chart</mat-icon> Attendance Overview

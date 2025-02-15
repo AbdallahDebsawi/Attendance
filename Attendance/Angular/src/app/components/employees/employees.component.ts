@@ -12,7 +12,6 @@ import { ServiceApiService } from 'src/app/Service/service-api.service';
   styleUrls: ['./employees.component.css'],
 })
 export class EmployeesComponent implements OnInit, OnDestroy {
-  
   employeeList: Employee[] = [];
   private employeeUpdateSub?: Subscription;
 
@@ -24,15 +23,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    if(this.apiUrl.role == 3)
-    {
-      this.loadEmployees();
-    }
-    
-    else 
-    {
-      this.loadEmployeesForManager();
-    }
+    this.loadEmployees();
     
     // Subscribe to the employeesUpdated listener
     this.employeeUpdateSub = this.employeeService.getEmployeesUpdatedListener().subscribe((updated) => {
@@ -52,18 +43,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
         console.error('Error fetching employees:', error);
       }
     );
-  }
-
-  loadEmployeesForManager(): void {
-    this.apiUrl.getAll(`user/manager/${this.apiUrl.loggedInEmployee?.Id}`).subscribe(
-      (data: Employee[]) => {
-        console.log('Fetched data:', data);
-        this.employeeList= data;        
-      },
-      (error) => {
-        console.error('Error fetching employees:', error);
-      }
-    )
   }
 
 

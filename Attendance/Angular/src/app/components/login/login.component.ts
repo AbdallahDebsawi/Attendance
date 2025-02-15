@@ -12,15 +12,12 @@ export class LoginComponent implements OnInit {
   email: string = '';
   password: string = '';
   loggedInEmployee: employee = new employee();
-  errorMessage: string = ''; // New property for error message
 
   constructor(private apiService: ServiceApiService, private router: Router) {}
 
   ngOnInit(): void {}
 
   signIn() {
-    this.errorMessage = ''; // Reset error message
-
     const loginData = { email: this.email, password: this.password };
 
     this.apiService.postData('user/login', loginData).subscribe(
@@ -40,13 +37,13 @@ export class LoginComponent implements OnInit {
           };
 
           this.apiService.setLoggedInEmployee(this.loggedInEmployee);
-          console.log('Logged in employee:', this.loggedInEmployee);
 
+          console.log('Logged in employee:', this.loggedInEmployee);
           this.router.navigate(['/dashboard', this.loggedInEmployee.Id]);
         }
       },
       (error) => {
-        this.errorMessage = error.error?.Message || 'Invalid email or password';
+        alert(error.error?.Message || 'Invalid email or password');
       }
     );
   }

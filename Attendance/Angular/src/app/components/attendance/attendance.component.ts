@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AttendanceService } from 'src/app/services/attendance.service';
 import { Attendance } from 'src/app/shared/models/attendance';
 import { DatePipe } from '@angular/common';
@@ -17,7 +17,6 @@ export class AttendanceComponent implements OnInit {
   @ViewChild(MatDatepicker) picker: MatDatepicker<Date> | undefined;
   userId? = 12;
   name: string = '';
-
   constructor(
     private attendanceService: AttendanceService,
     private apiService: ServiceApiService,
@@ -25,6 +24,7 @@ export class AttendanceComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Get userId from the URL
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id) {
@@ -34,15 +34,11 @@ export class AttendanceComponent implements OnInit {
         this.userId = loggedInEmployee?.Id;
       }
 
-      const loggedInEmployee = this.apiService.getLoggedInEmployee();
-      if (this.userId === loggedInEmployee?.Id) {
-        this.name = '';
-        // localStorage.removeItem('employeeName');
-      } else {
-        this.name = localStorage.getItem('employeeName') || '';
-      }
-
       this.loadAttendanceRecords();
+    });
+
+    this.route.queryParams.subscribe((queryParams) => {
+      this.name = queryParams['name'] || '';
     });
 
     // Subscribe to changes in attendance data
