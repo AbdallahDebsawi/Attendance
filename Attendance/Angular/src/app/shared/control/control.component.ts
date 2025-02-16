@@ -63,7 +63,6 @@ export class ControlComponent implements OnInit {
   };
 
   getAbsenceTypeLabel(value: number): string {
-    console.log('Absence Type Value:', value);
     return this.absenceTypeLabels[value] || 'Unknown';
   }
 
@@ -153,17 +152,18 @@ export class ControlComponent implements OnInit {
   isUpdateDisabled(request: Request): boolean {
     const getApprove = this.apiUrl.getLoggedInEmployee();
     const role = getApprove?.Id
-    if(role === 1)
-    {
-      return request.ManagerStatus === 'Approved' && request.HRStatus !== 'Approved';
-    }
-    else if (role === 3)
-    {
-      return request.ManagerStatus === 'Approved' && request.HRStatus === 'Approved';
-    }
-    else {
-    return true;
-    }
+    return request.ManagerStatus === 'Approved' && request.HRStatus === 'Approved';
+    // if(role === 1)
+    // {
+    //   return request.ManagerStatus === 'Approved' && request.HRStatus === 'Approved';
+    // }
+    // else if (role === 3)
+    // {
+    //   return request.ManagerStatus === 'Approved' && request.HRStatus === 'Approved';
+    // }
+    // else {
+    // return true;
+    // }
   }
     
 }

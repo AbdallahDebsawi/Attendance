@@ -221,29 +221,24 @@ namespace Attendance.Controllers
                 return BadRequest("Invalid Request Id");
             }
 
-            var request = new Request()
+            var existingRequest = db.Requests.FirstOrDefault(r => r.Id == id);
+            if (existingRequest == null)
             {
-                Id = id,
-                TypeOfAbsence = model.TypeOfAbsence,
-                From = model.From,
-                To = model.To,
-                ReasonOfAbsence = model.ReasonOfAbsence,
-                ManagerStatus = model.ManagerStatus,
-                HRStatus = model.HRStatus,
-                UserId = model.UserId
-            };
-            request.TypeOfAbsence = model.TypeOfAbsence;
-            request.From = model.From;
-            request.To = model.To;
-            request.ReasonOfAbsence = model.ReasonOfAbsence;
-            request.ManagerStatus = model.ManagerStatus;
-            request.HRStatus = model.HRStatus;
-            request.UserId = model.UserId;
+                return NotFound();
+            }
 
-            db.Requests.AddOrUpdate(request);
+            existingRequest.TypeOfAbsence = model.TypeOfAbsence;
+            existingRequest.From = model.From;
+            existingRequest.To = model.To;
+            existingRequest.ReasonOfAbsence = model.ReasonOfAbsence;
+            existingRequest.ManagerStatus = model.ManagerStatus;
+            existingRequest.HRStatus = model.HRStatus;
+            existingRequest.UserId = model.UserId;
+
             db.SaveChanges();
-            return Ok();
+            return Ok(existingRequest);
         }
+
 
 
 
