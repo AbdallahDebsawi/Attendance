@@ -36,17 +36,19 @@ export class RequestComponent implements OnInit {
     }
 
     loadRequestsByManager(managerId: number): void {
-      if(managerId){
-      this.apiUrl.getRequestbyManager(`GetEmployeeRequestByManager?managerId=${managerId}`).subscribe(
-      (data: Request[]) => {
-          console.log('Fetched Requests for Manager:', data);
-          this.requestList = data;
-          this.dataSource.data = data;
-          this.cdRef.detectChanges();
-        },
-        (error) => {
-          console.error('Error Fetching Data for Manager:', error);
-        });
+      if (managerId) {
+        this.apiUrl.getRequestbyManager(`GetEmployeeRequestByManager?managerId=${managerId}`).subscribe(
+          (data: Request[]) => {
+            console.log('Fetched Requests for Manager:', data);
+    
+            this.requestList = this.formatRequestDates(data);
+            this.dataSource.data = this.requestList;
+            this.cdRef.detectChanges();
+          },
+          (error) => {
+            console.error('Error Fetching Data for Manager:', error);
+          }
+        );
       } else {
         console.error('User not logged in');
       }
@@ -58,29 +60,46 @@ export class RequestComponent implements OnInit {
         this.apiUrl.getAll(`GetAllRequest?userId=${userId}`).subscribe(
           (data: Request[]) => {
             console.log('Fetched Data:', data);
-            this.requestList = data;
-            this.dataSource.data = data;
+    
+            this.requestList = this.formatRequestDates(data);
+            this.dataSource.data = this.requestList;
             this.cdRef.detectChanges();
           },
           (error) => {
             console.error('Error Fetching Data:', error);
-          });
+          }
+        );
       } else {
         console.error('User not logged in');
       }
     }
-
+    
     loadRequestHr(): void {
       this.apiUrl.getRequestByHr(`GetAllRequestByHr`).subscribe(
-        (data  : Request[]) => {
-          console.log("Request" , data)
-        this.requestList = data;
-        this.dataSource.data = data;
-        this.cdRef.detectChanges();
+        (data: Request[] | null) => {
+          if (!data || !Array.isArray(data)) {
+            console.error("Error: API response is invalid", data);
+            return;
+          }
+    
+          console.log("API Response:", data);
+    
+          this.requestList = this.formatRequestDates(data);
+          this.dataSource.data = this.requestList;
+          this.cdRef.detectChanges();
         },
         (error) => {
-          console.error('Error Fetching Data' , error);
-        }); 
+          console.error('Error Fetching Data', error);
+        }
+      );
+    }
+    
+    private formatRequestDates(data: Request[]): Request[] {
+      return data.map(request => ({
+        ...request,
+        From: request.From ? new Date(request.From).toISOString().split('T')[0] : '',
+        To: request.To ? new Date(request.To).toISOString().split('T')[0] : '',
+      }));
     }
     
 
