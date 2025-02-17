@@ -309,6 +309,14 @@
     <Compile Include="Migrations\202502110945565_UpdateManagerStatus.Designer.cs">
       <DependentUpon>202502110945565_UpdateManagerStatus.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202502171033189_update gender type.cs" />
+    <Compile Include="Migrations\202502171033189_update gender type.designer.cs">
+      <DependentUpon>202502171033189_update gender type.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202502171227072_change status type in request.cs" />
+    <Compile Include="Migrations\202502171227072_change status type in request.designer.cs">
+      <DependentUpon>202502171227072_change status type in request.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AttendanceUser.cs" />
     <Compile Include="Models\Department.cs" />
@@ -450,6 +458,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202502110945565_UpdateManagerStatus.resx">
       <DependentUpon>202502110945565_UpdateManagerStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202502171033189_update gender type.resx">
+      <DependentUpon>202502171033189_update gender type.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202502171227072_change status type in request.resx">
+      <DependentUpon>202502171227072_change status type in request.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

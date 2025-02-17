@@ -14,7 +14,7 @@ namespace Attendance.Models
         public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public string Gender { get; set; }
+        public int Gender { get; set; }
         public decimal Salary { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]

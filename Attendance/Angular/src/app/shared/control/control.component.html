@@ -37,7 +37,13 @@
           </th>
           <td mat-cell *matCellDef="let element">
             {{ column === 'TypeOfAbsence' ? getAbsenceTypeLabel(element[column]) : 
-               column === 'RoleId' ? roleMapping[element[column]] : element[column] }}
+               column === 'RoleId' ? roleMapping[element[column]] : 
+               column === 'Gender' ? genderMapping[element[column]] :
+               column === 'ManagerStatus' ? typeStatus[element[column]] :
+               column === 'HRStatus' ? typeStatus[element[column]] :
+
+               element[column] 
+            }}
           </td>
         </ng-container>
 

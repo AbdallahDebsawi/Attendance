@@ -4,9 +4,10 @@ import { ServiceApiService } from 'src/app/Service/service-api.service';
 import { Request } from '../models/request';
 import { employee } from '../models/employee';
 import { Role } from 'src/app/enums/role';
-
+import { Status } from 'src/app/enums/status';
 import { Router } from '@angular/router';
 import { Pipe, PipeTransform } from '@angular/core';
+import { Gender } from 'src/app/enums/gender';
 enum AbsenceType {
   AnnualLeave = 1,
   SickLeave = 2,
@@ -14,11 +15,7 @@ enum AbsenceType {
   Other = 4,
 }
 
-enum Status {
-  Approved = 1,
-  Rejected = 2,
-  Pending = 3,
-}
+
 @Component({
   selector: 'app-control',
   templateUrl: './control.component.html',
@@ -50,11 +47,7 @@ export class ControlComponent implements OnInit {
     [AbsenceType.Other]: 'Other',
   };
 
-  typeStatus: { [key: number]: string } = {
-    [Status.Approved]: 'Approved',
-    [Status.Rejected]: 'Rejected',
-    [Status.Pending]: 'Pending',
-  };
+  
 
   columnMapping: { [key: string]: string } = {
     name: 'Name',
@@ -181,5 +174,16 @@ export class ControlComponent implements OnInit {
     [Role.Manager]: 'Manager',
     [Role.Employee]: 'Employee',
     [Role.HR]: 'HR'
+  };
+
+  genderMapping: { [key: number]: string } = {
+    [Gender.Male]: 'Male',
+    [Gender.Female]: 'Female'
+  };
+
+  typeStatus: { [key: number]: string } = {
+    [Status.Approved]: 'Approved',
+    [Status.Rejected]: 'Rejected',
+    [Status.Pending]: 'Pending',
   };
 }
