@@ -144,9 +144,7 @@ export class RequestEntryComponent implements OnInit {
   
     let requestData = { ...this.requestForm.getRawValue() };
   
-    // Ensure that status is stored as a number
-    requestData.managerStatus = Number(requestData.managerStatus);
-    requestData.hrStatus = Number(requestData.hrStatus);
+    
   
     requestData.from = requestData.from ? this.formatDate(requestData.from) : null;
     requestData.to = requestData.to ? this.formatDate(requestData.to) : null;

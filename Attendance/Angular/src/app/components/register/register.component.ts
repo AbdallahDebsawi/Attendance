@@ -12,15 +12,18 @@ import { Gender } from 'src/app/enums/gender';
 })
 export class RegisterComponent implements OnInit {
   userForm: FormGroup;
+
+  
   roles = Object.entries(Role)
     .filter(([key, value]) => isNaN(Number(key)))
     .map(([key, value]) => ({ key, value }));
-  Role = Role; 
+
+
 
   genders = Object.entries(Gender)
     .filter(([key, value]) => isNaN(Number(key)))
     .map(([key, value]) => ({ key, value }));
-  gender = Gender; 
+   
 
   departments: any[] = []; // Store department list
   managers: any[] = []; // Store manager list
