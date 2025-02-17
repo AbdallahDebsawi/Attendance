@@ -72,13 +72,15 @@
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Gender</mat-label>
       <mat-select formControlName="gender" required>
-        <mat-option value="Male">Male</mat-option>
-        <mat-option value="Female">Female</mat-option>
+        <mat-option *ngFor="let gender of genders" [value]="gender.value">
+          {{ gender.key }}
+        </mat-option>
       </mat-select>
       <mat-error *ngIf="userForm.get('gender')?.hasError('required')">
         Gender is required
       </mat-error>
     </mat-form-field>
+    
 
     <!-- Role -->
     <!-- Role Selection -->

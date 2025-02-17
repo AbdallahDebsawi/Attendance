@@ -55,6 +55,12 @@
                 ? getAbsenceTypeLabel(element[column])
                 : column === "RoleId"
                 ? roleMapping[element[column]]
+                : column === "Gender"
+                ? genderMapping[element[column]]
+                : column === "ManagerStatus"
+                ? typeStatus[element[column]]
+                : column === "HRStatus"
+                ? typeStatus[element[column]]
                 : element[column]
             }}
           </td>

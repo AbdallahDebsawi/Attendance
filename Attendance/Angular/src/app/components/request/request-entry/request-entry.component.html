@@ -77,30 +77,26 @@
     </mat-form-field>
     
     
-    <label *ngIf="isManager == true">ManagerStatus</label>
-    <mat-form-field appearance="fill" style="width: 100%;" *ngIf="isManager == true">
-      <mat-select matInput formControlName="managerStatus">
-        <mat-option value="Pending">Pending</mat-option>
-        <mat-option value="Approved">Approved</mat-option>
-        <mat-option value="Rejected">Rejected</mat-option>
+    <!-- Manager Status Dropdown -->
+    <label *ngIf="isManager">Manager Status</label>
+    <mat-form-field appearance="fill" style="width: 100%;" *ngIf="isManager">
+      <mat-select formControlName="managerStatus">
+        <mat-option *ngFor="let s of status" [value]="s.value">
+          {{ s.label }}
+        </mat-option>
       </mat-select>
-      <mat-error *ngIf="requestForm.get('managerStatus')?.hasError('required')">
-        ManagerStatus is required.
-      </mat-error>
     </mat-form-field>
 
-    
-    <label *ngIf="isHr == true">HR Status</label>
-    <mat-form-field appearance="fill" style="width: 100%;" *ngIf="isHr == true">
-      <mat-select matInput formControlName="hrStatus">
-        <mat-option value="Pending">Pending</mat-option>
-        <mat-option value="Approved">Approved</mat-option>
-        <mat-option value="Rejected">Rejected</mat-option>
-      </mat-select>
-      <mat-error *ngIf="requestForm.get('hrStatus')?.hasError('required')">
-        HR Status is required.
-      </mat-error>
-    </mat-form-field>
+<!-- HR Status Dropdown -->
+  <label *ngIf="isHr">HR Status</label>
+  <mat-form-field appearance="fill" style="width: 100%;" *ngIf="isHr">
+    <mat-select formControlName="hrStatus">
+      <mat-option *ngFor="let s of status" [value]="s.value">
+        {{ s.label }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
 
 
     <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">

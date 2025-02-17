@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ServiceApiService } from 'src/app/Service/service-api.service';
 import { Request } from 'src/app/shared/models/request';
 import { MatTableDataSource } from '@angular/material/table';
+import { Status } from 'src/app/enums/status';
 
 enum AbsenceType {
   AnnualLeave = 1,
@@ -12,11 +13,7 @@ enum AbsenceType {
   Other = 4
 }
 
-enum Status {
-  Pending = 1,
-  Rejected = 2,
-  Approved = 3
-}
+
 
 @Component({
   selector: 'app-request-entry',
@@ -35,9 +32,9 @@ export class RequestEntryComponent implements OnInit {
     { value: AbsenceType.Other, label: 'Other' }
   ];
   status = [
-    {value: Status.Pending, label : 'Pending'},
-    {value:Status.Rejected, label : 'Rejected'},
-    {value : Status.Approved, label : 'Approved' }
+    { value: Status.Pending, label: 'Pending' },
+    { value: Status.Approved, label: 'Approved' },
+    { value: Status.Rejected, label: 'Rejected' }
   ];
   fileName: string = '';
   selectedFile: File | null = null;
@@ -88,15 +85,14 @@ export class RequestEntryComponent implements OnInit {
       }, Validators.required],
 
       managerStatus: [{ 
-        value: this.data?.ManagerStatus || 'Pending', 
+        value: this.data?.ManagerStatus ? Number(this.data.ManagerStatus) : Status.Pending, 
         disabled: this.data?.Id ? !this.isManager : false 
       }],
-
+    
       hrStatus: [{ 
-        value: this.data?.HRStatus || 'Pending', 
+        value: this.data?.HRStatus ? Number(this.data.HRStatus) : Status.Pending, 
         disabled: this.data?.Id ? !this.isHr : false 
       }],
-
       name: [{ 
         value: this.data?.Name || 'Unknown',  
         disabled: !!this.data?.Id 
@@ -145,7 +141,10 @@ export class RequestEntryComponent implements OnInit {
     if (this.requestForm.invalid) {
       return;
     }
+  
     let requestData = { ...this.requestForm.getRawValue() };
+  
+    
   
     requestData.from = requestData.from ? this.formatDate(requestData.from) : null;
     requestData.to = requestData.to ? this.formatDate(requestData.to) : null;
@@ -171,6 +170,7 @@ export class RequestEntryComponent implements OnInit {
       }
     );
   }
+  
   
 
   onFileSelected(event: any) {

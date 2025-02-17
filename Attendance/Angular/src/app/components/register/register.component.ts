@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Role } from 'src/app/enums/role';
 import { ServiceApiService } from 'src/app/Service/service-api.service';
 import { EmployeeService } from 'src/app/services/employee.service'; // Import EmployeeService
-
+import { Gender } from 'src/app/enums/gender';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -12,10 +12,18 @@ import { EmployeeService } from 'src/app/services/employee.service'; // Import E
 })
 export class RegisterComponent implements OnInit {
   userForm: FormGroup;
+
+  
   roles = Object.entries(Role)
     .filter(([key, value]) => isNaN(Number(key)))
     .map(([key, value]) => ({ key, value }));
-  Role = Role; // Allow template access to enum values
+
+
+
+  genders = Object.entries(Gender)
+    .filter(([key, value]) => isNaN(Number(key)))
+    .map(([key, value]) => ({ key, value }));
+   
 
   departments: any[] = []; // Store department list
   managers: any[] = []; // Store manager list
@@ -48,6 +56,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("Roles:", this.roles);
+    console.log("Genders", this.genders);
     console.log("Departments:", this.departments);
     console.log("Managers:", this.managers);
     
@@ -141,6 +150,8 @@ export class RegisterComponent implements OnInit {
 
       formValues.roleId = Number(formValues.role);
       delete formValues.role;
+
+      
 
       if (this.data?.Id) {  // If Id exists, update the user
         this.apiService.putData(`user/${this.data.Id}`, formValues).subscribe(
