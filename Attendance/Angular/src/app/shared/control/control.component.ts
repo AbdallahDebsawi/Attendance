@@ -7,6 +7,7 @@ import { Role } from 'src/app/enums/role';
 
 import { Router } from '@angular/router';
 import { Pipe, PipeTransform } from '@angular/core';
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 enum AbsenceType {
   AnnualLeave = 1,
   SickLeave = 2,
@@ -91,7 +92,6 @@ export class ControlComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
     if (!this.deleteRequest) {
       console.error('deleteRequest method is not passed correctly!');
     }
@@ -136,7 +136,8 @@ export class ControlComponent implements OnInit {
 
   onDelete(request: Request): void {
     if (!this.isEmployeeComponent) {
-      this.deleteRequest.emit(request); // Only emit delete if not Employee
+      this.openDeleteDialog(request);
+      // this.deleteRequest.emit(request); // Only emit delete if not Employee
     }
   }
 
@@ -148,7 +149,8 @@ export class ControlComponent implements OnInit {
 
   onDeleteUser(emp: employee): void {
     if (this.isEmployeeComponent) {
-      this.deleteUser.emit(emp);
+      this.openDeleteDialog(emp);
+      // this.deleteUser.emit(emp);
     }
   }
 
@@ -168,19 +170,37 @@ export class ControlComponent implements OnInit {
 
   isUpdateDisabled(request: Request): boolean {
     const loggedInEmployee = this.apiUrl.getLoggedInEmployee();
-    const role = loggedInEmployee?.RoleId; 
-  
-    if (request.ManagerStatus === 'Approved' && request.HRStatus === 'Approved') {
+    const role = loggedInEmployee?.RoleId;
+
+    if (
+      request.ManagerStatus === 'Approved' &&
+      request.HRStatus === 'Approved'
+    ) {
       return role !== 3;
     }
     return false;
   }
 
-
   roleMapping: { [key: number]: string } = {
     [Role.Manager]: 'Manager',
     [Role.Employee]: 'Employee',
-    [Role.HR]: 'HR'
+    [Role.HR]: 'HR',
   };
+  openDeleteDialog(data?: any) {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+      width: '500px',
+      data: data || null,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result !== undefined) {
+        if (this.isEmployeeComponent) {
+          this.deleteUser.emit(data);
+        } else {
+          this.deleteRequest.emit(data);
+        }
+      }
+    });
+  }
 }
 // Hello How are u??

@@ -1,15 +1,23 @@
 <p>Dashboard / Employees</p>
 <div style="padding: 2%">
- <app-control
- [displayedColumns]="['Id','Name', 'ManagerId', 'Email', 'Gender', 'Salary', 'JoinDate', 'RoleId', 'DepartmentName']"
- [dataSource]="employeeList"
- [tableTitle]="'Employee List'"
- (createUser)="openDialog()"
- (editUser)="openDialog($event)"
- (deleteUser)="deleteUser($event)"
- [searchColumn]="'Name'"
- 
- >
- 
-</app-control>
+  <app-control
+    [displayedColumns]="[
+      'Id',
+      'Name',
+      'ManagerId',
+      'Email',
+      'Gender',
+      'Salary',
+      'JoinDate',
+      'RoleId',
+      'DepartmentName'
+    ]"
+    [dataSource]="employeeList"
+    [tableTitle]="'Employee List'"
+    (createUser)="openDialog()"
+    (editUser)="openDialog($event)"
+    (deleteUser)="deleteUser($event)"
+    [searchColumn]="'Name'"
+  >
+  </app-control>
 </div>
