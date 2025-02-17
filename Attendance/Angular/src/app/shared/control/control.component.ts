@@ -3,6 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ServiceApiService } from 'src/app/Service/service-api.service';
 import { Request } from '../models/request';
 import { employee } from '../models/employee';
+import { Role } from 'src/app/enums/role';
+
 import { Router } from '@angular/router';
 import { Pipe, PipeTransform } from '@angular/core';
 enum AbsenceType {
@@ -89,16 +91,14 @@ export class ControlComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
     if (!this.deleteRequest) {
       console.error('deleteRequest method is not passed correctly!');
     }
 
     this.apiUrl.setUserRole();
 
-    // Set the flag based on the role or component title
     this.isEmployeeComponent = this.tableTitle === 'Employee List'; // Example condition
-
-    //this.searchColumn = 'Name'; // Default column if none is passed
   }
 
   takeAction(element: any): void {
@@ -168,15 +168,18 @@ export class ControlComponent implements OnInit {
 
   isUpdateDisabled(request: Request): boolean {
     const loggedInEmployee = this.apiUrl.getLoggedInEmployee();
-    const role = loggedInEmployee?.RoleId;
-
-    if (role === 2) {
-      return (
-        request.ManagerStatus === 'Approved' || request.HRStatus === 'Approved'
-      );
-    } else if (role === 3) {
-      return request.ManagerStatus !== 'Approved';
+    const role = loggedInEmployee?.RoleId; 
+  
+    if (request.ManagerStatus === 'Approved' && request.HRStatus === 'Approved') {
+      return role !== 3;
     }
     return false;
   }
+
+
+  roleMapping: { [key: number]: string } = {
+    [Role.Manager]: 'Manager',
+    [Role.Employee]: 'Employee',
+    [Role.HR]: 'HR'
+  };
 }

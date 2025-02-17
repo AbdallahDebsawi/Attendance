@@ -17,7 +17,7 @@ using System.Web.Http.Cors;
 namespace Attendance.Controllers
 {
 
-    [EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*")]
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class RequestController : ApiController, IAttendance<Request>
     {
         private AttendanceDb db = new AttendanceDb();
@@ -34,11 +34,20 @@ namespace Attendance.Controllers
 
             try
             {
+                var user = db.Users.Find(model.UserId);
+                if (user == null)
+                {
+                    return BadRequest("User not found");
+                }
+
+                // Set the dates
                 model.From = model.From.Date;
                 model.To = model.To.Date;
 
+                // Add the request
                 db.Requests.Add(model);
                 db.SaveChanges();
+
                 return Ok();
             }
             catch (Exception ex)
@@ -46,6 +55,7 @@ namespace Attendance.Controllers
                 return InternalServerError(ex);
             }
         }
+
 
         [HttpDelete]
         [Route("api/RequestDelete/{id}")]
@@ -108,9 +118,8 @@ namespace Attendance.Controllers
         {
             try
             {
-                // Get requests for the manager (if manager is also a user)
                 var managerRequests = db.Requests
-                    .Where(r => r.UserId == managerId) // Filter manager's own requests
+                    .Where(r => r.UserId == managerId)
                     .Select(r => new RequestViewModel
                     {
                         Id = r.Id,
@@ -121,11 +130,10 @@ namespace Attendance.Controllers
                         ManagerStatus = r.ManagerStatus,
                         HRStatus = r.HRStatus,
                         UserId = r.UserId,
-                        Name = r.Users.Name, // Manager's name
+                        Name = r.Users.Name,
                     })
                     .ToList();
 
-                // Get requests for users whose manager matches the managerId
                 var userRequests = db.Requests
                     .Where(r => db.Users.Any(u => u.ManagerId == managerId && u.Id == r.UserId))
                     .Select(r => new RequestViewModel
@@ -138,11 +146,10 @@ namespace Attendance.Controllers
                         ManagerStatus = r.ManagerStatus,
                         HRStatus = r.HRStatus,
                         UserId = r.UserId,
-                        Name = r.Users.Name, // User's name
+                        Name = r.Users.Name,
                     })
                     .ToList();
 
-                // Combine the manager's requests and the users' requests
                 var allRequests = managerRequests.Concat(userRequests).ToList();
 
                 return Ok(allRequests);
@@ -152,7 +159,6 @@ namespace Attendance.Controllers
                 return InternalServerError(ex);
             }
         }
-
 
         [HttpGet]
         [Route("api/GetAllRequestByHr")]
@@ -182,7 +188,6 @@ namespace Attendance.Controllers
                 return InternalServerError(ex);
             }
         }
-
 
 
         [HttpGet]
@@ -215,29 +220,24 @@ namespace Attendance.Controllers
                 return BadRequest("Invalid Request Id");
             }
 
-            var request = new Request()
+            var existingRequest = db.Requests.FirstOrDefault(r => r.Id == id);
+            if (existingRequest == null)
             {
-                Id = id,
-                TypeOfAbsence = model.TypeOfAbsence,
-                From = model.From,
-                To = model.To,
-                ReasonOfAbsence = model.ReasonOfAbsence,
-                ManagerStatus = model.ManagerStatus,
-                HRStatus = model.HRStatus,
-                UserId = model.UserId
-            };
-            request.TypeOfAbsence = model.TypeOfAbsence;
-            request.From = model.From;
-            request.To = model.To;
-            request.ReasonOfAbsence = model.ReasonOfAbsence;
-            request.ManagerStatus = model.ManagerStatus;
-            request.HRStatus = model.HRStatus;
-            request.UserId = model.UserId;
+                return NotFound();
+            }
 
-            db.Requests.AddOrUpdate(request);
+            existingRequest.TypeOfAbsence = model.TypeOfAbsence;
+            existingRequest.From = model.From;
+            existingRequest.To = model.To;
+            existingRequest.ReasonOfAbsence = model.ReasonOfAbsence;
+            existingRequest.ManagerStatus = model.ManagerStatus;
+            existingRequest.HRStatus = model.HRStatus;
+            existingRequest.UserId = model.UserId;
+
             db.SaveChanges();
-            return Ok();
+            return Ok(existingRequest);
         }
+
 
 
 

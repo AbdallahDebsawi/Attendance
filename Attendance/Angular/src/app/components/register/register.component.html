@@ -57,14 +57,7 @@
       </mat-error>
     </mat-form-field>
 
-    <!-- Phone Number -->
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Phone Number</mat-label>
-      <input matInput type="tel" formControlName="phoneNumber" required>
-      <mat-error *ngIf="userForm.get('phoneNumber')?.hasError('required')">
-        Phone Number is required
-      </mat-error>
-    </mat-form-field>
+   
 
     <!-- Salary -->
     <mat-form-field appearance="outline" class="full-width">

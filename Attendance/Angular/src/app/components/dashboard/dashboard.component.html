@@ -72,7 +72,7 @@
               <div
                 class="filled"
                 [ngStyle]="{
-                  'background-color': getProgressBarColor(leave.type),
+                  'background-color': getProgressBarColor(leave.type.toString()),
                   width: leave.filledPercentage + '%'
                 }"
               ></div>

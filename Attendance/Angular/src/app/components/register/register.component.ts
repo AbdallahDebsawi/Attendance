@@ -39,7 +39,6 @@ export class RegisterComponent implements OnInit {
       gender: ['', Validators.required],
       department: ['', Validators.required],
       role: ['', Validators.required],
-      phoneNumber: ['', Validators.required],
       joinDate: ['', Validators.required],
       managerId: ['']
     }, {

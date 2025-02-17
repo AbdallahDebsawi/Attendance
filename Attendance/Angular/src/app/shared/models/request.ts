@@ -1,8 +1,8 @@
 export class Request {
     Id: number;
     TypeOfAbsence?: number;
-    From?: Date;
-    To?: Date;
+    From?: Date | string;
+    To?: Date | string;
     ReasonOfAbsence?: string;
     ManagerStatus?: string;
     HRStatus?: string;
