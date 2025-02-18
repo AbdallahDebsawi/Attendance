@@ -4,8 +4,8 @@ export class Request {
     From?: Date | string;
     To?: Date | string;
     ReasonOfAbsence?: string;
-    ManagerStatus?: string;
-    HRStatus?: string;
+    ManagerStatus?: number;
+    HRStatus?: number;
     UserId?: number;
     FilePath?: string;
     Name? : string;
@@ -17,8 +17,8 @@ export class Request {
       From?: Date,
       To?: Date,
       ReasonOfAbsence?: string,
-      ManagerStatus?: string,
-      HRStatus?: string,
+      ManagerStatus?: number,
+      HRStatus?: number,
       UserId?: number,
       FilePath?: string,
       Name? : string

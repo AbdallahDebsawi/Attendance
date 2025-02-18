@@ -51,10 +51,14 @@
           <th mat-header-cell *matHeaderCellDef>Action</th>
           <td mat-cell *matCellDef="let element">
             <mat-menu #actionMenu="matMenu">
-              <button mat-menu-item (click)="isEmployeeComponent ? onUpdateUser(element) : onUpdateRequest(element)" [disabled]="isUpdateDisabled(element)">
-                <mat-icon>edit</mat-icon> Update
+              <button mat-menu-item 
+              (click)="isEmployeeComponent ? onUpdateUser(element) : onUpdateRequest(element)" 
+              [disabled]="isUpdateDisabled(element)">
+              <mat-icon>edit</mat-icon> Update
               </button>
-              <button mat-menu-item *ngIf="element?.Id" (click)="isEmployeeComponent ? onDeleteUser(element) : onDelete(element)">
+
+              <button mat-menu-item *ngIf="element?.Id" (click)="isEmployeeComponent ? onDeleteUser(element) : onDelete(element)"
+              [disabled]="isDeleteDisabled(element)">
                 <mat-icon>delete</mat-icon> Delete
               </button>
               <button mat-menu-item *ngIf="element?.Id && !tableTitle.includes('Requests List')" (click)="viewAttendanceHistory(element.Id, element.Name)">

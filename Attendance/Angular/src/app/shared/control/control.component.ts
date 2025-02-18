@@ -23,7 +23,8 @@ enum AbsenceType {
 })
 export class ControlComponent implements OnInit {
   searchText: any;
-
+  Role = Role;
+  Status = Status;
   element: Request = {} as Request;
   isUpdateMode: boolean = false;
   isEmployeeComponent: boolean = false; // New flag to track if it's Employee component
@@ -163,11 +164,33 @@ export class ControlComponent implements OnInit {
     const loggedInEmployee = this.apiUrl.getLoggedInEmployee();
     const role = loggedInEmployee?.RoleId; 
   
-    if (request.ManagerStatus === 'Approved' && request.HRStatus === 'Approved') {
-      return role !== 3;
+    // Disable if the user is an Employee and either status is Approved
+    if (role === Role.Employee && (request.ManagerStatus === Status.Approved || request.HRStatus === Status.Approved)) {
+      return true;
     }
+
+   else if(role === Role.Manager && (request.ManagerStatus != Status.Pending && request.HRStatus != Status.Pending))
+    {
+      return true;
+    }
+  
     return false;
   }
+
+
+
+  isDeleteDisabled(request: Request): boolean {
+    const loggedInEmployee = this.apiUrl.getLoggedInEmployee();
+    const role = loggedInEmployee?.RoleId; 
+  
+    // Disable if the user is an Employee and either status is Approved
+    if (role === Role.Employee && (request.ManagerStatus != Status.Pending || request.HRStatus != Status.Pending)) {
+      return true;
+    }
+
+    return false;
+  }
+  
 
 
   roleMapping: { [key: number]: string } = {
