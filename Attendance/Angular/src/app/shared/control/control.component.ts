@@ -7,6 +7,7 @@ import { Role } from 'src/app/enums/role';
 import { Status } from 'src/app/enums/status';
 import { Router } from '@angular/router';
 import { Pipe, PipeTransform } from '@angular/core';
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { Gender } from 'src/app/enums/gender';
 enum AbsenceType {
   AnnualLeave = 1,
@@ -48,7 +49,7 @@ export class ControlComponent implements OnInit {
     [AbsenceType.Other]: 'Other',
   };
 
-  
+
 
   columnMapping: { [key: string]: string } = {
     name: 'Name',
@@ -85,7 +86,6 @@ export class ControlComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
     if (!this.deleteRequest) {
       console.error('deleteRequest method is not passed correctly!');
     }
@@ -130,7 +130,8 @@ export class ControlComponent implements OnInit {
 
   onDelete(request: Request): void {
     if (!this.isEmployeeComponent) {
-      this.deleteRequest.emit(request); // Only emit delete if not Employee
+      this.openDeleteDialog(request);
+      // this.deleteRequest.emit(request); // Only emit delete if not Employee
     }
   }
 
@@ -142,7 +143,8 @@ export class ControlComponent implements OnInit {
 
   onDeleteUser(emp: employee): void {
     if (this.isEmployeeComponent) {
-      this.deleteUser.emit(emp);
+      this.openDeleteDialog(emp);
+      // this.deleteUser.emit(emp);
     }
   }
 
@@ -196,8 +198,24 @@ export class ControlComponent implements OnInit {
   roleMapping: { [key: number]: string } = {
     [Role.Manager]: 'Manager',
     [Role.Employee]: 'Employee',
-    [Role.HR]: 'HR'
+    [Role.HR]: 'HR',
   };
+  openDeleteDialog(data?: any) {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+      width: '500px',
+      data: data || null,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result !== undefined) {
+        if (this.isEmployeeComponent) {
+          this.deleteUser.emit(data);
+        } else {
+          this.deleteRequest.emit(data);
+        }
+      }
+    });
+  }
 
   genderMapping: { [key: number]: string } = {
     [Gender.Male]: 'Male',

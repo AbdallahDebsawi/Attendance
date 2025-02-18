@@ -3,7 +3,12 @@
     <div class="table-header">
       <h2 class="table-title">{{ tableTitle }}</h2>
       <div class="search-hero">
-        <input type="search" [(ngModel)]="searchText" class="form-control" placeholder="Search..." />
+        <input
+          type="search"
+          [(ngModel)]="searchText"
+          class="form-control"
+          placeholder="Search..."
+        />
       </div>
 
       <div class="filter-container">
@@ -14,7 +19,9 @@
         <button
           class="add-req-btn"
           (click)="onCreateRequest()"
-          *ngIf="!isEmployeeComponent && !tableTitle.includes('Attendance History')"
+          *ngIf="
+            !isEmployeeComponent && !tableTitle.includes('Attendance History')
+          "
         >
           Add Request
         </button>
@@ -30,19 +37,31 @@
     </div>
 
     <div class="table-inner-container">
-      <table mat-table [dataSource]="dataSource | filter:searchText:searchColumn" class="mat-elevation-z8">
-        <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
+      <table
+        mat-table
+        [dataSource]="dataSource | filter : searchText : searchColumn"
+        class="mat-elevation-z8"
+      >
+        <ng-container
+          *ngFor="let column of displayedColumns"
+          [matColumnDef]="column"
+        >
           <th mat-header-cell *matHeaderCellDef>
             {{ columnMapping[column] || (column | titlecase) }}
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ column === 'TypeOfAbsence' ? getAbsenceTypeLabel(element[column]) : 
-               column === 'RoleId' ? roleMapping[element[column]] : 
-               column === 'Gender' ? genderMapping[element[column]] :
-               column === 'ManagerStatus' ? typeStatus[element[column]] :
-               column === 'HRStatus' ? typeStatus[element[column]] :
-
-               element[column] 
+            {{
+              column === "TypeOfAbsence"
+                ? getAbsenceTypeLabel(element[column])
+                : column === "RoleId"
+                ? roleMapping[element[column]]
+                : column === "Gender"
+                ? genderMapping[element[column]]
+                : column === "ManagerStatus"
+                ? typeStatus[element[column]]
+                : column === "HRStatus"
+                ? typeStatus[element[column]]
+                : element[column]
             }}
           </td>
         </ng-container>
@@ -61,23 +80,54 @@
               [disabled]="isDeleteDisabled(element)">
                 <mat-icon>delete</mat-icon> Delete
               </button>
-              <button mat-menu-item *ngIf="element?.Id && !tableTitle.includes('Requests List')" (click)="viewAttendanceHistory(element.Id, element.Name)">
+              <button
+                mat-menu-item
+                *ngIf="element?.Id && !tableTitle.includes('Requests List')"
+                (click)="viewAttendanceHistory(element.Id, element.Name)"
+              >
                 <mat-icon>history</mat-icon> Attendance History
               </button>
-              <button mat-menu-item *ngIf="element?.Id && !tableTitle.includes('Requests List')" (click)="viewAttendanceOverview(element.Id, element.Name)">
+              <button
+                mat-menu-item
+                *ngIf="element?.Id && !tableTitle.includes('Requests List')"
+                (click)="viewAttendanceOverview(element.Id, element.Name)"
+              >
                 <mat-icon>bar_chart</mat-icon> Attendance Overview
               </button>
             </mat-menu>
 
-            <button mat-button [matMenuTriggerFor]="actionMenu" class="action-but">
+            <button
+              mat-button
+              [matMenuTriggerFor]="actionMenu"
+              class="action-but"
+            >
               Actions
-              <img src="../../../assets/images/action.png" alt="" class="action-icon1" />
+              <img
+                src="../../../assets/images/action.png"
+                alt=""
+                class="action-icon1"
+              />
             </button>
           </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="!tableTitle.includes('Attendance History') ? displayedColumns.concat(['action']) : displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: !tableTitle.includes('Attendance History') ? displayedColumns.concat(['action']) : displayedColumns"></tr>
+        <tr
+          mat-header-row
+          *matHeaderRowDef="
+            !tableTitle.includes('Attendance History')
+              ? displayedColumns.concat(['action'])
+              : displayedColumns
+          "
+        ></tr>
+        <tr
+          mat-row
+          *matRowDef="
+            let row;
+            columns: !tableTitle.includes('Attendance History')
+              ? displayedColumns.concat(['action'])
+              : displayedColumns
+          "
+        ></tr>
       </table>
     </div>
   </div>

@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>Are sure you want to delete!</h2>
+<mat-dialog-content>
+
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onCloseClick()">Close</button>
+  <button mat-button (click)="delete()" cdkFocusInitial>Yes</button>
+  <!-- <button mat-button [mat-dialog-close]="delete()" cdkFocusInitial>Yes</button> -->
+</mat-dialog-actions>
