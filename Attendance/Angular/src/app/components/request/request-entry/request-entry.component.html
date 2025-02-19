@@ -21,7 +21,7 @@
 
     <div style="display: flex; gap: 10px; width: 100%; flex-wrap: wrap;">
       <!-- Start Date -->
-      <div style="flex: 1; min-width: 200px">
+      <div style="flex: 1; min-width: 200px" *ngIf="requestForm.get('typeOfAbsence')?.value !== 3">
         <label>Start Date</label>
         <mat-form-field appearance="fill" style="width: 100%">
           <input
@@ -44,7 +44,7 @@
       </div>
 
       <!-- End Date -->
-      <div style="flex: 1; min-width: 200px">
+      <div style="flex: 1; min-width: 200px" *ngIf="requestForm.get('typeOfAbsence')?.value !== 3">
         <label>End Date</label>
         <mat-form-field appearance="fill" style="width: 100%">
           <input
@@ -66,6 +66,38 @@
         </mat-form-field>
       </div>
     </div>
+
+
+    <div style="display: flex; gap: 10px; width: 100%; flex-wrap: wrap;">
+      <!-- Start Date & Time (Shown for Personal Leave) -->
+<div style="flex: 1; min-width: 200px" *ngIf="requestForm.get('typeOfAbsence')?.value === 3">
+  <label>Start Date & Time</label>
+  <mat-form-field appearance="fill" style="width: 100%">
+    <input
+     matInput type="datetime-local"
+      formControlName="from"
+      />
+    <mat-error *ngIf="requestForm.get('from')?.hasError('required')">
+      Start date and time are required.
+    </mat-error>
+  </mat-form-field>
+</div>
+
+<!-- End Date & Time (Shown for Personal Leave) -->
+<div style="flex: 1; min-width: 200px" *ngIf="requestForm.get('typeOfAbsence')?.value === 3">
+  <label>End Date & Time</label>
+  <mat-form-field appearance="fill" style="width: 100%">
+    <input
+     matInput type="datetime-local"
+      formControlName="to" />
+    <mat-error *ngIf="requestForm.get('to')?.hasError('required')">
+      End date and time are required.
+    </mat-error>
+  </mat-form-field>
+</div>
+    </div>
+   
+
 
 
     <label>Reason for Leave</label>
