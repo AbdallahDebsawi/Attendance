@@ -38,6 +38,7 @@ export class RegisterComponent implements OnInit {
   ) {
     this.userForm = this.fb.group({
       id: [''],
+      CreatedBy :[''],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -65,9 +66,9 @@ export class RegisterComponent implements OnInit {
     
     console.log("Data passed to dialog:", this.data);
 
-    // If updating, prefill form fields
+    
     if (this.data?.Id) {
-      // Patch form values
+     
       this.userForm.patchValue({
         id: this.data.Id,
         firstName: this.data.Name.split(' ')[0], 
@@ -84,6 +85,15 @@ export class RegisterComponent implements OnInit {
       });
 
       console.log("Form after patching values:", this.userForm.value);
+    }
+    else
+    {
+      this.userForm.patchValue({
+        CreatedBy:this.apiService.loggedInEmployee?.Name
+      });
+
+     
+      console.log("Form after patching values:", this.apiService.loggedInEmployee?.Name);
     }
   }
 

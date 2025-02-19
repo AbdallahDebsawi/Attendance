@@ -40,7 +40,8 @@ namespace Attendance.Controllers
                                         u.RoleId,
                                         DepartmentName = u.Department.DepartmentName,
                                         u.Password,
-                                        u.DepartmentId
+                                        u.DepartmentId,
+                                        u.CreatedBy
                                     }).ToList();
                 if (!users.Any())
                 {
@@ -93,7 +94,10 @@ namespace Attendance.Controllers
                     return Content(HttpStatusCode.BadRequest, new { Message = "User with this email already exists." });
                 }
 
-                user.CreatedBy = "System";
+                if(user.CreatedBy == null)
+                {
+                    user.CreatedBy = "System";
+                }
                 db.Users.Add(user);
                 db.SaveChanges();
 
@@ -163,6 +167,9 @@ namespace Attendance.Controllers
                 existingUser.Salary = user.Salary;
                 existingUser.RoleId = user.RoleId;
                 existingUser.DepartmentId = user.DepartmentId;
+                existingUser.ManagerId = user.ManagerId;
+                existingUser.JoinDate = user.JoinDate;
+
 
                 // Update the ModificationDate only
                 existingUser.ModificationDate = DateTime.UtcNow;

@@ -6,6 +6,7 @@
 
 
      <input type="hidden" formControlName="id">
+     <input type="hidden" formControlName="CreatedBy">
 
     <!-- First Name -->
     <mat-form-field appearance="outline" class="full-width">
@@ -114,11 +115,16 @@
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Manager</mat-label>
       <mat-select formControlName="managerId">
+        <!-- Default 'None' option -->
+        <mat-option [value]="null">None</mat-option>
+        
+        <!-- List of managers -->
         <mat-option *ngFor="let manager of managers" [value]="manager.Id">
-          {{ manager.Id }} 
+          {{ manager.Id }}
         </mat-option>
       </mat-select>
     </mat-form-field>
+    
     
     
 
