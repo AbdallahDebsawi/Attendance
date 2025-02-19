@@ -49,7 +49,8 @@ export class RegisterComponent implements OnInit {
       department: ['', Validators.required],
       role: ['', Validators.required],
       joinDate: ['', Validators.required],
-      managerId: ['']
+      managerId: [''],
+      managerName: ['']
     }, {
       validator: this.passwordMatchValidator('password', 'confirmPassword')
     });
@@ -81,7 +82,8 @@ export class RegisterComponent implements OnInit {
         department: this.data.DepartmentId || '',
         role: this.data.RoleId,
         joinDate: this.formatDate(this.data.JoinDate),
-        managerId: this.data.ManagerId || ''
+        managerName: this.data.ManagerName || '',
+        managerId: this.data.managerId || ''
       });
 
       console.log("Form after patching values:", this.userForm.value);
@@ -160,6 +162,8 @@ export class RegisterComponent implements OnInit {
 
       formValues.roleId = Number(formValues.role);
       delete formValues.role;
+
+      formValues.managerId = Number(formValues.managerId);
 
       
 

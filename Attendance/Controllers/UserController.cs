@@ -33,6 +33,7 @@ namespace Attendance.Controllers
                                         u.Id,
                                         u.Name,
                                         u.ManagerId,
+                                        ManagerName = db.Users.FirstOrDefault(m => m.Id == u.ManagerId)?.Name,
                                         u.Email,
                                         u.Gender,
                                         u.Salary,

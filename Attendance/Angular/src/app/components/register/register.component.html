@@ -113,14 +113,11 @@
     
     <!-- Manager -->
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Manager</mat-label>
+      <mat-label>Manager Name</mat-label>
       <mat-select formControlName="managerId">
-        <!-- Default 'None' option -->
         <mat-option [value]="null">None</mat-option>
-        
-        <!-- List of managers -->
-        <mat-option *ngFor="let manager of managers" [value]="manager.Id">
-          {{ manager.Id }}
+        <mat-option *ngFor="let manager of managers" [value]="manager.Name">
+          {{ manager.Name }} 
         </mat-option>
       </mat-select>
     </mat-form-field>
