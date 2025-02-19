@@ -40,9 +40,7 @@ namespace Attendance.Controllers
                     return BadRequest("User not found");
                 }
 
-                // Set the dates
-                model.From = model.From.Date;
-                model.To = model.To.Date;
+                
 
                 // Add the request
                 db.Requests.Add(model);

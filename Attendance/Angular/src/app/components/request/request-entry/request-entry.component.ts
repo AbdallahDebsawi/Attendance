@@ -171,10 +171,7 @@ export class RequestEntryComponent implements OnInit {
 
     let requestData = { ...this.requestForm.getRawValue() };
 
-    requestData.from = requestData.from
-      ? this.formatDate(requestData.from)
-      : null;
-    requestData.to = requestData.to ? this.formatDate(requestData.to) : null;
+    
 
     if (this.data?.Id) {
       requestData.name = this.data.Name;

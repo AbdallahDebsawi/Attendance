@@ -96,12 +96,25 @@ export class RequestComponent implements OnInit {
     
     private formatRequestDates(data: Request[]): Request[] {
       return data.map(request => ({
-        ...request,
-        From: request.From ? new Date(request.From).toISOString().split('T')[0] : '',
-        To: request.To ? new Date(request.To).toISOString().split('T')[0] : '',
+          ...request,
+          From: request.TypeOfAbsence == 3
+              ? request.From ? new Date(request.From).toLocaleString('en-US', {
+                  year: 'numeric', month: '2-digit', day: '2-digit',
+                  hour: '2-digit', minute: '2-digit'
+                }) : ''
+              : request.From ? new Date(request.From).toISOString().split('T')[0] : '',
+          
+          To: request.TypeOfAbsence == 3  
+              ? request.To ? new Date(request.To).toLocaleString('en-US', {
+                  year: 'numeric', month: '2-digit', day: '2-digit',
+                  hour: '2-digit', minute: '2-digit'
+                }) : ''
+              : request.To ? new Date(request.To).toISOString().split('T')[0] : '',
       }));
-    }
-    
+  }
+  
+  
+  
 
   openDialog(request?: Request): void {
     const dialogRef = this.dialog.open(RequestEntryComponent, {
