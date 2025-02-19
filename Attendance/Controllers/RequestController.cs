@@ -1,5 +1,6 @@
 ﻿using Attendance.Data;
 using Attendance.Models;
+using Attendance.Models.Enums;
 using Attendance.Models.Interfaces;
 using Attendance.Models.ViewModel;
 using System;
@@ -79,35 +80,117 @@ namespace Attendance.Controllers
 
         [HttpGet]
         [Route("api/GetAllRequest")]
-        public IHttpActionResult GetAll([FromUri] int userId)
+        public IHttpActionResult GetAll([FromUri] int userId, [FromUri] int isManager)
         {
             if (userId == 0)
             {
                 return BadRequest("User ID is required.");
             }
-            try
+
+            if (isManager == 0)
             {
-                var result = db.Requests
-                .Where(r => r.UserId == userId)
-                .Select(r => new RequestViewModel
+                try
                 {
-                    Id = r.Id,
-                    TypeOfAbsence = r.TypeOfAbsence,
-                    From = r.From,
-                    To = r.To,
-                    ReasonOfAbsence = r.ReasonOfAbsence,
-                    ManagerStatus = r.ManagerStatus,
-                    HRStatus = r.HRStatus,
-                    UserId = r.UserId,
-                    Name = r.Users.Name
-                })
-                .ToList();
-                return Ok(result);
+                    var result = db.Requests
+                    .Where(r => r.UserId == userId)
+                    .Select(r => new RequestViewModel
+                    {
+                        Id = r.Id,
+                        TypeOfAbsence = r.TypeOfAbsence,
+                        From = r.From,
+                        To = r.To,
+                        ReasonOfAbsence = r.ReasonOfAbsence,
+                        ManagerStatus = r.ManagerStatus,
+                        HRStatus = r.HRStatus,
+                        UserId = r.UserId,
+                        Name = r.Users.Name
+                    })
+                    .ToList();
+                    return Ok(result);
+                }
+                catch (Exception ex)
+                {
+                    return InternalServerError(ex);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                return InternalServerError(ex);
+                var role = db.Users.Find(isManager).RoleId;
+                if (role ==(int) Role.Manager)
+                {
+                    try
+                    {
+                        var userRequests = from r in db.Requests
+                                           from u in db.Users
+                                           where u.ManagerId == isManager && u.Id == r.UserId
+                                           select  new RequestViewModel
+                                           {
+                                               Id = r.Id,
+                                               TypeOfAbsence = r.TypeOfAbsence,
+                                               From = r.From,
+                                               To = r.To,
+                                               ReasonOfAbsence = r.ReasonOfAbsence,
+                                               ManagerStatus = r.ManagerStatus,
+                                               HRStatus = r.HRStatus,
+                                               UserId = r.UserId,
+                                               Name = r.Users.Name,
+                                           };
+                        return Ok(userRequests);
+                        //      var userRequests = db.Requests
+                        //.Where(r => db.Users.Any(u => u.ManagerId == isManager && u.Id == r.UserId))
+                        //.Select(r => new RequestViewModel
+                        //{
+                        //    Id = r.Id,
+                        //    TypeOfAbsence = r.TypeOfAbsence,
+                        //    From = r.From,
+                        //    To = r.To,
+                        //    ReasonOfAbsence = r.ReasonOfAbsence,
+                        //    ManagerStatus = r.ManagerStatus,
+                        //    HRStatus = r.HRStatus,
+                        //    UserId = r.UserId,
+                        //    Name = r.Users.Name,
+                        //})
+                        //.ToList();
+                        //      return Ok(userRequests);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return InternalServerError(ex);
+                    }
+
+                }
+                else
+                {
+                    try
+                    {
+                        var result = db.Requests
+                            .Where(r => r.UserId != userId)
+                            .Select(r => new RequestViewModel
+                            {
+                                Id = r.Id,
+                                TypeOfAbsence = r.TypeOfAbsence,
+                                From = r.From,
+                                To = r.To,
+                                ReasonOfAbsence = r.ReasonOfAbsence,
+                                ManagerStatus = r.ManagerStatus,
+                                HRStatus = r.HRStatus,
+                                UserId = r.UserId,
+                                Name = r.Users.Name
+                            })
+                            .ToList();
+
+                        return Ok(result);
+                    }
+                    catch (Exception ex)
+                    {
+                        return InternalServerError(ex);
+                    }
+
+                }
+               
             }
+
         }
 
         [HttpGet]

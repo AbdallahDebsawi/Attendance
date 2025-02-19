@@ -64,14 +64,15 @@ export class AttendanceComponent implements OnInit {
 
     // Subscribe to changes in attendance data
     this.attendanceService.attendanceData$.subscribe((data) => {
-      this.attendanceRecords = data;
+      this.attendanceRecords = data.reverse();
+      this.cdRef.detectChanges();
     });
   }
 
   loadAttendanceRecords(): void {
     this.attendanceService.getAttendanceUserById(this.userId!).subscribe({
       next: (data) => {
-        this.attendanceRecords = data;
+        this.attendanceRecords = data.reverse();
         this.cdRef.detectChanges();
         console.log('Attendance records:', this.attendanceRecords);
       },

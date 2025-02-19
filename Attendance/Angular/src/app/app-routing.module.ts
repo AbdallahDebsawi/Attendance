@@ -20,6 +20,7 @@ const routes: Routes = [
       { path: 'dashboard/:id', component: DashboardComponent },
       { path: 'employee', component: EmployeesComponent },
       { path: 'attendance/:id', component: AttendanceComponent },
+      { path: 'request/:id', component: RequestComponent },
       { path: 'request', component: RequestComponent },
     ],
   },

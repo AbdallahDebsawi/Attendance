@@ -7,7 +7,9 @@
     [searchColumn]="'TypeOfAbsence'"
     [dataSource]="requestList"
     [tableTitle]="'Requests List'"
+    [buttonTitle]="buttonTitle"
     (createRequest)="openDialog()"
+    (employeesRequests)="loadEmployeeRequests()"
     (editRequest)="openDialog($event)"
     (deleteRequest)="deleteRequest($event)">
   </app-control>
