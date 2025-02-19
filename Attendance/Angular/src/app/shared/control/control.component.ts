@@ -16,7 +16,6 @@ enum AbsenceType {
   Other = 4,
 }
 
-
 @Component({
   selector: 'app-control',
   templateUrl: './control.component.html',
@@ -32,11 +31,13 @@ export class ControlComponent implements OnInit {
   @Input() displayedColumns: string[] = [];
   @Input() dataSource: any[] = [];
   @Input() tableTitle: string = '';
+  @Input() buttonTitle: string = '';
   @Input() searchColumn: string = '';
   @Output() createUser = new EventEmitter<void>();
   @Output() editUser = new EventEmitter<any>();
   @Output() deleteUser = new EventEmitter<employee>();
   @Output() createRequest = new EventEmitter<void>();
+  @Output() employeesRequests = new EventEmitter<void>();
   @Output() editRequest = new EventEmitter<any>();
   @Output() deleteRequest = new EventEmitter<Request>();
   @Input() request!: Request;
@@ -48,8 +49,6 @@ export class ControlComponent implements OnInit {
     [AbsenceType.PersonalLeave]: 'Personal Leave',
     [AbsenceType.Other]: 'Other',
   };
-
-
 
   columnMapping: { [key: string]: string } = {
     name: 'Name',
@@ -121,7 +120,9 @@ export class ControlComponent implements OnInit {
   onCreateUser(): void {
     this.createUser.emit();
   }
-
+  onEmployeesRequests(): void {
+    this.employeesRequests.emit();
+  }
   onUpdateRequest(request: Request): void {
     if (!this.isEmployeeComponent) {
       this.editRequest.emit(request); // Only emit update if not Employee
@@ -164,36 +165,41 @@ export class ControlComponent implements OnInit {
 
   isUpdateDisabled(request: Request): boolean {
     const loggedInEmployee = this.apiUrl.getLoggedInEmployee();
-    const role = loggedInEmployee?.RoleId; 
-  
+    const role = loggedInEmployee?.RoleId;
+
     // Disable if the user is an Employee and either status is Approved
-    if (role === Role.Employee && (request.ManagerStatus === Status.Approved || request.HRStatus === Status.Approved)) {
+    if (
+      role === Role.Employee &&
+      (request.ManagerStatus === Status.Approved ||
+        request.HRStatus === Status.Approved)
+    ) {
+      return true;
+    } else if (
+      role === Role.Manager &&
+      request.ManagerStatus != Status.Pending &&
+      request.HRStatus != Status.Pending
+    ) {
       return true;
     }
 
-   else if(role === Role.Manager && (request.ManagerStatus != Status.Pending && request.HRStatus != Status.Pending))
-    {
-      return true;
-    }
-  
     return false;
   }
-
-
 
   isDeleteDisabled(request: Request): boolean {
     const loggedInEmployee = this.apiUrl.getLoggedInEmployee();
-    const role = loggedInEmployee?.RoleId; 
-  
+    const role = loggedInEmployee?.RoleId;
+
     // Disable if the user is an Employee and either status is Approved
-    if (role === Role.Employee && (request.ManagerStatus != Status.Pending || request.HRStatus != Status.Pending)) {
+    if (
+      role === Role.Employee &&
+      (request.ManagerStatus != Status.Pending ||
+        request.HRStatus != Status.Pending)
+    ) {
       return true;
     }
 
     return false;
   }
-  
-
 
   roleMapping: { [key: number]: string } = {
     [Role.Manager]: 'Manager',
@@ -219,7 +225,7 @@ export class ControlComponent implements OnInit {
 
   genderMapping: { [key: number]: string } = {
     [Gender.Male]: 'Male',
-    [Gender.Female]: 'Female'
+    [Gender.Female]: 'Female',
   };
 
   typeStatus: { [key: number]: string } = {

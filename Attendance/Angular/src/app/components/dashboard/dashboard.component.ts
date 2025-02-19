@@ -15,14 +15,13 @@ enum AbsenceType {
   AnnualLeave = 1,
   SickLeave = 2,
   PersonalLeave = 3,
-  Other = 4
+  Other = 4,
 }
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
-
 export class DashboardComponent implements OnInit {
   attendance: Attendance | null = null;
   attendanceData: Attendance[] = [];
@@ -77,7 +76,6 @@ export class DashboardComponent implements OnInit {
       },
     },
   ];
-  
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -151,63 +149,68 @@ export class DashboardComponent implements OnInit {
       3: 'Personal Leave',
       4: 'Paternity',
     };
-  
+
     return absenceTypeMap[absenceType ?? 0] || 'Other'; // Default to "Other" if undefined
   }
-  
+
   loadRequests(): void {
     if (this.userId) {
-      this.apiUrl.getAll(`GetAllRequest?userId=${this.userId}`).subscribe(
-        (data: any[]) => {
-          console.log('Fetched Requests:', data);
-  
-          // Convert raw API response to Request[]
-          this.requestList = data.map((item) =>
-            new Request(
-              item.Id,
-              item.TypeOfAbsence ? Number(item.TypeOfAbsence) : 0, // Ensure it's a number
-              item.From ? new Date(item.From) : undefined,
-              item.To ? new Date(item.To) : undefined,
-              item.ReasonOfAbsence,
-              item.ManagerStatus,
-              item.HRStatus,
-              item.UserId,
-              item.FilePath
-            )
-          );
-  
-          // Reset takenDays for all leave types
-          this.leaveTypes.forEach((leave) => (leave.takenDays = 0));
-  
-          // Update takenDays based on API response
-          this.requestList.forEach((request) => {
-            const absenceType = request.TypeOfAbsence ?? 0; // Default to 0 if undefined
-            const leaveType = this.leaveTypes.find(
-              (leave) => leave.type === this.getLeaveTypeName(absenceType) // Ensure number is passed
+      this.apiUrl
+        .getAll(`/GetAllRequest?userId=${this.userId}&isManager=${0}`)
+        .subscribe(
+          (data: Request[]) => {
+            console.log('Fetched Data:', data);
+
+            // Convert raw API response to Request[]
+            this.requestList = data.map(
+              (item) =>
+                new Request(
+                  item.Id,
+                  item.TypeOfAbsence ? Number(item.TypeOfAbsence) : 0, // Ensure it's a number
+                  item.From ? new Date(item.From) : undefined,
+                  item.To ? new Date(item.To) : undefined,
+                  item.ReasonOfAbsence,
+                  item.ManagerStatus,
+                  item.HRStatus,
+                  item.UserId,
+                  item.FilePath
+                )
             );
-  
-            if (leaveType) {
-              leaveType.takenDays += this.calculateLeaveDays(
-                request.From ? new Date(request.From).toISOString().split('T')[0] : '',
-                request.To ? new Date(request.To).toISOString().split('T')[0] : ''
+
+            // Reset takenDays for all leave types
+            this.leaveTypes.forEach((leave) => (leave.takenDays = 0));
+
+            // Update takenDays based on API response
+            this.requestList.forEach((request) => {
+              const absenceType = request.TypeOfAbsence ?? 0; // Default to 0 if undefined
+              const leaveType = this.leaveTypes.find(
+                (leave) => leave.type === this.getLeaveTypeName(absenceType) // Ensure number is passed
               );
-            }
-          });
-  
-          // Force UI update (Angular change detection)
-          this.leaveTypes = [...this.leaveTypes];
-        },
-        (error) => {
-          console.error('Error Fetching Data:', error);
-        }
-      );
+
+              if (leaveType) {
+                leaveType.takenDays += this.calculateLeaveDays(
+                  request.From
+                    ? new Date(request.From).toISOString().split('T')[0]
+                    : '',
+                  request.To
+                    ? new Date(request.To).toISOString().split('T')[0]
+                    : ''
+                );
+              }
+            });
+
+            // Force UI update (Angular change detection)
+            this.leaveTypes = [...this.leaveTypes];
+          },
+          (error) => {
+            console.error('Error Fetching Data:', error);
+          }
+        );
     } else {
       console.error('User not logged in');
     }
   }
-  
-  
-  
+
   calculateLeaveDays(from: string, to: string): number {
     const fromDate = new Date(from);
     const toDate = new Date(to);

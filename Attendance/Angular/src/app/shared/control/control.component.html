@@ -16,6 +16,19 @@
           <img src="../../../assets/images/filter.png" alt="Filter" />
         </button>
 
+        <a routerLink="/request">
+          <button
+            class="add-req-btn"
+            (click)="onEmployeesRequests()"
+            *ngIf="
+              !isEmployeeComponent &&
+              !tableTitle.includes('Attendance History') &&
+              apiUrl.role !== 2
+            "
+          >
+            {{ buttonTitle }}
+          </button>
+        </a>
         <button
           class="add-req-btn"
           (click)="onCreateRequest()"
@@ -25,7 +38,6 @@
         >
           Add Request
         </button>
-
         <button
           class="add-req-btn"
           (click)="onCreateUser()"
@@ -70,14 +82,28 @@
           <th mat-header-cell *matHeaderCellDef>Action</th>
           <td mat-cell *matCellDef="let element">
             <mat-menu #actionMenu="matMenu">
-              <button mat-menu-item 
-              (click)="isEmployeeComponent ? onUpdateUser(element) : onUpdateRequest(element)" 
-              [disabled]="isUpdateDisabled(element)">
-              <mat-icon>edit</mat-icon> Update
+              <button
+                mat-menu-item
+                (click)="
+                  isEmployeeComponent
+                    ? onUpdateUser(element)
+                    : onUpdateRequest(element)
+                "
+                [disabled]="isUpdateDisabled(element)"
+              >
+                <mat-icon>edit</mat-icon> Update
               </button>
 
-              <button mat-menu-item *ngIf="element?.Id" (click)="isEmployeeComponent ? onDeleteUser(element) : onDelete(element)"
-              [disabled]="isDeleteDisabled(element)">
+              <button
+                mat-menu-item
+                *ngIf="element?.Id"
+                (click)="
+                  isEmployeeComponent
+                    ? onDeleteUser(element)
+                    : onDelete(element)
+                "
+                [disabled]="isDeleteDisabled(element)"
+              >
                 <mat-icon>delete</mat-icon> Delete
               </button>
               <button
