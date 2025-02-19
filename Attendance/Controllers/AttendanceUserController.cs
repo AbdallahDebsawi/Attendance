@@ -19,7 +19,6 @@ namespace Attendance.Controllers
     {
         private AttendanceDb db = new AttendanceDb();
 
-        // GET: api/AttendanceUser
         [HttpGet]
         public async Task<IHttpActionResult> GetAttendanceUsers()
         {
@@ -208,7 +207,6 @@ namespace Attendance.Controllers
         [HttpGet]
         [Route("api/AttendanceUser/user/{userId}/month/{year}/{month}")]
         [ResponseType(typeof(IEnumerable<AttendanceUser>))]
-       
         public async Task<IHttpActionResult> GetUserAttendanceByMonth(int userId, int year, int month)
         {
             if (year < 1 || month < 1 || month > 12)

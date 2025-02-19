@@ -2,6 +2,7 @@ export class employee{
 
     Id? : number ;
     ManagerId? : number ;
+    ManagerName? : string;
     Name? : string ;
     Email? : string ;
     Password? : string ;
@@ -11,4 +12,5 @@ export class employee{
     RoleId? : number ;
     DepartmentId? : number ;
     DepartmentName? : string;
+    CreatedBy? : string;
 }
