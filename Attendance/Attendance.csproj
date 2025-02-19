@@ -240,6 +240,14 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AttendanceUserController.cs" />
+    <Compile Include="Migrations\202502191055151_drop column wh.cs" />
+    <Compile Include="Migrations\202502191055151_drop column wh.designer.cs">
+      <DependentUpon>202502191055151_drop column wh.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202502191056479_addWorkingHoursColumn.cs" />
+    <Compile Include="Migrations\202502191056479_addWorkingHoursColumn.designer.cs">
+      <DependentUpon>202502191056479_addWorkingHoursColumn.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ViewModel\DayRecords.cs" />
     <Compile Include="Controllers\DepartmentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -465,6 +473,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202502171227072_change status type in request.resx">
       <DependentUpon>202502171227072_change status type in request.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202502191055151_drop column wh.resx">
+      <DependentUpon>202502191055151_drop column wh.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202502191056479_addWorkingHoursColumn.resx">
+      <DependentUpon>202502191056479_addWorkingHoursColumn.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
