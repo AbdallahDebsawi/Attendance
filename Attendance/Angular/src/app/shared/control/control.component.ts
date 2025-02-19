@@ -62,6 +62,7 @@ export class ControlComponent implements OnInit {
     HRStatus: 'HRStatus',
     department: 'Department',
     jobTitle: 'Job Title',
+    managerName : 'managerName',
     gender: 'Gender',
     action: 'Action',
     id: 'ID',

@@ -33,6 +33,7 @@ namespace Attendance.Controllers
                                         u.Id,
                                         u.Name,
                                         u.ManagerId,
+                                        ManagerName = db.Users.FirstOrDefault(m => m.Id == u.ManagerId)?.Name,
                                         u.Email,
                                         u.Gender,
                                         u.Salary,
@@ -163,6 +164,7 @@ namespace Attendance.Controllers
                 existingUser.Salary = user.Salary;
                 existingUser.RoleId = user.RoleId;
                 existingUser.DepartmentId = user.DepartmentId;
+                existingUser.ManagerId = user.ManagerId;
 
                 // Update the ModificationDate only
                 existingUser.ModificationDate = DateTime.UtcNow;
