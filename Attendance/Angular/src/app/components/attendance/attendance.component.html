@@ -1,5 +1,5 @@
 <p>Dashboard / Attendance</p>
-<div style="padding: 2%">
+<!-- <div style="padding: 2%">
   <app-control
     [displayedColumns]="[
       'Date',
@@ -16,7 +16,6 @@
   </app-control>
 </div>
 
-<!-- Hidden input element for MatDatepickerTrigger -->
 <input
   matInput
   [matDatepicker]="picker"
@@ -31,4 +30,46 @@
   (monthSelected)="chosenMonthHandler($event, picker)"
   [panelClass]="'custom-datepicker'"
 >
-</mat-datepicker>
+</mat-datepicker> -->
+
+<div class="expand">
+  <div class="table-title">{{ tableTitle }}</div>
+  <mat-accordion class="example-headers-align" multi>
+    <mat-expansion-panel *ngFor="let record of attendanceRecords">
+      <mat-expansion-panel-header>
+        <mat-panel-title> {{ record.Date }}</mat-panel-title>
+        <mat-panel-description>
+          view details
+          <mat-icon>date_range</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="table-inner-container">
+        <table>
+          <thead>
+            <th>Date</th>
+            <th>Check In</th>
+            <th>Check Out</th>
+            <th>Status</th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let day of record.Records">
+              <td>{{ day.Date }}</td>
+              <td>{{ day.CheckIn }}</td>
+              <td>{{ day.CheckOut }}</td>
+              <td>{{ day.Status }}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>
+                <b>Total Working hours: </b>
+                <span>{{ record.TotalWorkingHours }}</span>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </mat-expansion-panel>
+    <mat-divider></mat-divider>
+  </mat-accordion>
+</div>

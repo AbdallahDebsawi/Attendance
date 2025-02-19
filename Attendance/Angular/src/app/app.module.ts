@@ -38,6 +38,8 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { FilterPipe } from './filter.pipe';
 import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.component';
 // import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
@@ -54,7 +56,6 @@ import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.comp
     TestComponent,
     FilterPipe,
     DeleteDialogComponent,
-    
   ],
   imports: [
     BrowserModule,
@@ -84,7 +85,9 @@ import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.comp
     MatIconModule,
     MatCheckboxModule,
     FormsModule,
-    Ng2SearchPipeModule
+    Ng2SearchPipeModule,
+    MatExpansionModule,
+    MatDividerModule,
   ],
   providers: [AttendanceService],
   bootstrap: [AppComponent],

@@ -1,7 +1,13 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { AttendanceService } from 'src/app/services/attendance.service';
 import { Attendance } from 'src/app/shared/models/attendance';
-import { DatePipe } from '@angular/common';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { ServiceApiService } from 'src/app/Service/service-api.service';
 import { ActivatedRoute } from '@angular/router';
@@ -10,18 +16,25 @@ import { ActivatedRoute } from '@angular/router';
   selector: 'app-attendance',
   templateUrl: './attendance.component.html',
   styleUrls: ['./attendance.component.css'],
-  providers: [DatePipe], // Provide DatePipe
+  //providers: [DatePipe], // Provide DatePipe
+  // providers: [provideNativeDateAdapter()],
+
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AttendanceComponent implements OnInit {
-  attendanceRecords: Attendance[] = [];
+  attendanceRecords: any[] = [];
   @ViewChild(MatDatepicker) picker: MatDatepicker<Date> | undefined;
   userId? = 12;
   name: string = '';
+  tableTitle: string = this.name
+    ? this.name + '’s Attendance History'
+    : 'Attendance History';
 
   constructor(
     private attendanceService: AttendanceService,
     private apiService: ServiceApiService,
-    private route: ActivatedRoute // Inject ActivatedRoute
+    private route: ActivatedRoute, // Inject ActivatedRoute
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -37,9 +50,13 @@ export class AttendanceComponent implements OnInit {
       const loggedInEmployee = this.apiService.getLoggedInEmployee();
       if (this.userId === loggedInEmployee?.Id) {
         this.name = '';
+        this.tableTitle = 'Attendance History';
+        this.cdRef.detectChanges();
         // localStorage.removeItem('employeeName');
       } else {
         this.name = localStorage.getItem('employeeName') || '';
+        this.tableTitle = this.name + '’s Attendance History';
+        this.cdRef.detectChanges();
       }
 
       this.loadAttendanceRecords();
@@ -55,6 +72,8 @@ export class AttendanceComponent implements OnInit {
     this.attendanceService.getAttendanceUserById(this.userId!).subscribe({
       next: (data) => {
         this.attendanceRecords = data;
+        this.cdRef.detectChanges();
+        console.log('Attendance records:', this.attendanceRecords);
       },
       error: (err) => {
         console.error('Error fetching attendance records:', err);

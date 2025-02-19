@@ -36,7 +36,6 @@ namespace Attendance.Controllers
             var result = ApplyStatusLogic(attendanceUsers);
             return Ok(result);
         }
-
         // GET: api/AttendanceUser/{id}
         [HttpGet]
         public async Task<IHttpActionResult> GetAttendanceUserById(int id)
@@ -44,17 +43,38 @@ namespace Attendance.Controllers
             var attendanceRecords = await db.AttendanceUsers
                 .Where(a => a.UserId == id && !a.IsDeleted)
                 .OrderBy(a => a.CheckIn)
+                .GroupBy(a => a.CheckIn.Day)
                 .ToListAsync();
 
             if (!attendanceRecords.Any())
             {
-                return Ok(new List<object>()); // Return empty list if no records found
+                return Ok(new List<object>()); 
             }
+            var result = new List<object>();
+            foreach (var record in attendanceRecords)
+            {
+                List<Records> dayRecords = new List<Records>() { };
+                dayRecords = ApplyStatusLogic(record.ToList()) ;
+                var date = record.ToList()[0].CheckIn.ToString("yyyy-MM-dd");
+               TimeSpan totalWorkingHours = new TimeSpan(0, 0, 0);
+                foreach (var wh in dayRecords)
+                {   
 
-            var result = ApplyStatusLogic(attendanceRecords);
+                    totalWorkingHours +=wh.WorkingHours;
+                }
+                string formattedHours = $"{(int)totalWorkingHours.TotalHours} hours {totalWorkingHours.Minutes} minutes";
+                result.Add(new {
+                    Date= date,
+                    Records = dayRecords,
+                    TotalWorkingHours = formattedHours
+                });
+            }
+            //var result = ApplyStatusLogic(attendanceRecords);
             return Ok(result);
         }
-       
+
+
+
         // POST: api/AttendanceUser
         [HttpPost]
         public async Task<IHttpActionResult> PostAttendanceUser([FromBody] AttendanceUser attendanceUser)
@@ -213,9 +233,9 @@ namespace Attendance.Controllers
             return Ok(result);
         }
 
-        private List<object> ApplyStatusLogic(List<AttendanceUser> attendanceRecords)
+        private List<Records> ApplyStatusLogic(List<AttendanceUser> attendanceRecords)
         {
-            List<object> result = new List<object>();
+            List<Records> result = new List<Records>();
             string lastStatus = "";
             DateTime? lastCheckOut = null;
 
@@ -264,13 +284,13 @@ namespace Attendance.Controllers
                 TimeSpan workingTime = record.CheckOut.HasValue ? (record.CheckOut.Value - record.CheckIn) : TimeSpan.Zero;
                 string formattedWorkingHours = $"{(int)workingTime.TotalHours} hours {workingTime.Minutes} minutes";
 
-                result.Add(new
+                result.Add(new Records
                 {
                     Date = record.CheckIn.ToString("yyyy-MM-dd"),
                     CheckIn = record.CheckIn.ToString("hh:mm tt"),
                     CheckOut = record.CheckOut?.ToString("hh:mm tt") ?? "N/A",
                     Status = status,
-                    WorkingHours = formattedWorkingHours
+                    WorkingHours = workingTime
                 });
             }
 
