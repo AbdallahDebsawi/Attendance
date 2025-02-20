@@ -7,7 +7,7 @@ import { Attendance } from '../shared/models/attendance';
   providedIn: 'root',
 })
 export class AttendanceService {
-  private apiUrl = `https://localhost:44323/api/AttendanceUser`;
+  private apiUrl = `https://oriented-s.com:90/Raqeeb/AttendanceBackend/api/AttendanceUser`;
 
   // BehaviorSubject to hold current attendance data
   private attendanceDataSubject = new BehaviorSubject<Attendance[]>([]);

@@ -155,8 +155,12 @@ export class RegisterComponent implements OnInit {
       const formValues = this.userForm.value;
 
       formValues.name = `${formValues.firstName} ${formValues.lastName}`;
+      delete formValues.firstName;
+      delete formValues.lastName;
       delete formValues.confirmPassword;
-
+      
+      
+    
       formValues.departmentId = formValues.department;
       delete formValues.department;
 
@@ -165,6 +169,9 @@ export class RegisterComponent implements OnInit {
 
       formValues.managerId = Number(formValues.managerId);
 
+      if (formValues.managerId === 0) {
+        formValues.managerId = null;
+      }
       
 
       if (this.data?.Id) {  // If Id exists, update the user

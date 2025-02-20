@@ -7,7 +7,7 @@ import { employee } from 'src/app/shared/models/employee';
   providedIn: 'root',
 })
 export class ServiceApiService {
-  private apiUrl = 'https://localhost:44323/api';
+  private apiUrl = 'https://oriented-s.com:90/Raqeeb/AttendanceBackend/api';
   public loggedInEmployeeKey = 'loggedInEmployee'; // Key for localStorage
   public loggedInEmployee: employee | null = null; // Define loggedInEmployee in memory
   role: any;
