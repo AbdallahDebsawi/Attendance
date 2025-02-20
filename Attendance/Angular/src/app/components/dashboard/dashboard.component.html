@@ -1,7 +1,7 @@
 <div class="filter-container">
   <p>{{ name ? name + "’s Dashboard" : "Dashboard" }}</p>
   <!-- <button class="filter-button" *ngIf="role == 'hr'">
-    <img src="../../../assets/images/filter.png" alt="Filter" />
+    <img src="assets/images/filter.png" alt="Filter" />
   </button> -->
 </div>
 <div class="dashboard-container">
@@ -72,7 +72,9 @@
               <div
                 class="filled"
                 [ngStyle]="{
-                  'background-color': getProgressBarColor(leave.type.toString()),
+                  'background-color': getProgressBarColor(
+                    leave.type.toString()
+                  ),
                   width: leave.filledPercentage + '%'
                 }"
               ></div>

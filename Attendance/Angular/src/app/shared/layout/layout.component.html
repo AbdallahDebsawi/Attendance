@@ -4,14 +4,14 @@
     <div class="sidebar-content">
       <!-- Sidebar Image -->
       <div class="sidebar-image">
-        <img src="../../../assets/images/sidebar.png" alt="Sidebar Image" />
+        <img src="assets/images/sidebar.png" alt="Sidebar Image" />
       </div>
 
       <!-- Profile Section -->
       <div class="profile-section">
         <!-- Profile Picture -->
         <div class="profile-pic">
-          <img src="../../../assets/images/profile.png" alt="Profile Picture" />
+          <img src="assets/images/profile.png" alt="Profile Picture" />
         </div>
         <!-- Username -->
         <div class="username-section">
@@ -45,7 +45,7 @@
           <a [routerLink]="['/dashboard', userId]">
             <div class="option-item">
               <img
-                src="../../../assets/images/dashboard.png"
+                src="assets/images/dashboard.png"
                 alt="Dashboard Icon"
                 class="option-icon"
               />
@@ -57,7 +57,7 @@
           <a routerLink="/employee">
             <div class="option-item" *ngIf="apiService.role !== 2">
               <img
-                src="../../../assets/images/employee.png"
+                src="assets/images/employee.png"
                 alt="Employee Icon"
                 class="option-icon"
               />
@@ -69,7 +69,7 @@
           <a [routerLink]="['/attendance', userId]">
             <div class="option-item">
               <img
-                src="../../../assets/images/employee.png"
+                src="assets/images/employee.png"
                 alt="Employee Icon"
                 class="option-icon"
               />
@@ -81,7 +81,7 @@
           <a routerLink="/request">
             <div class="option-item">
               <img
-                src="../../../assets/images/request.png"
+                src="assets/images/request.png"
                 alt="Request Icon"
                 class="option-icon"
               />
@@ -99,7 +99,7 @@
           <!-- Check In / Check Out Button -->
           <button class="attendance-button" (click)="toggleCheckInOut()">
             <img
-              src="../../../assets/images/check.png"
+              src="assets/images/check.png"
               alt="Check Icon"
               class="attendance-icon"
             />
@@ -113,7 +113,7 @@
         <div class="logout-section">
           <button class="logout-button" (click)="signOut()">
             <img
-              src="../../../assets/images/logout.png"
+              src="assets/images/logout.png"
               alt="Logout Icon"
               class="logout-icon"
             />
@@ -125,7 +125,7 @@
 
     <div class="bottom-pic">
       <img
-        src="../../../assets/images/bottomSidebar.png"
+        src="assets/images/bottomSidebar.png"
         alt="Logout Icon"
         class="logout-icon"
       />
@@ -137,7 +137,7 @@
     <div class="main-content">
       <!-- Toggle Button -->
       <button (click)="toggleSidebar(sidenav)">
-        <img src="../../../assets/images/toggle.png" alt="Toggle Sidebar" />
+        <img src="assets/images/toggle.png" alt="Toggle Sidebar" />
       </button>
     </div>
 

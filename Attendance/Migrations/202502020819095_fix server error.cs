@@ -15,7 +15,7 @@
                         CheckIn = c.DateTime(nullable: false),
                         CheckOut = c.DateTime(),
                         Status = c.String(),
-                        WorkingHours = c.Time(nullable: false, precision: 7),
+                        WorkingHours = c.Double(),
                         UserId = c.Int(nullable: false),
                         CreatedAt = c.DateTime(nullable: false),
                         CreatedBy = c.String(),
