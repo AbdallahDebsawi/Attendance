@@ -78,4 +78,8 @@ export class AttendanceService {
       `${this.apiUrl}/user/${userId}/month/${year}/${month}`
     );
   }
+
+  getMonthlyHours(userId : number): Observable<Attendance[]>{
+    return this.http.get<Attendance[]>(`${this.apiUrl}/user/${userId}`);
+  }
 }

@@ -1,16 +1,18 @@
 p {
   padding-left: 3%;
   font-size: 20px;
-}.example-action-buttons {
+}
+.example-action-buttons {
   padding-bottom: 20px;
 }
-.expand{
+.expand {
   background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 20px ;
-    padding: 2%;
-}table {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+  padding: 2%;
+}
+table {
   width: 100%;
   font-family: Arial, sans-serif;
   min-width: 800px;
@@ -56,6 +58,7 @@ tr td:last-child {
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
 }
+
 .table-inner-container {
   background-color: white;
   max-height: 400px;
@@ -69,6 +72,7 @@ tr td:last-child {
 .example-headers-align .mat-mdc-form-field+.mat-mdc-form-field {
   margin-left: 8px;
 }
+
 ::ng-deep .mat-datepicker-content {
   position: fixed !important;
   top: 50% !important;
@@ -127,7 +131,6 @@ tr td:last-child {
   }
 
   .filter-container {
-
     justify-content: flex-start;
     gap: 10px;
   }
@@ -184,3 +187,87 @@ tr td:last-child {
     margin-left: 10px;
   }
 }
+
+
+
+.progress-container-wrapper {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.progress-container {
+  position: relative;
+  width: 90%;
+  margin: 50px auto;
+}
+
+.progress-bar {
+  display: flex;
+  height: 40px;
+  width: 100%;
+  border-radius: 10px;
+  background-color: #ddd;
+  position: relative;
+}
+
+.progress-section {
+  height: 100%;
+}
+
+.red {
+  background-color: #ff7c7c;
+}
+
+.orange {
+  background-color: #ffc43d;
+}
+
+.green {
+  background-color: #38ef40;
+}
+
+
+.progress-loader {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  height: 60%;
+  background-color: #6567ff;
+  border-radius: 10px;
+  z-index: 2;
+}
+
+.progress-line {
+  position: absolute;
+  top: 0;
+  width: 1px;
+  height: 120%;
+  background-color: black;
+  z-index: 3;
+}
+
+.hours-labels {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  top: 45px;
+}
+
+.hours-labels span {
+  position: absolute;
+  transform: translateX(-50%);
+  padding-top: 10px ;
+}
+
+.total-hours-label {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  font-weight: bold;
+}
+

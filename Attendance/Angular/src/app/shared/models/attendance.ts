@@ -6,4 +6,5 @@ export class Attendance {
   Date?: string| null; // Allow null here
   WorkingHours?: number;
   Status?: string;
+  TotalHours? : Number;
 }

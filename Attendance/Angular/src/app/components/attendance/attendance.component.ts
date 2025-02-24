@@ -1,14 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AttendanceService } from 'src/app/services/attendance.service';
-import { Attendance } from 'src/app/shared/models/attendance';
-import { MatDatepicker } from '@angular/material/datepicker';
 import { ServiceApiService } from 'src/app/Service/service-api.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -16,52 +7,46 @@ import { ActivatedRoute } from '@angular/router';
   selector: 'app-attendance',
   templateUrl: './attendance.component.html',
   styleUrls: ['./attendance.component.css'],
-  //providers: [DatePipe], // Provide DatePipe
-  // providers: [provideNativeDateAdapter()],
-
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AttendanceComponent implements OnInit {
+  userId?: number;
   attendanceRecords: any[] = [];
-  @ViewChild(MatDatepicker) picker: MatDatepicker<Date> | undefined;
-  userId? = 12;
-  name: string = '';
-  tableTitle: string = this.name
-    ? this.name + '’s Attendance History'
-    : 'Attendance History';
+  TotalHours: number = 0;
+  totalHour:number = 0;
+  MinHoursPerMonth: number = 0;
+  MaxHoursPerMonth: number = 0;
+  TotalHoursPercentage: number = 0;
 
   constructor(
     private attendanceService: AttendanceService,
     private apiService: ServiceApiService,
-    private route: ActivatedRoute, // Inject ActivatedRoute
+    private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
-      if (id) {
-        this.userId = +id; // Convert string to number
-      } else {
-        const loggedInEmployee = this.apiService.getLoggedInEmployee();
-        this.userId = loggedInEmployee?.Id;
-      }
-
-      const loggedInEmployee = this.apiService.getLoggedInEmployee();
-      if (this.userId === loggedInEmployee?.Id) {
-        this.name = '';
-        this.tableTitle = 'Attendance History';
-        this.cdRef.detectChanges();
-        // localStorage.removeItem('employeeName');
-      } else {
-        this.name = localStorage.getItem('employeeName') || '';
-        this.tableTitle = this.name + '’s Attendance History';
-        this.cdRef.detectChanges();
-      }
+      this.userId = id ? +id : this.apiService.getLoggedInEmployee()?.Id;
 
       this.loadAttendanceRecords();
+      this.loadMonthlyHours();
     });
+  }
 
+  loadMonthlyHours(): void {
+    this.attendanceService.getMonthlyHours(this.userId!).subscribe({
+      next: (data: any) => {
+        if (data) {
+          this.MinHoursPerMonth = data.MinHoursPerMonth ?? 0;
+          this.MaxHoursPerMonth = data.MaxHoursPerMonth ?? 0;
+          this.TotalHours = this.extractHours(data.TotalHours);
+          this.totalHour = data.TotalHours;
+          this.TotalHoursPercentage = this.calculatePercentage(this.TotalHours);
+          this.cdRef.detectChanges();
+        }
+      },
+      error: (err) => console.error('Error fetching monthly hours:', err),
     // Subscribe to changes in attendance data
     this.attendanceService.attendanceData$.subscribe((data) => {
       this.attendanceRecords = data.reverse();
@@ -69,54 +54,27 @@ export class AttendanceComponent implements OnInit {
     });
   }
 
+  extractHours(timeString: string): number {
+    if (!timeString) return 0;
+    const hoursMatch = timeString.match(/(\d+)\s*hours?/);
+    const minutesMatch = timeString.match(/(\d+)\s*minutes?/);
+    const hours = hoursMatch ? parseInt(hoursMatch[1], 10) : 0;
+    const minutes = minutesMatch ? parseInt(minutesMatch[1], 10) : 0;
+    return hours + minutes / 60;
+  }
+
+  calculatePercentage(hours: number): number {
+    return (hours / 260) * 100;
+  }
+
   loadAttendanceRecords(): void {
     this.attendanceService.getAttendanceUserById(this.userId!).subscribe({
       next: (data) => {
-        this.attendanceRecords = data.reverse();
+        this.attendanceRecords = data;
         this.cdRef.detectChanges();
         console.log('Attendance records:', this.attendanceRecords);
       },
-      error: (err) => {
-        console.error('Error fetching attendance records:', err);
-      },
+      error: (err) => console.error('Error fetching attendance records:', err),
     });
-  }
-
-  getUserAttendanceByMonth(year: number, month: number): void {
-    this.attendanceService
-      .getUserAttendanceByMonth(this.userId!, year, month)
-      .subscribe({
-        next: (data) => {
-          this.attendanceRecords = data;
-        },
-        error: (err) => {
-          if ((err.status = 404)) {
-            this.attendanceRecords = [];
-          }
-          console.error('Error fetching attendance:', err);
-        },
-      });
-  }
-
-  openDatePicker(): void {
-    this.picker!.open(); // Opens the datepicker
-  }
-
-  chosenYearHandler(
-    normalizedYear: Date,
-    datepicker: MatDatepicker<Date>
-  ): void {
-    const year = normalizedYear.getFullYear();
-    this.picker!.open();
-  }
-
-  chosenMonthHandler(
-    normalizedMonth: Date,
-    datepicker: MatDatepicker<Date>
-  ): void {
-    const year = normalizedMonth.getFullYear();
-    const month = normalizedMonth.getMonth() + 1;
-    this.getUserAttendanceByMonth(year, month);
-    datepicker.close();
   }
 }

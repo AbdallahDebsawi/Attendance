@@ -4,6 +4,7 @@ using Attendance.Models.Interfaces;
 using Attendance.Models.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
@@ -47,23 +48,24 @@ namespace Attendance.Controllers
 
             if (!attendanceRecords.Any())
             {
-                return Ok(new List<object>()); 
+                return Ok(new List<object>());
             }
             var result = new List<object>();
             foreach (var record in attendanceRecords)
             {
                 List<Records> dayRecords = new List<Records>() { };
-                dayRecords = ApplyStatusLogic(record.ToList()) ;
+                dayRecords = ApplyStatusLogic(record.ToList());
                 var date = record.ToList()[0].CheckIn.ToString("yyyy-MM-dd");
-               TimeSpan totalWorkingHours = new TimeSpan(0, 0, 0);
+                TimeSpan totalWorkingHours = new TimeSpan(0, 0, 0);
                 foreach (var wh in dayRecords)
-                {   
+                {
 
-                    totalWorkingHours +=wh.WorkingHours;
+                    totalWorkingHours += wh.WorkingHours;
                 }
                 string formattedHours = $"{(int)totalWorkingHours.TotalHours} hours {totalWorkingHours.Minutes} minutes";
-                result.Add(new {
-                    Date= date,
+                result.Add(new
+                {
+                    Date = date,
                     Records = dayRecords,
                     TotalWorkingHours = formattedHours
                 });
@@ -147,7 +149,7 @@ namespace Attendance.Controllers
 
             return StatusCode(System.Net.HttpStatusCode.NoContent);
         }
-       
+
         //  Get today's attendance record for a user
         [HttpGet]
         [Route("api/AttendanceUser/user/{userId}/date/{date}")]
@@ -173,7 +175,6 @@ namespace Attendance.Controllers
             return Ok(result);
         }
 
-        //  Get the latest attendance record for a user
         [HttpGet]
         [Route("api/AttendanceUser/user/{userId}/last")]
         [ResponseType(typeof(AttendanceUser))]
@@ -295,222 +296,106 @@ namespace Attendance.Controllers
             return result;
         }
 
+        [HttpGet]
+        [Route("api/AttendanceUser/user/{userId}")]
+        [ResponseType(typeof(object))]
+        public async Task<IHttpActionResult> GetTotalhoursForMonth(int userId)
+        {
+            if (userId <= 0)
+            {
+                return BadRequest("Invalid user ID.");
+            }
 
-        //private double CalculateWorkingHours(List<AttendanceUser> records)
-        //{
-        //    double totalHours = 0;
-        //    foreach (var record in records)
-        //    {
-        //        if (record.CheckOut.HasValue)
-        //        {
-        //            totalHours += (record.CheckOut.Value - record.CheckIn).TotalHours;
-        //        }
-        //    }
-        //    return Math.Round(totalHours, 2);
-        //}
+            DateTime today = DateTime.Today;
+            DateTime startOfMonth = new DateTime(today.Year, today.Month, 1);
+            DateTime endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
 
+            var monthHourly = await (from a in db.AttendanceUsers
+                                     where a.UserId == userId
+                                     && a.CheckIn >= startOfMonth
+                                     && a.CheckIn <= endOfMonth
+                                     select new
+                                     {
+                                         a.CheckIn,
+                                         a.CheckOut
+                                     }).ToListAsync();
+
+            var leaveRequests = await (from r in db.Requests
+                                       where r.UserId == userId
+                                       && r.From >= startOfMonth
+                                       && r.To <= endOfMonth
+                                       && r.HRStatus == 1
+                                       && r.ManagerStatus == 1
+                                       select r).ToListAsync();
+
+
+            double totalHours = 0;
+
+            double minHoursPerMonth = 0;
+            double maxHoursPerMonth = 0;
+
+            for (DateTime date = startOfMonth; date <= endOfMonth; date = date.AddDays(1))
+            {
+                if (date.DayOfWeek != DayOfWeek.Friday && date.DayOfWeek != DayOfWeek.Saturday)
+                {
+                    minHoursPerMonth += 8;
+                }
+
+                if (date.DayOfWeek != DayOfWeek.Friday)
+                {
+                    maxHoursPerMonth += 8;
+                }
+            }
+
+            foreach (var record in monthHourly)
+            {
+                var leaveRequest = leaveRequests.FirstOrDefault(r => r.From.Date <= record.CheckIn.Date && r.To.Date >= record.CheckIn.Date);
+
+                if (record.CheckIn != null && leaveRequest != null)
+                {
+                    if (leaveRequest.TypeOfAbsence == "1" || leaveRequest.TypeOfAbsence == "2" || leaveRequest.TypeOfAbsence == "4")
+                    {
+                        totalHours += 8;
+                        continue;
+                    }
+                    else if (leaveRequest.TypeOfAbsence == "Personal Leave")
+                    {
+                        continue;
+                    }
+                }
+
+                if (record.CheckIn != null && record.CheckOut.HasValue)
+                {
+                    totalHours += (record.CheckOut.Value - record.CheckIn).TotalHours;
+                }
+            }
+
+            int hours = (int)totalHours;
+            int minutes = (int)((totalHours - hours) * 60);
+
+            string formattedTime = $"{hours} hours {minutes} minutes";
+
+            string status;
+            if (totalHours > maxHoursPerMonth)
+            {
+                status = "Overtime";
+            }
+            else if (minHoursPerMonth < totalHours && totalHours < maxHoursPerMonth)
+            {
+                status = "Normal";
+            }
+            else
+            {
+                status = "Your Attendance not complete This month";
+            }
+
+            return Ok(new
+            {
+                TotalHours = formattedTime,
+                Status = status,
+                MinHoursPerMonth = minHoursPerMonth,
+                MaxHoursPerMonth = maxHoursPerMonth
+            });
+        }
     }
-
 }
-//[HttpGet]
-//public async Task<IHttpActionResult> GetAttendanceUsers(int userId)
-//{
-//    var attendanceRecords = await db.AttendanceUsers
-//        .Where(a => a.UserId == userId && !a.IsDeleted)
-//        .OrderBy(a => a.CheckIn)
-//        .ToListAsync();
-
-//    // Dictionary to group records by date
-//    var groupedRecords = attendanceRecords
-//        .GroupBy(a => a.CheckIn.Date)
-//        .ToDictionary(g => g.Key, g => g.ToList());
-
-//    var startDate = attendanceRecords.Min(a => a.CheckIn).Date;
-//    var endDate = DateTime.Today;
-
-//    var result = new List<object>();
-
-//    for (var date = startDate; date <= endDate; date = date.AddDays(1))
-//    {
-//        var dayRecords = groupedRecords.ContainsKey(date) ? groupedRecords[date] : new List<AttendanceUser>();
-//        List<object> recordsList = new List<object>();
-
-//        if (dayRecords.Any())
-//        {
-//            double totalHours = 0;
-//            bool breakAdded = false;
-
-//            for (int i = 0; i < dayRecords.Count; i++)
-//            {
-//                var record = dayRecords[i];
-
-//                // Determine status
-//                if (record.CheckIn.TimeOfDay < TimeSpan.FromHours(8))
-//                    record.Status = "Present On Time";
-//                else
-//                    record.Status = "Present Late";
-
-//                if (record.CheckOut.HasValue)
-//                {
-//                    var checkOutTime = record.CheckOut.Value.TimeOfDay;
-//                    if (checkOutTime < TimeSpan.FromHours(17))
-//                        record.Status = "Leave";
-//                    else if (checkOutTime <= TimeSpan.FromHours(17.5))
-//                        record.Status = "Leave On Time";
-//                    else
-//                        record.Status = "Over Time";
-//                }
-
-//                // Calculate working hours for this record
-//                double hoursWorked = record.CheckOut.HasValue ?
-//                    (record.CheckOut.Value - record.CheckIn).TotalHours : 0;
-//                totalHours += hoursWorked;
-
-//                recordsList.Add(new
-//                {
-//                    CheckIn = record.CheckIn.ToString("hh:mm tt"),
-//                    CheckOut = record.CheckOut?.ToString("hh:mm tt"),
-//                    Status = record.Status,
-//                    WorkingHours = Math.Round(hoursWorked, 2)
-//                });
-
-//                // Add break after the first work session
-//                if (!breakAdded && record.CheckOut.HasValue && totalHours >= 4)
-//                {
-//                    var breakStart = record.CheckOut.Value;
-//                    var breakEnd = breakStart.AddHours(1);
-
-//                    recordsList.Add(new
-//                    {
-//                        CheckIn = breakStart.ToString("hh:mm tt"),
-//                        CheckOut = breakEnd.ToString("hh:mm tt"),
-//                        Status = "Break",
-//                        WorkingHours = 0
-//                    });
-
-//                    breakAdded = true;
-//                }
-//            }
-
-//            result.Add(new { date = date.ToString("yyyy-MM-dd"), records = recordsList, TotalWorkingHours = Math.Round(totalHours, 2) });
-//        }
-//        else
-//        {
-//            // No record found for this day, mark as Absent
-//            result.Add(new
-//            {
-//                date = date.ToString("yyyy-MM-dd"),
-//                records = new List<object>
-//        {
-//            new { CheckIn = "N/A", CheckOut = "N/A", Status = "Absent", WorkingHours = 0 }
-//        },
-//                TotalWorkingHours = 0
-//            });
-//        }
-//    }
-
-//    return Ok(result);
-//}
-
-/* [HttpGet]
-         //public async Task<IHttpActionResult> GetAttendanceUserById(int id)
-        //{
-        //    var attendanceRecords = await db.AttendanceUsers
-        //        .Where(a => a.UserId == id && !a.IsDeleted)
-        //        .OrderBy(a => a.CheckIn)
-        //        .ToListAsync();
-
-        //    var groupedRecords = attendanceRecords
-        //        .GroupBy(a => a.CheckIn.Date)
-        //        .ToDictionary(g => g.Key, g => g.ToList());
-
-        //    var startDate = attendanceRecords.Any() ? attendanceRecords.Min(a => a.CheckIn).Date : DateTime.Today;
-        //    var endDate = DateTime.Today;
-        //    var result = new List<object>();
-
-        //    for (var date = startDate; date <= endDate; date = date.AddDays(1))
-        //    {
-        //        var dayRecords = groupedRecords.ContainsKey(date) ? groupedRecords[date] : new List<AttendanceUser>();
-        //        List<object> recordsList = new List<object>();
-
-        //        if (dayRecords.Any())
-        //        {
-        //            double totalHours = 0;
-        //            string lastStatus = "";
-        //            DateTime? lastCheckOut = null;
-
-        //            for (int i = 0; i < dayRecords.Count; i++)
-        //            {
-        //                var record = dayRecords[i];
-        //                string status = "";
-
-        //                // ✅ First check-in of the day should be "Present On Time" or "Present Late"
-        //                if (i == 0)
-        //                {
-        //                    status = record.CheckIn.TimeOfDay < TimeSpan.FromHours(8) ? "Present On Time" : "Present Late";
-        //                }
-        //                else // ✅ Subsequent check-ins should determine if user came after leave/break
-        //                {
-        //                    if (lastCheckOut.HasValue && record.CheckIn > lastCheckOut)
-        //                    {
-        //                        if (lastStatus == "Leave")
-        //                            status = "Came after Leave";
-        //                        else if (lastStatus == "Break")
-        //                            status = "Came after Break";
-        //                    }
-        //                }
-
-        //                // ✅ Determine status based on CheckOut time
-        //                if (record.CheckOut.HasValue)
-        //                {
-        //                    var checkOutTime = record.CheckOut.Value.TimeOfDay;
-        //                    if (checkOutTime < TimeSpan.FromHours(14))
-        //                        status = "Leave";
-        //                    else if (checkOutTime < TimeSpan.FromHours(15))
-        //                        status = "Break";
-        //                    else if (checkOutTime < TimeSpan.FromHours(17))
-        //                        status = "Leave";
-        //                    else if (checkOutTime <= TimeSpan.FromHours(17.5))
-        //                        status = "Leave On Time";
-        //                    else
-        //                        status = "Over Time";
-
-        //                    lastCheckOut = record.CheckOut;
-        //                }
-
-        //                lastStatus = status;
-        //                double workingHours = record.CheckOut.HasValue ? (record.CheckOut.Value - record.CheckIn).TotalHours : 0;
-        //                totalHours += workingHours;
-
-        //                recordsList.Add(new
-        //                {
-        //                    CheckIn = record.CheckIn.ToString("hh:mm tt"),
-        //                    CheckOut = record.CheckOut?.ToString("hh:mm tt"),
-        //                    Status = status,
-        //                    WorkingHours = Math.Round(workingHours, 2)
-        //                });
-        //            }
-
-        //            result.Add(new
-        //            {
-        //                date = date.ToString("yyyy-MM-dd"),
-        //                records = recordsList,
-        //                TotalWorkingHours = Math.Round(totalHours, 2)
-        //            });
-        //        }
-        //        else
-        //        {
-        //            result.Add(new
-        //            {
-        //                date = date.ToString("yyyy-MM-dd"),
-        //                records = new List<object> { new { CheckIn = "N/A", CheckOut = "N/A", Status = "Absent", WorkingHours = 0 } },
-        //                TotalWorkingHours = 0
-        //            });
-        //        }
-        //    }
-        //    return Ok(result);
-        //}
-
-
-        
-*/

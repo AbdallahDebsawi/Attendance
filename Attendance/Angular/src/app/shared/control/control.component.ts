@@ -104,7 +104,6 @@ export class ControlComponent implements OnInit {
         element.hrStatus = 'Pending'; // Toggle back to 'Pending'
       }
     } else if (this.apiUrl.role === 1) {
-      // Manager role can update managerStatus
       if (element.managerStatus === 'Pending') {
         element.managerStatus = 'Approved';
         element.hrStatus = '--';

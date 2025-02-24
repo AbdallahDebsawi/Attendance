@@ -37,7 +37,6 @@ import { TestComponent } from './test/test.component';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { FilterPipe } from './filter.pipe';
 import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.component';
-// import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
 
@@ -78,7 +77,6 @@ import { MatDividerModule } from '@angular/material/divider';
     CanvasJSAngularChartsModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    // MatProgressBarModule,
     MatNativeDateModule,
     MatSelectModule,
     MatMenuModule,
@@ -87,7 +85,7 @@ import { MatDividerModule } from '@angular/material/divider';
     FormsModule,
     Ng2SearchPipeModule,
     MatExpansionModule,
-    MatDividerModule,
+    MatDividerModule
   ],
   providers: [AttendanceService],
   bootstrap: [AppComponent],
