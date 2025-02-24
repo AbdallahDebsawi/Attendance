@@ -38,7 +38,6 @@ export class RegisterComponent implements OnInit {
   ) {
     this.userForm = this.fb.group({
       id: [''],
-      CreatedBy :[''],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -67,9 +66,9 @@ export class RegisterComponent implements OnInit {
     
     console.log("Data passed to dialog:", this.data);
 
-    
+    // If updating, prefill form fields
     if (this.data?.Id) {
-     
+      // Patch form values
       this.userForm.patchValue({
         id: this.data.Id,
         firstName: this.data.Name.split(' ')[0], 
@@ -87,15 +86,6 @@ export class RegisterComponent implements OnInit {
       });
 
       console.log("Form after patching values:", this.userForm.value);
-    }
-    else
-    {
-      this.userForm.patchValue({
-        CreatedBy:this.apiService.loggedInEmployee?.Name
-      });
-
-     
-      console.log("Form after patching values:", this.apiService.loggedInEmployee?.Name);
     }
   }
 
@@ -155,12 +145,8 @@ export class RegisterComponent implements OnInit {
       const formValues = this.userForm.value;
 
       formValues.name = `${formValues.firstName} ${formValues.lastName}`;
-      delete formValues.firstName;
-      delete formValues.lastName;
       delete formValues.confirmPassword;
-      
-      
-    
+
       formValues.departmentId = formValues.department;
       delete formValues.department;
 
@@ -169,9 +155,6 @@ export class RegisterComponent implements OnInit {
 
       formValues.managerId = Number(formValues.managerId);
 
-      if (formValues.managerId === 0) {
-        formValues.managerId = null;
-      }
       
 
       if (this.data?.Id) {  // If Id exists, update the user

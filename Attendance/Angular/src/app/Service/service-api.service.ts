@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { employee } from 'src/app/shared/models/employee';
+import { employee } from 'src/app/shared/models/employee'; 
 
 @Injectable({
   providedIn: 'root',
 })
 export class ServiceApiService {
-  private apiUrl = 'https://oriented-s.com:90/Raqeeb/AttendanceBackend/api';
+  private apiUrl = 'https://localhost:44323/api';
   public loggedInEmployeeKey = 'loggedInEmployee'; // Key for localStorage
-  public loggedInEmployee: employee | null = null; // Define loggedInEmployee in memory
-  role: any;
+  public loggedInEmployee: employee | null = null;  // Define loggedInEmployee in memory
+  role: any;  
   userId?: number = 0;
 
   constructor(private http: HttpClient) {}
@@ -19,11 +19,11 @@ export class ServiceApiService {
     return this.http.get<any>(`${this.apiUrl}/${endPoint}`);
   }
 
-  getRequestbyManager(endPoint: string): Observable<any> {
+  getRequestbyManager(endPoint : string):Observable<any> {
     return this.http.get<any>(`${this.apiUrl}${endPoint}`);
   }
 
-  getRequestByHr(endPoint: string): Observable<any> {
+  getRequestByHr(endPoint : string):Observable<any>{
     return this.http.get<any>(`${this.apiUrl}${endPoint}`);
   }
 
@@ -59,6 +59,7 @@ export class ServiceApiService {
     return this.http.delete<any>(`${this.apiUrl}/${endPoint}`);
   }
 
+
   setUserRole(): void {
     const loggedInEmployee = this.getLoggedInEmployee();
     if (loggedInEmployee) {
@@ -68,3 +69,4 @@ export class ServiceApiService {
     }
   }
 }
+

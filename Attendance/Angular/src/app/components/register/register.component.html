@@ -1,12 +1,11 @@
 <h2 mat-dialog-title>{{ data?.Id ? 'Edit User' : 'Register User' }}</h2>
 
-<form [formGroup]="userForm" >
+<form [formGroup]="userForm" (ngSubmit)="save()">
   <mat-dialog-content class="mat-typography">
 
 
 
      <input type="hidden" formControlName="id">
-     <input type="hidden" formControlName="CreatedBy">
 
     <!-- First Name -->
     <mat-form-field appearance="outline" class="full-width">
@@ -115,13 +114,11 @@
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Manager Name</mat-label>
       <mat-select formControlName="managerId">
-        <mat-option [value]="null">None</mat-option>
-        <mat-option *ngFor="let manager of managers" [value]="manager.Id">
+        <mat-option *ngFor="let manager of managers" [value]="manager.Name">
           {{ manager.Name }} 
         </mat-option>
       </mat-select>
     </mat-form-field>
-    
     
     
 
@@ -138,7 +135,7 @@
 
   <mat-dialog-actions align="end">
     <button mat-button (click)="close()">Cancel</button>
-    <button mat-button (click)="save()" color="primary" type="submit" [disabled]="userForm.invalid">
+    <button mat-button color="primary" type="submit" [disabled]="userForm.invalid">
       {{ data?.Id ? 'Update' : 'Register' }}
     </button>
   </mat-dialog-actions>

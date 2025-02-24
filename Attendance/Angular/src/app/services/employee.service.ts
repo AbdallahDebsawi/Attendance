@@ -6,7 +6,6 @@ import { map } from 'rxjs/operators';
 export interface Employee {
   id: number;
   name: string;
-  createdBy: string;
   managerId: number;
   email: string;
   gender: string;
@@ -21,8 +20,7 @@ export interface Employee {
   providedIn: 'root',
 })
 export class EmployeeService {
-  private apiUrl =
-    'https://oriented-s.com:90/Raqeeb/AttendanceBackend/api/user';
+  private apiUrl = 'https://localhost:44323/api/user';
   private employeesUpdated = new BehaviorSubject<boolean>(false); // Notify when employees should be refreshed
 
   constructor(private http: HttpClient) {}

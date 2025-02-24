@@ -28,7 +28,7 @@ th, td {
   text-align: left;
   border: none !important;
   outline: none !important;
-  white-space: nowrap;
+  white-space: nowrap; 
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -147,11 +147,11 @@ td.mat-cell button {
   border-radius: 25px;
   font-size: 16px;
   outline: none;
-  transition: all 0.3s ease-in-out;
-  background: url("/assets/images/search.png") no-repeat left 12px center;
+  transition: all 0.3s ease-in-out; 
+  background: url("../../../assets/images/search.png") no-repeat left 12px center; 
   background-size: 20px;
   background-color: white;
-  text-indent: 35px;
+  text-indent: 35px; 
 }
 
 .form-control:focus {
@@ -237,7 +237,7 @@ td.mat-cell button {
   }
 
   .filter-container {
-
+    
     justify-content: flex-start;
     gap: 10px;
   }

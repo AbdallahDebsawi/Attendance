@@ -1,26 +1,13 @@
-<div
-  style="
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-  "
->
-  <img
-    src="../../../../Raqeeb/Attendance/assets/images/requestTitle.jpeg"
-    width="25px"
-  />
-  <h1 mat-dialog-title style="margin: 0">Leave Application</h1>
+<div style="text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px;">
+  <img src=".\assets\images\requestTitle.jpeg" width="25px">
+  <h1 mat-dialog-title style="margin: 0;">Leave Application</h1>
 </div>
-<h5 style="text-align: center">
-  Fill the required fields below to apply for annual leave
-</h5>
+<h5 style="text-align: center;">Fill the required fields below to apply for annual leave</h5>
 
 <mat-dialog-content>
   <form [formGroup]="requestForm">
     <label>Leave Type</label>
-    <mat-form-field appearance="fill" style="width: 100%">
+    <mat-form-field appearance="fill" style="width: 100%;">
       <mat-select matInput formControlName="typeOfAbsence">
         <mat-option *ngFor="let type of absenceTypes" [value]="type.value">
           {{ type.label }}
@@ -31,12 +18,10 @@
       </mat-error>
     </mat-form-field>
 
-    <div style="display: flex; gap: 10px; width: 100%; flex-wrap: wrap">
+
+    <div style="display: flex; gap: 10px; width: 100%; flex-wrap: wrap;">
       <!-- Start Date -->
-      <div
-        style="flex: 1; min-width: 200px"
-        *ngIf="requestForm.get('typeOfAbsence')?.value !== 3"
-      >
+      <div style="flex: 1; min-width: 200px" *ngIf="requestForm.get('typeOfAbsence')?.value !== 3">
         <label>Start Date</label>
         <mat-form-field appearance="fill" style="width: 100%">
           <input
@@ -59,10 +44,7 @@
       </div>
 
       <!-- End Date -->
-      <div
-        style="flex: 1; min-width: 200px"
-        *ngIf="requestForm.get('typeOfAbsence')?.value !== 3"
-      >
+      <div style="flex: 1; min-width: 200px" *ngIf="requestForm.get('typeOfAbsence')?.value !== 3">
         <label>End Date</label>
         <mat-form-field appearance="fill" style="width: 100%">
           <input
@@ -85,49 +67,51 @@
       </div>
     </div>
 
-    <div style="display: flex; gap: 10px; width: 100%; flex-wrap: wrap">
-      <!-- Start Date & Time (Shown for Personal Leave) -->
-      <div
-        style="flex: 1; min-width: 200px"
-        *ngIf="requestForm.get('typeOfAbsence')?.value === 3"
-      >
-        <label>Start Date & Time</label>
-        <mat-form-field appearance="fill" style="width: 100%">
-          <input matInput type="datetime-local" formControlName="from" />
-          <mat-error *ngIf="requestForm.get('from')?.hasError('required')">
-            Start date and time are required.
-          </mat-error>
-        </mat-form-field>
-      </div>
 
-      <!-- End Date & Time (Shown for Personal Leave) -->
-      <div
-        style="flex: 1; min-width: 200px"
-        *ngIf="requestForm.get('typeOfAbsence')?.value === 3"
-      >
-        <label>End Date & Time</label>
-        <mat-form-field appearance="fill" style="width: 100%">
-          <input matInput type="datetime-local" formControlName="to" />
-          <mat-error *ngIf="requestForm.get('to')?.hasError('required')">
-            End date and time are required.
-          </mat-error>
-        </mat-form-field>
-      </div>
+    <div style="display: flex; gap: 10px; width: 100%; flex-wrap: wrap;">
+      <!-- Start Date & Time (Shown for Personal Leave) -->
+<div style="flex: 1; min-width: 200px" *ngIf="requestForm.get('typeOfAbsence')?.value === 3">
+  <label>Start Date & Time</label>
+  <mat-form-field appearance="fill" style="width: 100%">
+    <input
+     matInput type="datetime-local"
+      formControlName="from"
+      />
+    <mat-error *ngIf="requestForm.get('from')?.hasError('required')">
+      Start date and time are required.
+    </mat-error>
+  </mat-form-field>
+</div>
+
+<!-- End Date & Time (Shown for Personal Leave) -->
+<div style="flex: 1; min-width: 200px" *ngIf="requestForm.get('typeOfAbsence')?.value === 3">
+  <label>End Date & Time</label>
+  <mat-form-field appearance="fill" style="width: 100%">
+    <input
+     matInput type="datetime-local"
+      formControlName="to" />
+    <mat-error *ngIf="requestForm.get('to')?.hasError('required')">
+      End date and time are required.
+    </mat-error>
+  </mat-form-field>
+</div>
     </div>
+   
+
+
 
     <label>Reason for Leave</label>
-    <mat-form-field appearance="fill" style="width: 100%">
+    <mat-form-field appearance="fill" style="width: 100%;">
       <textarea matInput formControlName="reasonOfAbsence" rows="3"></textarea>
-      <mat-error
-        *ngIf="requestForm.get('reasonOfAbsence')?.hasError('required')"
-      >
+      <mat-error *ngIf="requestForm.get('reasonOfAbsence')?.hasError('required')">
         Reason for leave is required.
       </mat-error>
     </mat-form-field>
 
+
     <!-- Manager Status Dropdown -->
     <label *ngIf="isManager">Manager Status</label>
-    <mat-form-field appearance="fill" style="width: 100%" *ngIf="isManager">
+    <mat-form-field appearance="fill" style="width: 100%;" *ngIf="isManager">
       <mat-select formControlName="managerStatus">
         <mat-option *ngFor="let s of status" [value]="s.value">
           {{ s.label }}
@@ -135,60 +119,38 @@
       </mat-select>
     </mat-form-field>
 
-    <!-- HR Status Dropdown -->
-    <label *ngIf="isHr">HR Status</label>
-    <mat-form-field appearance="fill" style="width: 100%" *ngIf="isHr">
-      <mat-select formControlName="hrStatus">
-        <mat-option *ngFor="let s of status" [value]="s.value">
-          {{ s.label }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+<!-- HR Status Dropdown -->
+  <label *ngIf="isHr">HR Status</label>
+  <mat-form-field appearance="fill" style="width: 100%;" *ngIf="isHr">
+    <mat-select formControlName="hrStatus">
+      <mat-option *ngFor="let s of status" [value]="s.value">
+        {{ s.label }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 
-    <div style="width: 100%; display: flex; flex-direction: column; gap: 10px">
-      <label
-        >Attach handover document (pdf, jpg, docx or any other format)</label
-      >
-      <div style="display: flex; align-items: center; gap: 10px">
-        <button
-          mat-button
-          color="primary"
-          (click)="fileInput.click()"
-          style="background-color: black; color: white"
-        >
+
+
+    <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
+      <label>Attach handover document (pdf, jpg, docx or any other format)</label>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button mat-button color="primary" (click)="fileInput.click()" style="background-color: black; color: white;">
           Choose File
         </button>
-        <input
-          #fileInput
-          type="file"
-          (change)="onFileSelected($event)"
-          hidden
-        />
-        <span *ngIf="fileName" style="margin-left: 10px">{{ fileName }}</span>
+        <input #fileInput type="file" (change)="onFileSelected($event)" hidden>
+        <span *ngIf="fileName" style="margin-left: 10px;">{{ fileName }}</span>
       </div>
     </div>
 
     <!-- Buttons -->
-    <mat-dialog-actions
-      style="width: 100%; display: flex; justify-content: space-between"
-    >
-      <button
-        mat-button
-        style="background-color: green; color: white; flex: 1"
-        type="submit"
-        (click)="saveRequest()"
-      >
+    <mat-dialog-actions style="width: 100%; display: flex; justify-content: space-between;">
+      <button mat-button style="background-color: green; color: white; flex: 1;" type="submit" (click)="saveRequest()">
         Submit
       </button>
-      <button
-        mat-button
-        color="warn"
-        type="button"
-        (click)="requestForm.reset()"
-        style="flex: 1"
-      >
+      <button mat-button color="warn" type="button" (click)="requestForm.reset()" style="flex: 1;">
         Reset
       </button>
     </mat-dialog-actions>
+
   </form>
 </mat-dialog-content>
